@@ -4,6 +4,8 @@ import rdflib
 import ontospy
 import pandas as pd
 
+import os
+
 import sys
 sys.path.append('../')
 from metaexplainercode import codeconstants
@@ -76,5 +78,9 @@ if __name__=="__main__":
 		
 
 	questions_children = pd.DataFrame(questions_children)
+
+	if not os.path.exists(codeconstants.OUTPUT_FOLDER):
+   		os.makedirs(codeconstants.OUTPUT_FOLDER)
+
 	questions_children.to_csv(codeconstants.OUTPUT_FOLDER + '/prototypical_questions_explanations_eo.csv')
 
