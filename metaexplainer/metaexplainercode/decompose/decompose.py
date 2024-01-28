@@ -5,6 +5,7 @@ import ontospy
 import pandas as pd
 
 import os
+import re
 
 import sys
 sys.path.append('../')
@@ -31,7 +32,15 @@ def get_property_value(class_obj, URIRef):
 	Trying to get a value for a given property on a class
 	For property pass the entire URI including namespace and property name 
 	'''
-	return class_obj.getValuesForProperty(rdflib.term.URIRef(URIRef))
+	value_uri = class_obj.getValuesForProperty(rdflib.term.URIRef(URIRef))
+
+	#retrieve string value of question if present
+	if len(value_uri) > 0:
+		value_uri = value_uri[0].toPython()
+	else:
+		value_uri = ''
+
+	return value_uri
 
 
 def get_example_question(class_obj):
@@ -40,18 +49,27 @@ def get_example_question(class_obj):
 	They are stored as skos:example so just retrieve value for that
 	'''
 	skos_example_URI = 'http://www.w3.org/2004/02/skos/core#example'
+	label_URI = 'http://www.w3.org/2000/01/rdf-schema#label'
 
 	class_obj._buildGraph()
 	child_uri = class_obj.uri
-	value_uri = get_property_value(class_obj, skos_example_URI)
+	quest = get_property_value(class_obj, skos_example_URI)
+	label = get_property_value(class_obj, label_URI)	
 
-	#retrieve string value of question if present
-	if len(value_uri) > 0:
-		value_uri = value_uri[0].toPython()
-	else:
-		value_uri = ''
+	return (label, quest)
 
-	return (child_uri, value_uri)
+def extract_quoted_string(questText):
+	quoted = re.compile('"[^"]*"')
+	for value in quoted.findall(questText):
+		return value
+	return ''
+
+def find_similar_question(question, questions_list):
+	'''
+	Find similar question based on the user input 
+	'''
+	questions_parsed = {extract_quoted_string(exp_quest['questions']): exp_quest['explanation']  for exp_quest in questions_list}
+	print(questions_parsed)
 	
 
 def get_class_content(ont_class):
@@ -61,7 +79,7 @@ def get_class_content(ont_class):
 	pass
 	
 if __name__=="__main__":
-	#Trying to load EO and inspect it
+	#Trying to load EO and inspect it; this works better than others
 	eo_model = ontospy.Ontospy("https://purl.org/heals/eo",verbose=True)
 	#eo_model.printClassTree()
 	explanation_class = get_class_term(eo_model, "explanation", -1)
@@ -75,7 +93,8 @@ if __name__=="__main__":
 		(child_uri, value_uri) = get_example_question(child)
 		print(child_uri, value_uri)
 		questions_children.append({'explanation': child_uri, 'questions': value_uri})
-		
+
+	find_similar_question('Why Semgluatide over Metformin?', questions_children)		
 
 	questions_children = pd.DataFrame(questions_children)
 
