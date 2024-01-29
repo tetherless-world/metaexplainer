@@ -59,16 +59,23 @@ def get_example_question(class_obj):
 	return (label, quest)
 
 def extract_quoted_string(questText):
-	quoted = re.compile('"[^"]*"')
+	'''
+	Find all quoted quesitons 
+	Pattern from: https://www.reddit.com/r/regex/comments/u3ao9g/trouble_capturing_multiple_string_matches_with/
+	'''
+	quoted = re.compile(r'[\"\“]((?:[^\"])+)\"')
+	all_quoted_strings = []
+
 	for value in quoted.findall(questText):
-		return value
-	return ''
+		if value != '':
+			all_quoted_strings.append(value)
+	return all_quoted_strings
 
 def find_similar_question(question, questions_list):
 	'''
 	Find similar question based on the user input 
 	'''
-	questions_parsed = {extract_quoted_string(exp_quest['questions']): exp_quest['explanation']  for exp_quest in questions_list}
+	questions_parsed = {exp_quest['question']: exp_quest['explanation']  for exp_quest in questions_list}
 	print(questions_parsed)
 	
 
@@ -84,22 +91,32 @@ if __name__=="__main__":
 	#eo_model.printClassTree()
 	explanation_class = get_class_term(eo_model, "explanation", -1)
 	children_list_exp = get_children_of_class(explanation_class)
-	print(children_list_exp)
+	print('Explanations Extracted', children_list_exp)
 
-	print("Example questions for each child are")
-	questions_children = []
+	if not os.path.exists(codeconstants.OUTPUT_FOLDER + '/prototypical_questions_explanations_eo.csv'):
+		print("Example questions for each child are")
+		questions_children = []
 
-	for child in children_list_exp:
-		(child_uri, value_uri) = get_example_question(child)
-		print(child_uri, value_uri)
-		questions_children.append({'explanation': child_uri, 'questions': value_uri})
+		for child in children_list_exp:
+			(child_uri, value_uri) = get_example_question(child)
+			quests = extract_quoted_string(value_uri)
 
+			for quest in quests:
+				questions_children.append({'explanation': child_uri, 'question': quest})
+
+		questions_children = pd.DataFrame(questions_children)
+
+		if not os.path.exists(codeconstants.OUTPUT_FOLDER):
+	   		os.makedirs(codeconstants.OUTPUT_FOLDER)
+
+		questions_children.to_csv(codeconstants.OUTPUT_FOLDER + '/prototypical_questions_explanations_eo.csv')
+	else:
+		print('Proto file found not extracting questions again!')
+		questions_children = pd.read_csv(codeconstants.OUTPUT_FOLDER + '/prototypical_questions_explanations_eo.csv')
+		questions_children = questions_children.to_dict('records')
+
+	
 	find_similar_question('Why Semgluatide over Metformin?', questions_children)		
 
-	questions_children = pd.DataFrame(questions_children)
-
-	if not os.path.exists(codeconstants.OUTPUT_FOLDER):
-   		os.makedirs(codeconstants.OUTPUT_FOLDER)
-
-	questions_children.to_csv(codeconstants.OUTPUT_FOLDER + '/prototypical_questions_explanations_eo.csv')
+	
 
