@@ -4,12 +4,21 @@ import rdflib
 import ontospy
 import pandas as pd
 
+#distance metrics imports
+
+from Levenshtein import distance
+from Levenshtein import jaro_winkler
+
+
+
 import os
 import re
 
 import sys
 sys.path.append('../')
 from metaexplainercode import codeconstants
+
+from metaexplainercode import metaexplainer_utils
 
 def get_children_of_class(ont_class):
 	'''
@@ -75,7 +84,22 @@ def find_similar_question(question, questions_list):
 	'''
 	Find similar question based on the user input 
 	'''
+	#generating lookup with question and explanation, so that the most similar explanations can be returned
 	questions_parsed = {exp_quest['question']: exp_quest['explanation']  for exp_quest in questions_list}
+
+	for ref_question in questions_parsed.keys():
+		comparisons = (ref_question, question)
+		print(comparisons)
+
+		result_cos = metaexplainer_utils.find_cosine_similarity(ref_question, question)
+		leven_score = distance(ref_question, question)
+		jaro_winkler_score = jaro_winkler(ref_question, question)
+
+		print('Leven score ', leven_score)
+		print('Jaro winkler score ', jaro_winkler_score)
+		print('Cosine sim', result_cos)
+		#next add these to arrays and pick highest
+
 	print(questions_parsed)
 	
 
@@ -86,14 +110,14 @@ def get_class_content(ont_class):
 	pass
 	
 if __name__=="__main__":
-	#Trying to load EO and inspect it; this works better than others
-	eo_model = ontospy.Ontospy("https://purl.org/heals/eo",verbose=True)
-	#eo_model.printClassTree()
-	explanation_class = get_class_term(eo_model, "explanation", -1)
-	children_list_exp = get_children_of_class(explanation_class)
-	print('Explanations Extracted', children_list_exp)
-
 	if not os.path.exists(codeconstants.OUTPUT_FOLDER + '/prototypical_questions_explanations_eo.csv'):
+		#Trying to load EO and inspect it; this works better than others
+		eo_model = ontospy.Ontospy("https://purl.org/heals/eo",verbose=True)
+		#eo_model.printClassTree()
+		explanation_class = get_class_term(eo_model, "explanation", -1)
+		children_list_exp = get_children_of_class(explanation_class)
+		print('Explanations Extracted', children_list_exp)
+
 		print("Example questions for each child are")
 		questions_children = []
 
@@ -107,7 +131,7 @@ if __name__=="__main__":
 		questions_children = pd.DataFrame(questions_children)
 
 		if not os.path.exists(codeconstants.OUTPUT_FOLDER):
-	   		os.makedirs(codeconstants.OUTPUT_FOLDER)
+			os.makedirs(codeconstants.OUTPUT_FOLDER)
 
 		questions_children.to_csv(codeconstants.OUTPUT_FOLDER + '/prototypical_questions_explanations_eo.csv')
 	else:
