@@ -85,22 +85,25 @@ def find_similar_question(question, questions_list):
 	Find similar question based on the user input 
 	'''
 	#generating lookup with question and explanation, so that the most similar explanations can be returned
-	questions_parsed = {exp_quest['question']: exp_quest['explanation']  for exp_quest in questions_list}
+	scores_expl = []
 
-	for ref_question in questions_parsed.keys():
+	for exp_quest in questions_list:
+		ref_question = exp_quest['question']
+		expl_type = exp_quest['explanation']
+
 		comparisons = (ref_question, question)
-		print(comparisons)
+		#print(comparisons)
 
 		result_cos = metaexplainer_utils.find_cosine_similarity(ref_question, question)
 		leven_score = distance(ref_question, question)
 		jaro_winkler_score = jaro_winkler(ref_question, question)
 
-		print('Leven score ', leven_score)
-		print('Jaro winkler score ', jaro_winkler_score)
-		print('Cosine sim', result_cos)
+		scores_expl.append({'explanation type': expl_type, 'question': ref_question, 'levenshtein_score': leven_score, 'jaro_winkler_score': jaro_winkler_score, 'cosine_similarity': result_cos})
 		#next add these to arrays and pick highest
 
-	print(questions_parsed)
+	scores_expl = sorted(scores_expl, key=lambda x: x['cosine_similarity'], reverse=True)
+	print(scores_expl)
+	return {'User question': question, 'Comparison scores': scores_expl}
 	
 
 def get_class_content(ont_class):
