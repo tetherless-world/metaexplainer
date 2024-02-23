@@ -119,7 +119,7 @@ if __name__=="__main__":
 		#eo_model.printClassTree()
 		explanation_class = get_class_term(eo_model, "explanation", -1)
 		children_list_exp = get_children_of_class(explanation_class)
-		print('Explanations Extracted', children_list_exp)
+		print('Explanations Extracted', children_list_exp, '\n # of explanations ', len(children_list_exp))
 
 		print("Example questions for each child are")
 		questions_children = []
@@ -131,12 +131,12 @@ if __name__=="__main__":
 			for quest in quests:
 				questions_children.append({'explanation': child_uri, 'question': quest})
 
-		questions_children = pd.DataFrame(questions_children)
+		questions_children_pd = pd.DataFrame(questions_children)
 
 		if not os.path.exists(codeconstants.OUTPUT_FOLDER):
 			os.makedirs(codeconstants.OUTPUT_FOLDER)
 
-		questions_children.to_csv(codeconstants.OUTPUT_FOLDER + '/prototypical_questions_explanations_eo.csv')
+		questions_children_pd.to_csv(codeconstants.OUTPUT_FOLDER + '/prototypical_questions_explanations_eo.csv')
 	else:
 		print('Proto file found not extracting questions again!')
 		questions_children = pd.read_csv(codeconstants.OUTPUT_FOLDER + '/prototypical_questions_explanations_eo.csv')
