@@ -24,7 +24,7 @@ def get_children_of_class(ont_class):
 	'''
 	Return a list of all children of a class
 	'''
-	children_list = ont_class.children()
+	children_list = ont_class.descendants()
 	return children_list
 
 def get_class_term(loaded_ont, class_term, search_index):
@@ -32,7 +32,11 @@ def get_class_term(loaded_ont, class_term, search_index):
 	Return class found if there is more than 1 match, allow the user to pick
 	'''
 	class_list = loaded_ont.get_class(class_term)
+	#class_parents = [class_o.parents() for class_o in class_list]
+	#print('Parents ', class_parents)
+	
 	class_at_index = class_list[search_index]
+	#print('All exps ', class_list[-1])
 	return class_at_index
 
 
@@ -125,11 +129,12 @@ if __name__=="__main__":
 		questions_children = []
 
 		for child in children_list_exp:
-			(child_uri, value_uri) = get_example_question(child)
-			quests = extract_quoted_string(value_uri)
+			(exp_label, question) = get_example_question(child)
+			#print('Explanation ', exp_label, 'Questions ', question)
+			quests = extract_quoted_string(question)
 
 			for quest in quests:
-				questions_children.append({'explanation': child_uri, 'question': quest})
+				questions_children.append({'explanation': exp_label, 'question': quest})
 
 		questions_children_pd = pd.DataFrame(questions_children)
 
