@@ -35,7 +35,7 @@ def get_class_term(loaded_ont, class_term, search_index):
 	#class_parents = [class_o.parents() for class_o in class_list]
 	#print('Parents ', class_parents)
 	
-	class_at_index = class_list[search_index]
+	class_at_index = [class_matched for class_matched in class_list if get_property_value(class_matched, 'http://www.w3.org/2000/01/rdf-schema#label') == 'Explanation'][0]
 	#print('All exps ', class_list[-1])
 	return class_at_index
 
@@ -130,7 +130,7 @@ if __name__=="__main__":
 
 		for child in children_list_exp:
 			(exp_label, question) = get_example_question(child)
-			#print('Explanation ', exp_label, 'Questions ', question)
+			print('Explanation ', exp_label, 'Questions ', question)
 			quests = extract_quoted_string(question)
 
 			for quest in quests:
