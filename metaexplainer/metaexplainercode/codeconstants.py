@@ -2,6 +2,17 @@ import os
 
 #A file to save constant file variables that are used across code files in this directory
 
+DATA_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/datasets/'))
+
+OUTPUT_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/output_files/'))
+XREF_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/xref/'))
+
+
+QUESTIONS_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/questions/guideline_questions.txt'))
+QUESTIONS_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/questions/'))
+
+
+
 
 # Constants used in the guideline_extractionenhancedfile
 BASE_URL = 'http://care.diabetesjournals.org'
@@ -44,11 +55,7 @@ MULTI_CCS_CODES_LOOKUP_FILE = os.path.abspath(os.path.join(os.path.dirname(__fil
 
 PROTOTYPICAL_PATIENTS_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), r'/data/cohorts/v1/prototypical_patients.csv'))
 
-QUESTIONS_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/questions/guideline_questions.txt'))
-QUESTIONS_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/questions/'))
 
-OUTPUT_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/output_files/'))
-XREF_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/xref/'))
 
 DEMO_QUESTIONS_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/questions/demo_questions.csv'))
 DEMO_JSON_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/ui_test_riskprediction.json'))
