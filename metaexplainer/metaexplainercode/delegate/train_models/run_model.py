@@ -120,7 +120,7 @@ def fit_and_predict_model(mod_num, model, x_train, y_train, x_test, y_test):
 	#printing and returning report
 	#print(class_report)
 	clean_class_report_edited = clean_class_report(class_report, len(x_train), len(x_test), mod_num, model[0])
-	return clean_class_report_edited
+	return (model[1], clean_class_report_edited)
 
 def clean_class_report(class_report, num_x_train, num_x_test, mod_num, mod_name):
 	'''
@@ -155,7 +155,7 @@ def get_model_output(models_output, pick_max, pick_other_node_model):
 		max_model = 0
 
 		for model in models_output.keys():
-			class_report_model = models_output[model]
+			class_report_model = models_output[model][1]
 
 			if class_report_model['test f1'] > max_f1:
 				max_model = model
@@ -181,10 +181,15 @@ if __name__ == '__main__':
 	for mod_num in models.keys():
 		model = models[mod_num]
 
-		mod_classification_report = fit_and_predict_model(mod_num, model, x_train, y_train, x_test, y_test)
-		model_output[mod_num] = mod_classification_report
+		(model, mod_classification_report) = fit_and_predict_model(mod_num, model, x_train, y_train, x_test, y_test)
+
+		#this is where you get the model 
+
+		model_output[mod_num] = (model, mod_classification_report)
 
 	#print(model_output)
-	print(get_model_output(model_output, True, 0))
+	model_output_print = get_model_output(model_output, True, 0)
+	print('Testing proba ', model_output_print[0].predict_proba)
+	print(model_output_print[1])
 
 
