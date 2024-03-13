@@ -13,3 +13,10 @@ def find_cosine_similarity(s1, s2):
 
 	result_cos = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix)
 	return result_cos[0][1]
+
+def print_list(list_n):
+	'''
+	Print contents of list on separate lines
+	'''
+	for val in list_n:
+		print(val)

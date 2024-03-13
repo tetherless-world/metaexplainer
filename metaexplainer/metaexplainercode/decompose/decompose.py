@@ -106,7 +106,8 @@ def find_similar_question(question, questions_list):
 		#next add these to arrays and pick highest
 
 	scores_expl = sorted(scores_expl, key=lambda x: x['cosine_similarity'], reverse=True)
-	print(scores_expl)
+	print('User question ', question)
+	metaexplainer_utils.print_list(scores_expl)
 	return {'User question': question, 'Comparison scores': scores_expl}
 	
 
@@ -148,7 +149,7 @@ if __name__=="__main__":
 		questions_children = questions_children.to_dict('records')
 
 	
-	find_similar_question('Why Semgluatide over Metformin?', questions_children)		
+	find_similar_question('Why is the patient`s A1C important for their Diabetes?', questions_children)		
 
 	
 
