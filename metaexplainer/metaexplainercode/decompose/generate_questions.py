@@ -14,10 +14,13 @@ completion = client.chat.completions.create(
      {"role": "system",
      "content": "Always answer in English."},
     {"role": "user",
-     "content": "Generate fifty questions for contrastive explanations for the Diabetes domain. Contrastive questions are of the form, 'Why this and not that' or 'Why this feature versus this feature'. " \
+     "content": "Generate 100 questions for contrastive explanations for the Diabetes domain. Contrastive questions are of the form, 'Why this and not that' or 'Why this feature versus this feature'. " \
      "Your features could be age, diabetes pedigree function, sex and BMI and the prediction is whether the patient has diabetes or not. Their values range from ages: 18 - 70, diabetes pedigree function: 0.2 - 1, sex: Male or female and BMI: 18 - 30." \
-     "For each question, also generate a machine interpretation recognizing in the question -  instances and/or feature and their filters and the values that are being compared and/or datasets and the target variable and whether it is a low or high likelihood."}
-  ]
+     " For each question, also generate a machine interpretation which is a predicate logic interpretation of the question and also identify the target variable and if there is a low / high likelihood."}
+     #recognizing in the question - all instances, all features - their filters and the values that are being compared, all datasets and the target variable and whether it is a low or high likelihood.
+  ],
+  temperature=0
+  #above part of prompt 2 can be used across question types
 )
 
 output = completion.choices[0].message

@@ -1,0 +1,18 @@
+instruction: |
+  Pretend that you are a user who is trying to understand what action to take on a question.
+  Your job is to what type of explanation to provide and how to provide that explanation.
+  If there exists methods to produce the explanation, you must detect what the methods are.
+  If the author of the question expresses an explicit preference, you must detect it.
+  You will be given a question and utterance for each task.
+  The options will be denoted by ```Question:``` and ```Utterance:```.
+  The comment will be denoted by ```Comment:```.
+  You MUST respond with a valid Utterance.
+
+task: |
+  ```
+  Question: {question}
+  ```
+
+  ```
+  Utterance: {utterance}
+  ```
