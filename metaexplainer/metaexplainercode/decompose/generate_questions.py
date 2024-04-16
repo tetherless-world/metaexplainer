@@ -11,7 +11,7 @@ from metaexplainercode import codeconstants
 def retrieve_prompt():
 	#certain kind of prediction and features in certain ways, and that fact that it uses confidence 
 	prompt_template_text = '''
- Generate 100 questions for {{explanation}} for the Diabetes domain. {{explanation}} questions are of the form, 
+ Generate 5 questions for {{explanation}} for the Diabetes domain. {{explanation}} questions are of the form, 
  {%- for question in questions %}
 	{{question}} \n
 	{%- endfor %}
@@ -28,7 +28,12 @@ def retrieve_prompt():
 	{{feature_range}} \n
 	{%- endfor %}.
 
-	For each question, also generate a machine interpretation which includes a predicate logic interpretation of the question, the explanation type, features and also identify the target variable and if there is a low / high likelihood.
+	For each question, 
+	also generate a machine interpretation which includes:
+	 predicate logic translation of the question, 
+	 action mentioned in the question,
+	 explanation type: {{explanation}}, 
+	 and the target variable in the question and if there is a low / high likelihood.
 	'''
 
 	return prompt_template_text
@@ -72,6 +77,8 @@ if __name__=="__main__":
 					#  "content": "You are an explanation assistant skilled at understanding the needs of users and the questions they could ask for which they require explanations. Anticipate what their needs might be based on the user's requirements and generate questions."},
 					 {"role": "system",
 					 "content": "Always answer in English."},
+					 {"role": "system",
+					 "content": "Always keep the target variable as Diabetes prediction."},
 					{"role": "user",
 					 "content": filled_prompt}
 					 #recognizing in the question - all instances, all features - their filters and the values that are being compared, all datasets and the target variable and whether it is a low or high likelihood.
