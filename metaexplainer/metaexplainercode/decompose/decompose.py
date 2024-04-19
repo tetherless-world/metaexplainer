@@ -14,11 +14,33 @@ from Levenshtein import jaro_winkler
 import os
 import re
 
+
 import sys
 sys.path.append('../')
 from metaexplainercode import codeconstants
 
 from metaexplainercode import metaexplainer_utils
+
+
+def write_generated_questions(domain):
+	'''
+	Read question files and generate an excel sheet with one sheet for each explanation type
+	'''	
+
+	domain_dirs = os.listdir(codeconstants.DECOMPOSE_QUESTIONS_FOLDER + '/' + domain)
+	questions_csv = ''
+
+	for explanation_type in domain_dirs:
+		for gpt_file in os.listdir(explanation_type):
+			'''
+			Add all together and get a sense of columns
+			'''
+			pass
+
+	'''
+	Normalize each 
+	'''
+
 
 def get_children_of_class(ont_class):
 	'''

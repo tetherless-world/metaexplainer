@@ -5,6 +5,7 @@ import os
 DATA_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/datasets/'))
 
 OUTPUT_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/output_files/'))
+DECOMPOSE_QUESTIONS_FOLDER = OUTPUT_FOLDER + '/decompose_questions/'
 XREF_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/xref/'))
 
 

@@ -4,6 +4,8 @@ client = OpenAI()
 from jinja2 import Template
 import pandas as pd
 
+import os
+
 import sys
 sys.path.append('../')
 from metaexplainercode import codeconstants
@@ -11,7 +13,8 @@ from metaexplainercode import codeconstants
 def retrieve_prompt():
 	#certain kind of prediction and features in certain ways, and that fact that it uses confidence 
 	prompt_template_text = '''
- Generate 5 questions for {{explanation}} for the Diabetes domain. {{explanation}} questions are of the form, 
+ Generate 20 questions for {{explanation}} for the Diabetes domain. 
+ {{explanation}} questions are of the form, 
  {%- for question in questions %}
 	{{question}} \n
 	{%- endfor %}
@@ -56,6 +59,17 @@ if __name__=="__main__":
 	print(prompt_template_text)
 	prompt_template = Template(prompt_template_text)
 
+	domain = 'Diabetes'
+
+	'''
+	Create directories for each new domain and store one question per explanation type
+	'''
+	if not os.path.isdir(codeconstants.DECOMPOSE_QUESTIONS_FOLDER):
+		os.mkdir(codeconstants.DECOMPOSE_QUESTIONS_FOLDER)
+
+	if not os.path.isdir(codeconstants.DECOMPOSE_QUESTIONS_FOLDER + domain):
+		os.mkdir(codeconstants.DECOMPOSE_QUESTIONS_FOLDER +  domain)
+
 	#define the features and feature ranges on a per dataset basis - can have a common util function for this
 	features = ['Age', 'Sex', 'Diabetes Pedigree Function', 'BMI']
 	feature_ranges = ['Age: 30 - 70', 'Sex: Male or Female', 'Diabetes Pedigree Function: 0.2 - 0.1', 'BMI: 18 - 30']
@@ -68,6 +82,11 @@ if __name__=="__main__":
 		prompt = create_prompt_record(explanation_type, questions_explanation, features, 'whether a patient has Diabetes or not',feature_ranges)
 		filled_prompt = prompt_template.render(prompt)
 		print(filled_prompt)
+
+		explanation_dir = codeconstants.DECOMPOSE_QUESTIONS_FOLDER +  domain + '/' + ''.join(explanation_type.split(' ')) 
+
+		if not os.path.isdir(explanation_dir):
+			os.mkdir(explanation_dir)
 
 		for i in range(0, 1):
 			completion = client.chat.completions.create(
@@ -83,14 +102,19 @@ if __name__=="__main__":
 					 "content": filled_prompt}
 					 #recognizing in the question - all instances, all features - their filters and the values that are being compared, all datasets and the target variable and whether it is a low or high likelihood.
 				],
-				temperature=0
+				temperature=0, #degrees of freedom - entropy (analytical - low temp),
+				seed = 3,
+				#set random seed the same each time
 				#above part of prompt 2 can be used across question types
 			)
 
 			output = completion.choices[0].message
-			conts += output.content + '\n \n'
+
+			
+
+			with open(explanation_dir + '/gpt-questions' + str(i + 1) + '.txt', 'w') as f:
+				f.write(output.content)
 
 			print("Run ", str(i), 'for explanation ', explanation_type)
 
-	with open(codeconstants.OUTPUT_FOLDER + '/gpt-questions.txt', 'w') as f:
-		f.write(conts)
+			
