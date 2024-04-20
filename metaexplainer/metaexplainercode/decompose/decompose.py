@@ -26,17 +26,49 @@ def write_generated_questions(domain):
 	'''
 	Read question files and generate an excel sheet with one sheet for each explanation type
 	'''	
-
-	domain_dirs = os.listdir(codeconstants.DECOMPOSE_QUESTIONS_FOLDER + '/' + domain)
+	domain_dir_path = codeconstants.DECOMPOSE_QUESTIONS_FOLDER + '/' + domain
+	domain_dirs = [dir_domain.name for dir_domain in os.scandir(domain_dir_path) if dir_domain.is_dir()]
 	questions_csv = ''
 
 	for explanation_type in domain_dirs:
-		for gpt_file in os.listdir(explanation_type):
+		explanation_type_path = domain_dir_path + '/' + explanation_type
+		explanation_dfs = []
+
+		for gpt_file in os.listdir(explanation_type_path):
 			'''
 			Add all together and get a sense of columns
 			'''
-			pass
+			gpt_file_path = open(explanation_type_path + '/' + gpt_file)
+			gpt_file_cont = gpt_file_path.read()
+			gpt_file_split = [quest.split('\n') for quest in gpt_file_cont.split('\n\n')]
+			gpt_dict_records = []
 
+			for quest_record in gpt_file_split:
+				gpt_dict_record = {}
+				for record_cont in quest_record:
+					record_cont = record_cont.strip()
+					record_cont = re.sub(r'[0-9]+.\s' ,'', record_cont)
+					record_cont = re.sub(r'-\s','', record_cont)
+
+					if ':' in record_cont:
+						record_splits = record_cont.split(':')
+						gpt_dict_record[record_splits[0]] = record_splits[1]
+					else:
+						gpt_dict_record['Question'] = record_cont
+
+				gpt_dict_records.append(gpt_dict_record)
+
+
+			gpt_dict_record_df = pd.DataFrame(gpt_dict_records)
+			explanation_dfs.append([gpt_file, gpt_dict_record_df])
+
+		#create a validation excel file for each explanation type
+		val_file = domain_dir_path + '/' + explanation_type + '_validation.xlsx'
+		with pd.ExcelWriter(val_file, engine='xlsxwriter') as writer:
+			for df_entry in explanation_dfs:
+				df_entry[1].to_excel(writer, sheet_name= df_entry[0])
+			print('Finished writing validation file for ', val_file)
+		#break
 	'''
 	Normalize each 
 	'''
@@ -171,7 +203,7 @@ if __name__=="__main__":
 		questions_children = questions_children.to_dict('records')
 
 	
-	find_similar_question('Why is the patient`s A1C important for their Diabetes?', questions_children)		
+	#find_similar_question('Why is the patient`s A1C important for their Diabetes?', questions_children)		
 
-	
+	write_generated_questions('Diabetes')
 

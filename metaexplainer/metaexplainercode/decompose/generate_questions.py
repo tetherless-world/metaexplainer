@@ -88,7 +88,7 @@ if __name__=="__main__":
 		if not os.path.isdir(explanation_dir):
 			os.mkdir(explanation_dir)
 
-		for i in range(0, 1):
+		for i in range(0, 3):
 			completion = client.chat.completions.create(
 				model="gpt-3.5-turbo",
 				messages=[
