@@ -47,8 +47,8 @@ def write_generated_questions(domain):
 				gpt_dict_record = {}
 				for record_cont in quest_record:
 					record_cont = record_cont.strip()
-					record_cont = re.sub(r'[0-9]+.\s' ,'', record_cont)
-					record_cont = re.sub(r'-\s','', record_cont)
+					record_cont = re.sub(r'^([0-9]+.\s)' ,'', record_cont)
+					record_cont = re.sub(r'^(-\s)','', record_cont)
 
 					if ':' in record_cont:
 						record_splits = record_cont.split(':')
@@ -68,11 +68,41 @@ def write_generated_questions(domain):
 			for df_entry in explanation_dfs:
 				df_entry[1].to_excel(writer, sheet_name= df_entry[0])
 			print('Finished writing validation file for ', val_file)
-		#break
-	'''
-	Normalize each 
-	'''
 
+def write_validate_questions(domain):
+	'''
+	Convert the validated questions across explanationt types to a .txt file for fine-tuning 
+	'''
+	domain_dir_path = codeconstants.DECOMPOSE_QUESTIONS_FOLDER + '/' + domain
+
+	validated_files = [file_domain.name for file_domain in os.scandir(domain_dir_path) 
+	if (file_domain.is_file() and '.xlsx' in file_domain.name)]
+	all_txt = ''
+	questions_ctr = 0
+
+	for validated_file in validated_files:
+		validated_xls = pd.ExcelFile(domain_dir_path + '/' + validated_file)
+		sheets_validated_xls = validated_xls.sheet_names
+
+		for sheet in sheets_validated_xls:
+			f = pd.read_excel(domain_dir_path + '/' + validated_file, sheet_name=sheet)
+			f.drop(f.columns[f.columns.str.contains('unnamed',case = False)],axis = 1, inplace = True)
+
+			cont = ''
+			questions_ctr += len(f)
+			#orientation adapted from: https://stackoverflow.com/questions/67277559/how-to-print-each-row-of-a-dataframe-including-the-column-names
+			for i in f.index:
+				cont += '\n'
+				#print(i)
+				for j in f.columns:
+				   cont += f'{j} : {f.iloc[i][j]}' + '\n'
+
+			all_txt += cont + '\n'
+
+	with open(domain_dir_path + '/finetune_questions.txt', 'w') as f:
+		f.write(all_txt)
+
+	print('Finished writing ', questions_ctr, 'records to training file')
 
 def get_children_of_class(ont_class):
 	'''
@@ -205,5 +235,7 @@ if __name__=="__main__":
 	
 	#find_similar_question('Why is the patient`s A1C important for their Diabetes?', questions_children)		
 
-	write_generated_questions('Diabetes')
+	#write_generated_questions('Diabetes')
+
+	write_validate_questions('Diabetes')
 
