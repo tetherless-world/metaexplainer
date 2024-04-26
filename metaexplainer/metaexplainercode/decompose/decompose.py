@@ -94,12 +94,14 @@ def write_validate_questions(domain):
 		for sheet in sheets_validated_xls:
 			f = pd.read_excel(domain_dir_path + '/' + validated_file, sheet_name=sheet)
 			f.drop(f.columns[f.columns.str.contains('unnamed',case = False)],axis = 1, inplace = True)
+			
 			#perform a rename column here 
 			f.columns = rename_columns(f.columns)
-			list_dfs.append(f)
 
 			#standardize what you see in the explanation type column
-			f['Explanation type'] = f['Explanation type'].apply(lambda s: s.translate(str.maketrans('', '', string.punctuation)))
+			f = edit_content(f)
+			
+			list_dfs.append(f)
 
 			cont = ''
 			questions_ctr += len(f)
@@ -136,6 +138,19 @@ def write_validate_questions(domain):
 
 	print('Finished writing ', questions_ctr, 'records to training file')
 
+def edit_content(f):
+	'''
+	Apply some transformations on rows to make content more standardized
+	This could increase based on needs.
+	'''
+
+	f['Explanation type'] = f['Explanation type'].apply(lambda s: s.translate(str.maketrans('', '', string.punctuation)))
+	
+	if 'Likelihood' in f.columns:
+		f["Target variable"] = f.apply(lambda x: x['Target variable'] + x['Likelihood'] if not pd.isnull(x["Likelihood"]) else x['Target variable'], axis=1)
+		f = f.drop(['Likelihood'], axis = 1)
+																										
+	return f
 
 def rename_columns(explanation_sheet_df_colnames):
 	'''
