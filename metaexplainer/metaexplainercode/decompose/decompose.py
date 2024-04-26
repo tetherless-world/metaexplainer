@@ -21,7 +21,11 @@ from metaexplainercode import codeconstants
 
 from metaexplainercode import metaexplainer_utils
 
+'''
+GPT Question processing functions
+'''
 
+#Run this after you run GPT API - essentially would need to call the generate_questions here based on Domain
 def write_generated_questions(domain):
 	'''
 	Read question files and generate an excel sheet with one sheet for each explanation type
@@ -69,6 +73,7 @@ def write_generated_questions(domain):
 				df_entry[1].to_excel(writer, sheet_name= df_entry[0])
 			print('Finished writing validation file for ', val_file)
 
+#Run this after validating all the spreadsheets for each explanation type
 def write_validate_questions(domain):
 	'''
 	Convert the validated questions across explanationt types to a .txt file for fine-tuning 
@@ -79,6 +84,8 @@ def write_validate_questions(domain):
 	if (file_domain.is_file() and '.xlsx' in file_domain.name)]
 	all_txt = ''
 	questions_ctr = 0
+	#maintaining a list of dataframes so that you can train the model from this 
+	list_dfs = []
 
 	for validated_file in validated_files:
 		validated_xls = pd.ExcelFile(domain_dir_path + '/' + validated_file)
@@ -87,6 +94,8 @@ def write_validate_questions(domain):
 		for sheet in sheets_validated_xls:
 			f = pd.read_excel(domain_dir_path + '/' + validated_file, sheet_name=sheet)
 			f.drop(f.columns[f.columns.str.contains('unnamed',case = False)],axis = 1, inplace = True)
+			#perform a rename column here 
+			list_dfs.append(f)
 
 			cont = ''
 			questions_ctr += len(f)
@@ -99,11 +108,19 @@ def write_validate_questions(domain):
 
 			all_txt += cont + '\n'
 
+	all_dfs = pd.concat(list_dfs, axis=1, ignore_index=True)
+
+	all_dfs.to_csv(domain_dir_path + '/finetune_questions.csv')
+
 	with open(domain_dir_path + '/finetune_questions.txt', 'w') as f:
 		f.write(all_txt)
 
 	print('Finished writing ', questions_ctr, 'records to training file')
 
+
+'''
+Ontology loading and processing functions 
+'''
 def get_children_of_class(ont_class):
 	'''
 	Return a list of all children of a class
