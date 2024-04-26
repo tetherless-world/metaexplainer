@@ -3,13 +3,12 @@ from rdflib import Graph
 import rdflib
 import ontospy
 import pandas as pd
+import functools
 
 #distance metrics imports
 
 from Levenshtein import distance
 from Levenshtein import jaro_winkler
-
-
 
 import os
 import re
@@ -95,6 +94,7 @@ def write_validate_questions(domain):
 			f = pd.read_excel(domain_dir_path + '/' + validated_file, sheet_name=sheet)
 			f.drop(f.columns[f.columns.str.contains('unnamed',case = False)],axis = 1, inplace = True)
 			#perform a rename column here 
+			f.columns = rename_columns(f.columns)
 			list_dfs.append(f)
 
 			cont = ''
@@ -108,7 +108,22 @@ def write_validate_questions(domain):
 
 			all_txt += cont + '\n'
 
-	all_dfs = pd.concat(list_dfs, axis=1, ignore_index=True)
+	all_dfs = None
+	len_dfs = len(list_dfs)
+	df_ctr = 0
+
+	while df_ctr < len_dfs:
+		if df_ctr == 0 and len(list_dfs) > 1:
+			all_dfs = pd.concat([list_dfs[0], list_dfs[1]], axis=0)
+			df_ctr = 1
+			continue
+		elif len_dfs == 1:
+			all_dfs = list_dfs[0]
+		else:
+			all_dfs = pd.concat([all_dfs, list_dfs[df_ctr]], axis = 0)
+		df_ctr += 1
+
+	#pd.concat(list_dfs, axis=1, ignore_index=False)
 
 	all_dfs.to_csv(domain_dir_path + '/finetune_questions.csv')
 
@@ -116,6 +131,28 @@ def write_validate_questions(domain):
 		f.write(all_txt)
 
 	print('Finished writing ', questions_ctr, 'records to training file')
+
+
+def rename_columns(explanation_sheet_df_colnames):
+	'''
+	rename columns of explanation sheet to reduce variance; general rules:
+	1. Strip all unnecessary spaces and punctuations
+	2. Make all column names - Sentence case
+	3. See if there can be renamings within the names, e.g., predicate logic anything to machine interpretation
+	'''
+	col_names = []
+	for col_name in explanation_sheet_df_colnames:
+		col_name = col_name.strip('')
+		
+
+		if 'predicate logic' in col_name.lower():
+			col_name = 'Machine Interpretation'
+
+		col_name = col_name.capitalize()
+
+		col_names.append(col_name)
+
+	return col_names
 
 
 '''
