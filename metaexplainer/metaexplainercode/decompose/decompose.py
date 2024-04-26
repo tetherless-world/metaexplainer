@@ -11,6 +11,7 @@ from Levenshtein import distance
 from Levenshtein import jaro_winkler
 
 import os
+import string
 import re
 
 
@@ -96,6 +97,9 @@ def write_validate_questions(domain):
 			#perform a rename column here 
 			f.columns = rename_columns(f.columns)
 			list_dfs.append(f)
+
+			#standardize what you see in the explanation type column
+			f['Explanation type'] = f['Explanation type'].apply(lambda s: s.translate(str.maketrans('', '', string.punctuation)))
 
 			cont = ''
 			questions_ctr += len(f)
