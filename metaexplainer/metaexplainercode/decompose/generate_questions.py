@@ -98,6 +98,8 @@ if __name__=="__main__":
 					 "content": "Always answer in English."},
 					 {"role": "system",
 					 "content": "Always keep the target variable as Diabetes prediction."},
+					 # {"role": "system",
+					 # "content": "Provide the questions and their associated fields in CSV format."},
 					{"role": "user",
 					 "content": filled_prompt}
 					 #recognizing in the question - all instances, all features - their filters and the values that are being compared, all datasets and the target variable and whether it is a low or high likelihood.
@@ -116,5 +118,4 @@ if __name__=="__main__":
 				f.write(output.content)
 
 			print("Run ", str(i), 'for explanation ', explanation_type)
-
 			
