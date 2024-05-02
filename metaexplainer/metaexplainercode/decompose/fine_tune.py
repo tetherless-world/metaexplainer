@@ -109,3 +109,13 @@ class LLM_ExplanationInterpretor():
 	def inference():
 		pass
 
+	def run(mode):
+		if mode == 'train':
+			train()
+		elif mode == 'test':
+			inference
+
+
+if __name__== "__main__":
+	pass
+
