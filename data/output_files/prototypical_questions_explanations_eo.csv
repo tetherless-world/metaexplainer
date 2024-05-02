@@ -1,0 +1,28 @@
+,explanation,question
+0,Case Based Explanation,To what other situations has this recommendation been applied?
+1,Case Based Explanation,What instances from the training data are considered indicative for this recommendation?
+2,Contextual Explanation,What broader information about the current situation prompted the suggestion of this recommendation?
+3,Contrastive Explanation,Why administer this new drug over the one I would typically prescribe?
+4,Contrastive Explanation,Why this and not that?
+5,Contrastive Explanation,Why this feature and not that feature?
+6,Counterfactual Explanation,What if the patient had a high risk for  cardiovascular disease? Would you still recommend  the same treatment plan?
+7,Data Explanation,What is the data?
+8,Data Explanation,How has the data been used in a particular decision?
+9,Data Explanation,How has the data been used to train the ML model?
+10,Everyday Explanation,Why are gloves recommended when dealing with high-risk patients?
+11,Clinical Pearls,What is a fact a system should consider when prescribing this medication?
+12,Fairness Explanation,Is there a bias consequence of this system recommendation?
+13,Fairness Explanation,What data was used to arrive at this decision?
+14,Rationale Explanation,Why of an ML decision and provides reasons that led to a decision?
+15,Trace Based Explanation,What steps were taken by the system to generate this recommendation?
+16,Responsibility Explanation,"Who is involved in the development, management, and implementation of an ML system?"
+17,Responsibility Explanation,Who to contact for a human review of a decision?
+18,Safety and Performance Explanation,What steps were taken to ensure robustness and reliability of system?
+19,Safety and Performance Explanation,How has the data been used to train the ML model?
+20,Safety and Performance Explanation,What steps were taken to ensure robustness and reliability of AI method?
+21,Safety and Performance Explanation,What were the plans for the system development?
+22,Simulation Based Explanation,What would happen if this recommendation is followed?
+23,Statistical Explanation,What percentage of similar patients who received this treatment recovered?
+24,Scientific Explanation,What is the biological basis for this recommendation?
+25,Evidence Based Explanation,What studies support this recommendation?
+26,Mechanistic Explanation,What is a biological basis for this recommendation?
