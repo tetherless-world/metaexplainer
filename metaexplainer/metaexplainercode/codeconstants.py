@@ -3,9 +3,12 @@ import os
 #A file to save constant file variables that are used across code files in this directory
 
 DATA_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/datasets/'))
+PROMPTS_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/prompts/'))
 
 OUTPUT_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/output_files/'))
 DECOMPOSE_QUESTIONS_FOLDER = OUTPUT_FOLDER + '/decompose_questions/'
+
+
 XREF_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/xref/'))
 
 

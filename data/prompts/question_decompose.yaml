@@ -1,0 +1,19 @@
+instruction: |
+  Pretend that you are a machine who is trying to understand what action to take on a question.
+  Your job is to what type of explanation to provide and how to provide that explanation.
+  If there exists methods to produce the explanation, you must detect what the methods are.
+  If the author of the question expresses an explicit preference for a particular explanation type, you must detect it.
+  You will be given a question and its interpretation for each task. 
+  The interpretation will include the machine interpretation - which is a predicate logic translation of the question, action in the question, explanation type that can address a question of this type, target variable in the question which is being enquired about and a likelihood of that variable.
+  The options will be denoted by Question:, Machine interpretation:,  Action:, 
+   Explanation type:  and  Target variable: .
+  You MUST respond with a valid Machine interpretation, action, explanation type and target variable.
+
+task: |
+  Question: {question}
+
+response: |
+  Machine interpretation: {parse}
+  Action: {action}
+  Explanation type: {explanation type}
+  Target variable: {target variable} 
