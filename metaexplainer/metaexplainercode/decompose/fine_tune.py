@@ -99,7 +99,7 @@ class LLM_ExplanationInterpretor():
 
 	def set_datasets(self, domain_name):
 		domain_dir_path = codeconstants.DECOMPOSE_QUESTIONS_FOLDER + '/' + domain_name
-		dataset_file_path = domain_dir_path + domain_name + '_dataset.jsonl' 
+		dataset_file_path = domain_dir_path + '/' + domain_name + '_dataset.jsonl' 
 
 		try:
 			my_abs_path = Path(dataset_file_path).resolve(strict=True)
