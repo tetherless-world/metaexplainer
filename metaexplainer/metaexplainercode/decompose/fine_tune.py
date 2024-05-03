@@ -11,7 +11,8 @@ import os
 import os.path
 from pathlib import Path
 
-from peft import LoraConfig
+from peft import LoraConfig, PeftModel, PeftConfig
+
 from trl import SFTTrainer
 
 from datasets import load_dataset
@@ -36,6 +37,7 @@ class LLM_ExplanationInterpretor():
 		self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
 		#defining variables that get set through setter functions later on
 		self.base_model = None
+		self.refined_model = None
 		self.train_dataset = None
 		self.test_dataset = None
 
@@ -182,18 +184,136 @@ class LLM_ExplanationInterpretor():
 		# Training
 		train_result = fine_tuning.train()
 
-		# Save Model
+		
+
+		#efficient way that doesn't work with pipeline framework
 		fine_tuning.model.save_pretrained(codeconstants.OUTPUT_FOLDER + '/llm_results/decompose_refined_model')
+
+		# Save Model - pipeline way
+		## change this to include the refined model name
+		#fine_tuning.save_model(codeconstants.OUTPUT_FOLDER + '/llm_results/' + self.refined_model_name + '_decompose_refined_model')
+		#fine_tuning.model.config.save_pretrained(codeconstants.OUTPUT_FOLDER + '/llm_results/' + self.refined_model_name + '_decompose_refined_model')
+
 		print('Saved the trained model ')
 
 
-	def inference(self, test_dataset):
-		pass
+	def get_base_model(self):
+		base_model = AutoModelForCausalLM.from_pretrained(
+				self.base_model_name,
+				torch_dtype=torch.float16,
+				device_map="auto",
+				#quantization_config=quant_config,
+			)
+		return base_model
+
+	def set_refined_model(self):
+		'''
+		Might be unnecessary
+		'''
+		refined_model = None
+		with torch.no_grad():
+			# Load the Peft configuration from the saved location
+			## change this to include the refined model name
+			peft_config = codeconstants.OUTPUT_FOLDER + '/llm_results/decompose_refined_model'
+
+			device_map = {
+				"base_model": self.device,
+			}
+
+
+			# Create the PeftModel instance
+			refined_model = PeftModel.from_pretrained(self.get_base_model(), peft_config,
+														adapter_name="sft", device_map=device_map)
+
+			refined_model.merge_adapter()
+
+			# refined_model = AutoModelForCausalLM.from_pretrained(gdrive_path + 'llama')
+
+			refined_model  = refined_model.to(self.device)
+
+			torch.cuda.empty_cache()
+			print(' Refined model ', self.refined_model_name, ' and base model ', self.base_model_name, ' merged.')
+		
+		self.refined_model = refined_model
+	
+	def get_refined_model(self):
+		return self.refined_model
+
+	def format_instruction_record(self, record, mode = 'test'):
+		#print(row)
+		prompt = '### System:\n'
+		prompt += record['instruction']
+		prompt += '\n\n'
+		prompt += '### User:\n'
+		#print(row)
+		prompt += record['input'].strip()
+		prompt += '\n\n'
+		prompt += '### Response:\n'
+		response = ''
+
+		if mode=='train':
+			response += record['output']
+
+		prompt += response
+
+		prompt += '\n\n'
+		#Could use this for explanation type later
+		# prompt += '### Response:\n'
+		# prompt += template['label'][label]
+		return prompt
+	
+	def inference(self, passed_dataset, mode='test'):
+		inputs = []
+		outputs = []
+		
+		with torch.no_grad():
+			for dataset_record in passed_dataset:
+				prompt = self.format_instruction_record(dataset_record)
+				inputs.append(prompt)
+
+			print('# of Prompts generated', len(inputs), ' and a sample is \n', inputs[0])
+			#based on https://discuss.huggingface.co/t/llama2-pad-token-for-batched-inference/48020
+			inputs = self.tokenizer(inputs, return_tensors="pt", padding=True).to(self.device)
+			#inputs = {k: v.to("cuda") for k, v in inputs.items()}
+			print(inputs['input_ids'].shape)
+
+			generate_ids = self.refined_model.generate(**inputs, max_length=500, do_sample=True, top_p=0.9)
+			outputs = self.tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)
+			outputs = [result_str.split('### Response:')[1].split('\n\n')[1] for result_str in outputs]
+
+			#Need to write a parsing for the top-1
+
+			#trying this approach - https://anirbansen2709.medium.com/finetuning-llms-using-lora-77fb02cbbc48
+			# self.refined_model = AutoModelForCausalLM.from_pretrained(codeconstants.OUTPUT_FOLDER + '/llm_results/' + self.refined_model_name + '_decompose_refined_model')
+			# pipe = pipeline('text-generation', model= self.refined_model, tokenizer=self.tokenizer, 
+			# trust_remote_code=True, 
+			# max_length = 300,
+			# return_full_text=False, device=self.device)
+
+			# for input in inputs:
+			# 	out_sample = pipe(input)
+			# 	print(out_sample)
+			# 	outputs.append(out_sample)
+			# 	break
+
+			
+			metaexplainer_utils.write_list(outputs, codeconstants.OUTPUT_FOLDER + '/llm_results/' + refined_model_name + '_' + mode + '_outputs.txt')
+
+			torch.cuda.empty_cache()
+
+		print('Inference ran on ', mode, 'dataset ')
+		return outputs
 
 	def run(self, mode):
+		'''
+		Caution: don't run train and test at same time
+		'''
 		if mode == 'train':
+			self.set_base_model()
 			self.train(self.train_dataset)
 		elif mode == 'test':
+			print('Running inference on test datatset')
+			self.set_refined_model()
 			self.inference(self.test_dataset)
 
 
@@ -211,9 +331,10 @@ if __name__== "__main__":
 	
 	#instantiating class 
 	llm_explanation_interpreter = LLM_ExplanationInterpretor(llama_tokenizer, base_model_name, refined_model_name)
-	llm_explanation_interpreter.set_base_model()
+	#llm_explanation_interpreter.set_base_model()
 	
 	llm_explanation_interpreter.set_datasets('Diabetes')
 
-	llm_explanation_interpreter.run('train')
+	#llm_explanation_interpreter.run('train')
+	llm_explanation_interpreter.run('test')
 
