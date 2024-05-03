@@ -7,6 +7,8 @@ from transformers import (
 	TrainingArguments,
 	pipeline
 )
+
+import re
 import os
 import os.path
 from pathlib import Path
@@ -279,10 +281,7 @@ class LLM_ExplanationInterpretor():
 
 			generate_ids = self.refined_model.generate(**inputs, max_length=500, do_sample=True, top_p=0.9)
 			outputs = self.tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)
-			outputs = [result_str.split('### Response:')[1].split('\n\n')[1] for result_str in outputs]
-
-			#Need to write a parsing for the top-1
-
+		
 			#trying this approach - https://anirbansen2709.medium.com/finetuning-llms-using-lora-77fb02cbbc48
 			# self.refined_model = AutoModelForCausalLM.from_pretrained(codeconstants.OUTPUT_FOLDER + '/llm_results/' + self.refined_model_name + '_decompose_refined_model')
 			# pipe = pipeline('text-generation', model= self.refined_model, tokenizer=self.tokenizer, 
@@ -297,12 +296,47 @@ class LLM_ExplanationInterpretor():
 			# 	break
 
 			
-			metaexplainer_utils.write_list(outputs, codeconstants.OUTPUT_FOLDER + '/llm_results/' + refined_model_name + '_' + mode + '_outputs.txt')
+			metaexplainer_utils.write_list(outputs, codeconstants.OUTPUT_FOLDER + '/llm_results/' + self.refined_model_name + '_' + mode + '_outputs.txt')
 
 			torch.cuda.empty_cache()
 
 		print('Inference ran on ', mode, 'dataset ')
 		return outputs
+
+	def post_process_results(self, mode='test'):
+		'''
+		Need to remove instruction from the responses and retain the top-1 alone
+		'''
+		result_file_name = codeconstants.OUTPUT_FOLDER + '/llm_results/' + self.refined_model_name + '_' + mode + '_outputs.txt'
+		keys = ['Question', 'Explanation type', 'Machine interpretation', 'Action', 'Target variable']
+		
+
+		read_content = metaexplainer_utils.read_list_from_file(result_file_name)
+
+		regex = re.compile(r'''
+			[\S]+:                # a key (any word followed by a colon)
+			(?:
+			\s                    # then a space in between
+				(?!\S+:)\S+       # then a value (any word not followed by a colon)
+			)+                    # match multiple values if present
+			''', re.VERBOSE)
+
+
+		for result_str in read_content:
+			#only get response onward 
+			response = result_str.split('### Response:')[1]
+			#print(response)
+			val_keys = {field_key: '' for field_key in keys}
+
+			for field in keys:
+				extracted_val = re.split('(' + field + '):', response)[1:3]
+
+				if len(extracted_val) > 1:
+					val_keys[field] = extracted_val[1].split('\\n')[0].strip()
+
+			print(val_keys)
+			#break
+
 
 	def run(self, mode):
 		'''
@@ -333,8 +367,11 @@ if __name__== "__main__":
 	llm_explanation_interpreter = LLM_ExplanationInterpretor(llama_tokenizer, base_model_name, refined_model_name)
 	#llm_explanation_interpreter.set_base_model()
 	
-	llm_explanation_interpreter.set_datasets('Diabetes')
+	#llm_explanation_interpreter.set_datasets('Diabetes')
 
 	#llm_explanation_interpreter.run('train')
-	llm_explanation_interpreter.run('test')
+	#llm_explanation_interpreter.run('test')
+
+	#post-processing
+	llm_explanation_interpreter.post_process_results()
 
