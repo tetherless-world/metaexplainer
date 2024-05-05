@@ -313,7 +313,9 @@ class LLM_ExplanationInterpretor():
 			parts = extracted_val[1].split('\\n')
 			for str_val in parts:
 				if str_val != '':
+					#find first non empty string and set that!
 					extract_str = str_val.strip()
+					break
 		
 		return extract_str
 
