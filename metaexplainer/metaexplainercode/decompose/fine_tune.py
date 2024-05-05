@@ -303,6 +303,15 @@ class LLM_ExplanationInterpretor():
 		print('Inference ran on ', mode, 'dataset ')
 		return outputs
 
+	def extract_key_value_from_string(self, response_str, find_key):
+		extract_str = ''
+		extracted_val = re.split('(' + find_key + '):\n?', response_str)[1:3]
+
+		if len(extracted_val) > 1:
+				extract_str = extracted_val[1].split('\\n')[0].strip()
+		
+		return extract_str
+
 	def post_process_results(self, mode='test'):
 		'''
 		Need to remove instruction from the responses and retain the top-1 alone
@@ -324,18 +333,23 @@ class LLM_ExplanationInterpretor():
 
 		for result_str in read_content:
 			#only get response onward 
-			response = result_str.split('### Response:')[1]
+			split_at_response = result_str.split('### Response:')
+			rest_of_string = split_at_response[0]
+			response = split_at_response[1]
 			#print(response)
 			val_keys = {field_key: '' for field_key in keys}
 
 			for field in keys:
-				extracted_val = re.split('(' + field + '):', response)[1:3]
+				val_keys[field] = self.extract_key_value_from_string(response, field)
 
-				if len(extracted_val) > 1:
-					val_keys[field] = extracted_val[1].split('\\n')[0].strip()
+			if val_keys['Question'] == '':
+				#if question is empty - extract from the head string
+				val_keys['Question'] = self.extract_key_value_from_string(rest_of_string, 'Question')
 
+
+			#need to write this to a file
 			print(val_keys)
-			#break
+			#would need to add this to a list and do some post-processing on the input too - to make them comparable
 
 
 	def run(self, mode):
@@ -352,6 +366,7 @@ class LLM_ExplanationInterpretor():
 
 
 if __name__== "__main__":
+
 	# Model and tokenizer names
 	base_model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
 	refined_model_name = "llama-3-8b-charis-explanation" #You can give it your own name
