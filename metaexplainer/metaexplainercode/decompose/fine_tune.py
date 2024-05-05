@@ -322,6 +322,7 @@ class LLM_ExplanationInterpretor():
 	def post_process_results(self, mode='test'):
 		'''
 		Need to remove instruction from the responses and retain the top-1 alone
+		This would need to be called at the compute-F1
 		'''
 		result_file_name = codeconstants.OUTPUT_FOLDER + '/llm_results/' + self.refined_model_name + '_' + mode + '_outputs.txt'
 		keys = ['Question', 'Explanation type', 'Machine interpretation', 'Action', 'Target variable']
@@ -337,6 +338,7 @@ class LLM_ExplanationInterpretor():
 			)+                    # match multiple values if present
 			''', re.VERBOSE)
 
+		result_dict = []
 
 		for result_str in read_content:
 			#only get response onward 
@@ -356,10 +358,23 @@ class LLM_ExplanationInterpretor():
 				val_keys['Question'] = self.extract_key_value_from_string(str(rest_of_string), 'User')
 
 
-			#need to write this to a file
+			result_dict.append(val_keys)
 			print(val_keys)
-			#would need to add this to a list and do some post-processing on the input too - to make them comparable
+		
+		return result_dict
 
+	def compute_metrics(self, mode='test'):
+		'''
+		Get the results in a dictionary and then use the input to find outputs based on input
+		'''
+		results_mode = self.post_process_results(mode)
+		inputs = self.test_dataset
+
+		if mode == 'train':
+			inputs = self.train_dataset
+		
+		#return label level F1 and F1s for other output fields - Machine Interpretation, Action and Likelihood
+		return []
 
 	def run(self, mode):
 		'''
