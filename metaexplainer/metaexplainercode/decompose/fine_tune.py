@@ -305,10 +305,15 @@ class LLM_ExplanationInterpretor():
 
 	def extract_key_value_from_string(self, response_str, find_key):
 		extract_str = ''
+
 		extracted_val = re.split('(' + find_key + '):\n?', response_str)[1:3]
+		
 
 		if len(extracted_val) > 1:
-				extract_str = extracted_val[1].split('\\n')[0].strip()
+			parts = extracted_val[1].split('\\n')
+			for str_val in parts:
+				if str_val != '':
+					extract_str = str_val.strip()
 		
 		return extract_str
 
@@ -319,7 +324,7 @@ class LLM_ExplanationInterpretor():
 		result_file_name = codeconstants.OUTPUT_FOLDER + '/llm_results/' + self.refined_model_name + '_' + mode + '_outputs.txt'
 		keys = ['Question', 'Explanation type', 'Machine interpretation', 'Action', 'Target variable']
 		
-
+		#loads content in decoded form - while writing or returning it back need to use encode.
 		read_content = metaexplainer_utils.read_list_from_file(result_file_name)
 
 		regex = re.compile(r'''
@@ -337,14 +342,16 @@ class LLM_ExplanationInterpretor():
 			rest_of_string = split_at_response[0]
 			response = split_at_response[1]
 			#print(response)
+			#print(rest_of_string)
 			val_keys = {field_key: '' for field_key in keys}
 
 			for field in keys:
-				val_keys[field] = self.extract_key_value_from_string(response, field)
+				val_keys[field] = self.extract_key_value_from_string(response, field).encode('utf-8')
 
-			if val_keys['Question'] == '':
+			if val_keys['Question'] == b'':
+				#print('I enter for question')
 				#if question is empty - extract from the head string
-				val_keys['Question'] = self.extract_key_value_from_string(rest_of_string, 'Question')
+				val_keys['Question'] = self.extract_key_value_from_string(str(rest_of_string), 'User')
 
 
 			#need to write this to a file
