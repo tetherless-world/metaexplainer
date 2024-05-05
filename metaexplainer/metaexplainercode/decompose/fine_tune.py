@@ -438,6 +438,7 @@ class LLM_ExplanationInterpretor():
 			self.train(self.train_dataset)
 		elif mode == 'test':
 			print('Running inference on test datatset')
+			self.get_datasets('Diabetes')
 			self.set_refined_model()
 			self.inference(self.test_dataset)
 
@@ -461,6 +462,8 @@ if __name__== "__main__":
 
 	#llm_explanation_interpreter.run('train')
 	llm_explanation_interpreter.run('test')
+
+	#if the compute metrics is called outside of test / train - then call get_datasets
 
 	llm_explanation_interpreter.compute_metrics()
 
