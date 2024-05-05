@@ -100,10 +100,21 @@ class LLM_ExplanationInterpretor():
 
 		self.dump_jsonl(list_objects, output_file_path)
 
+	def get_datasets(self, domain_name):
+		domain_dir_path = codeconstants.DECOMPOSE_QUESTIONS_FOLDER + '/' + domain_name
+		dataset_file_path = domain_dir_path + '/' + domain_name + '_dataset.jsonl' 
+		train_dataset_path = domain_dir_path + '/' + domain_name + '_train_dataset.jsonl' 
+		test_dataset_path = domain_dir_path + '/' + domain_name + '_test_dataset.jsonl'
 
+		self.train_dataset = load_dataset('json', data_files= train_dataset_path)
+		self.test_dataset = load_dataset('json', data_files= test_dataset_path)
+		print('Split used for training loaded.')
+	
 	def set_datasets(self, domain_name):
 		domain_dir_path = codeconstants.DECOMPOSE_QUESTIONS_FOLDER + '/' + domain_name
 		dataset_file_path = domain_dir_path + '/' + domain_name + '_dataset.jsonl' 
+		train_dataset_path = domain_dir_path + '/' + domain_name + '_train_dataset.jsonl' 
+		test_dataset_path = domain_dir_path + '/' + domain_name + '_test_dataset.jsonl' 
 
 		try:
 			my_abs_path = Path(dataset_file_path).resolve(strict=True)
@@ -114,7 +125,10 @@ class LLM_ExplanationInterpretor():
 		splits = dataset['train'].train_test_split(test_size=0.2) #https://huggingface.co/docs/datasets/v1.8.0/package_reference/main_classes.html#datasets.Dataset.train_test_split
 		self.train_dataset = splits['train']
 		self.test_dataset = splits['test']
-		print('Datasets loaded ')
+		self.dump_jsonl(self.train_dataset, train_dataset_path)
+		self.dump_jsonl(self.test_dataset, test_dataset_path)
+		print('Dataset split generated and datasets loaded. Train: ', len(self.train_dataset),
+		'And test: ', len(self.test_dataset))
 		#return train_dataset, test_dataset
 	
 	def set_base_model(self):
@@ -149,7 +163,7 @@ class LLM_ExplanationInterpretor():
 		# Training Params
 		train_params = TrainingArguments(
 			output_dir= codeconstants.OUTPUT_FOLDER + "/llm_results/decompose_results_modified",
-			num_train_epochs=5,
+			num_train_epochs=10,
 			per_device_train_batch_size=4,
 			gradient_accumulation_steps=1,
 			optim="paged_adamw_32bit",
@@ -359,21 +373,59 @@ class LLM_ExplanationInterpretor():
 
 
 			result_dict.append(val_keys)
-			print(val_keys)
+			#print(val_keys)
 		
-		return result_dict
+		result_dictionary = {}
 
+		for record in result_dict:
+			question = record['Question']
+			result_dictionary[question] = {}
+
+			del record['Question']
+			
+			result_dictionary[question] = record
+		
+		return result_dictionary
+
+	
+	def post_process_input(self, mode='test'):
+		'''
+		Return a dicitonary version of the input to easily compare against prediction output
+		{<question>}:{'Machine interpretation':<>, 'Action':<>, 'Explanation type':<>, 'Prediction': <>}
+		'''
+		input_dict = {}
+
+		dataset_iter = self.test_dataset
+
+		if mode == 'train':
+			dataset_iter = self.train_dataset
+
+		for record in dataset_iter:
+			input_dict[record['input'].strip()] = {output.split(':')[0]: output.split(':')[1].strip() for output in record['output'].split('\n')}
+
+		return input_dict
+	
 	def compute_metrics(self, mode='test'):
 		'''
 		Get the results in a dictionary and then use the input to find outputs based on input
 		'''
-		results_mode = self.post_process_results(mode)
-		inputs = self.test_dataset
+		#Call get dataset if files exist
+		results = self.post_process_results(mode)
+		inputs = self.post_process_input(mode)
+		print('Length of results ', len(results.keys()))
 
-		if mode == 'train':
-			inputs = self.train_dataset
+		#print(inputs.keys())
+		not_found = []
+		for result_question in results.keys():
+			#trying to find non matches 
+			if type(result_question) != str:
+				result_question = result_question.decode('utf-8')
+
+			if not result_question in inputs.keys():
+				not_found.append(result_question)
 		
 		#return label level F1 and F1s for other output fields - Machine Interpretation, Action and Likelihood
+		#print(not_found)
 		return []
 
 	def run(self, mode):
@@ -382,6 +434,7 @@ class LLM_ExplanationInterpretor():
 		'''
 		if mode == 'train':
 			self.set_base_model()
+			self.set_datasets('Diabetes')
 			self.train(self.train_dataset)
 		elif mode == 'test':
 			print('Running inference on test datatset')
@@ -404,13 +457,10 @@ if __name__== "__main__":
 	
 	#instantiating class 
 	llm_explanation_interpreter = LLM_ExplanationInterpretor(llama_tokenizer, base_model_name, refined_model_name)
-	#llm_explanation_interpreter.set_base_model()
 	
-	#llm_explanation_interpreter.set_datasets('Diabetes')
 
 	#llm_explanation_interpreter.run('train')
-	#llm_explanation_interpreter.run('test')
+	llm_explanation_interpreter.run('test')
 
-	#post-processing
-	llm_explanation_interpreter.post_process_results()
+	llm_explanation_interpreter.compute_metrics()
 
