@@ -163,7 +163,7 @@ class LLM_ExplanationInterpretor():
 		# Training Params
 		train_params = TrainingArguments(
 			output_dir= codeconstants.OUTPUT_FOLDER + "/llm_results/decompose_results_modified",
-			num_train_epochs=10,
+			num_train_epochs=12,
 			per_device_train_batch_size=4,
 			gradient_accumulation_steps=1,
 			optim="paged_adamw_32bit",
@@ -283,7 +283,8 @@ class LLM_ExplanationInterpretor():
 		outputs = []
 		
 		with torch.no_grad():
-			for dataset_record in passed_dataset:
+			for dataset_record in passed_dataset['train']:
+				#print('Dataset record ', dataset_record)
 				prompt = self.format_instruction_record(dataset_record)
 				inputs.append(prompt)
 
@@ -396,6 +397,8 @@ class LLM_ExplanationInterpretor():
 		input_dict = {}
 
 		dataset_iter = self.test_dataset
+		#neeed to fix the output loading 
+		print(dataset_iter['train'])
 
 		if mode == 'train':
 			dataset_iter = self.train_dataset
@@ -460,10 +463,13 @@ if __name__== "__main__":
 	llm_explanation_interpreter = LLM_ExplanationInterpretor(llama_tokenizer, base_model_name, refined_model_name)
 	
 
-	#llm_explanation_interpreter.run('train')
-	llm_explanation_interpreter.run('test')
+	llm_explanation_interpreter.run('train')
+	#llm_explanation_interpreter.run('test')
 
 	#if the compute metrics is called outside of test / train - then call get_datasets
+ 
+	# if llm_explanation_interpreter.test_dataset == None or llm_explanation_interpreter.train_dataset == None:
+	# 	llm_explanation_interpreter.get_datasets('Diabetes')
 
-	llm_explanation_interpreter.compute_metrics()
+	# llm_explanation_interpreter.compute_metrics()
 
