@@ -398,12 +398,13 @@ class LLM_ExplanationInterpretor():
 
 		dataset_iter = self.test_dataset
 		#neeed to fix the output loading 
-		print(dataset_iter['train'])
+		#print(dataset_iter['train'])
 
 		if mode == 'train':
 			dataset_iter = self.train_dataset
 
-		for record in dataset_iter:
+		for record in dataset_iter['train']:
+			#print(record)
 			input_dict[record['input'].strip()] = {output.split(':')[0]: output.split(':')[1].strip() for output in record['output'].split('\n')}
 
 		return input_dict
@@ -428,7 +429,7 @@ class LLM_ExplanationInterpretor():
 				not_found.append(result_question)
 		
 		#return label level F1 and F1s for other output fields - Machine Interpretation, Action and Likelihood
-		#print(not_found)
+		print(not_found)
 		return []
 
 	def run(self, mode):
@@ -463,13 +464,13 @@ if __name__== "__main__":
 	llm_explanation_interpreter = LLM_ExplanationInterpretor(llama_tokenizer, base_model_name, refined_model_name)
 	
 
-	llm_explanation_interpreter.run('train')
+	#llm_explanation_interpreter.run('train')
 	#llm_explanation_interpreter.run('test')
 
 	#if the compute metrics is called outside of test / train - then call get_datasets
  
-	# if llm_explanation_interpreter.test_dataset == None or llm_explanation_interpreter.train_dataset == None:
-	# 	llm_explanation_interpreter.get_datasets('Diabetes')
+	if llm_explanation_interpreter.test_dataset == None or llm_explanation_interpreter.train_dataset == None:
+		llm_explanation_interpreter.get_datasets('Diabetes')
 
-	# llm_explanation_interpreter.compute_metrics()
+	llm_explanation_interpreter.compute_metrics()
 
