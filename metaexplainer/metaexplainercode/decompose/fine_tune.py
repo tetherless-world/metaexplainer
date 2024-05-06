@@ -8,7 +8,7 @@ from transformers import (
 	pipeline
 )
 
-from sklearn.metrics import confusion_matrix
+
 from sklearn.metrics import classification_report
 
 import re
@@ -409,7 +409,7 @@ class LLM_ExplanationInterpretor():
 
 		return input_dict
 	
-	def compute_metrics(self, mode='test'):
+	def compute_metrics(self, domain_name, mode='test'):
 		'''
 		Get the results in a dictionary and then use the input to find outputs based on input
 		'''
@@ -447,11 +447,14 @@ class LLM_ExplanationInterpretor():
 		print('Labels for explanation types are ', unique_explanation_types)
 		#print('Results ', list(found_questions_results['Explanation type']))
 		#print('References ', list(found_questions_references['Explanation type']))
-		# cm_explanation_types = confusion_matrix(list(found_questions_results['Explanation type'].astype(str)), 
-		# 								  list(found_questions_references['Explanation type']), labels=unique_explanation_types)
+		metaexplainer_utils.generate_confusion_matrix_and_visualize(list(found_questions_results['Explanation type'].astype(str)),
+															   list(reference_explanation_types), 
+															   unique_explanation_types, 
+															   'llm_results/' + refined_model_name + '_' + domain_name + '_explanation_type_accuracy.png')
+
 		cm_explanation_types = classification_report(list(found_questions_results['Explanation type'].astype(str)), 
-										  list(found_questions_references['Explanation type']), labels=unique_explanation_types)
-		print('Confusion matrix for explanation types is ', cm_explanation_types)
+										  list(reference_explanation_types), labels=unique_explanation_types)
+		print('Confusion matrix for explanation types is \n', cm_explanation_types)
 
 		#return label level F1 and F1s for other output fields - Machine Interpretation, Action and Likelihood
 		print('Non-matches between result and input', not_found, '\n These will be skipped.')
@@ -496,7 +499,8 @@ if __name__== "__main__":
 	#if the compute metrics is called outside of test / train - then call get_datasets
  
 	if llm_explanation_interpreter.test_dataset == None or llm_explanation_interpreter.train_dataset == None:
+		#maybe the train doesn't have to be domain-specific
 		llm_explanation_interpreter.get_datasets('Diabetes')
 
-	llm_explanation_interpreter.compute_metrics()
+	llm_explanation_interpreter.compute_metrics('Diabetes')
 
