@@ -8,6 +8,7 @@ from transformers import (
 	pipeline
 )
 
+from sklearn.metrics import confusion_matrix
 import re
 import os
 import os.path
@@ -340,7 +341,7 @@ class LLM_ExplanationInterpretor():
 		This would need to be called at the compute-F1
 		'''
 		result_file_name = codeconstants.OUTPUT_FOLDER + '/llm_results/' + self.refined_model_name + '_' + mode + '_outputs.txt'
-		keys = ['Question', 'Explanation type', 'Machine interpretation', 'Action', 'Target variable']
+		keys = ['Explanation type', 'Machine interpretation', 'Action', 'Target variable']
 		
 		#loads content in decoded form - while writing or returning it back need to use encode.
 		read_content = metaexplainer_utils.read_list_from_file(result_file_name)
@@ -367,12 +368,9 @@ class LLM_ExplanationInterpretor():
 			for field in keys:
 				val_keys[field] = self.extract_key_value_from_string(response, field).encode('utf-8')
 
-			if val_keys['Question'] == b'':
-				#print('I enter for question')
-				#if question is empty - extract from the head string
-				val_keys['Question'] = self.extract_key_value_from_string(str(rest_of_string), 'User')
-
-
+			
+			val_keys['Question'] = self.extract_key_value_from_string(str(rest_of_string), 'User')
+			
 			result_dict.append(val_keys)
 			#print(val_keys)
 		
@@ -418,8 +416,14 @@ class LLM_ExplanationInterpretor():
 		inputs = self.post_process_input(mode)
 		print('Length of results ', len(results.keys()))
 
-		#print(inputs.keys())
+		
+
+		#Defining hash key retrievers
 		not_found = []
+		found_questions_results = []
+		found_questions_references = []
+		question_comparisons = list(results.keys())
+
 		for result_question in results.keys():
 			#trying to find non matches 
 			if type(result_question) != str:
@@ -427,9 +431,25 @@ class LLM_ExplanationInterpretor():
 
 			if not result_question in inputs.keys():
 				not_found.append(result_question)
+			else:
+				found_questions_results.append(results[result_question])
+				found_questions_references.append(inputs[result_question])
+
+		#converting the results and references to pandas since it is easier to load
+		found_questions_results = pd.DataFrame(found_questions_results)
+		found_questions_references = pd.DataFrame(found_questions_references)
 		
+		unique_explanation_types = list((pd.read_csv(codeconstants.OUTPUT_FOLDER + '/prototypical_questions_explanations_eo.csv')['explanation']).unique())
+		print('Labels for explanation types are ', unique_explanation_types)
+		#print('Results ', list(found_questions_results['Explanation type']))
+		#print('References ', list(found_questions_references['Explanation type']))
+		cm_explanation_types = confusion_matrix(list(found_questions_results['Explanation type'].astype(str)), 
+										  list(found_questions_references['Explanation type']), labels=unique_explanation_types)
+		print('Confusion matrix for explanation types is ', cm_explanation_types)
+
 		#return label level F1 and F1s for other output fields - Machine Interpretation, Action and Likelihood
-		print(not_found)
+		print('Non-matches between result and input', not_found, '\n These will be skipped.')
+
 		return []
 
 	def run(self, mode):
