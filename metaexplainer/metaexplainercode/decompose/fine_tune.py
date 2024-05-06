@@ -9,6 +9,8 @@ from transformers import (
 )
 
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+
 import re
 import os
 import os.path
@@ -439,11 +441,15 @@ class LLM_ExplanationInterpretor():
 		found_questions_results = pd.DataFrame(found_questions_results)
 		found_questions_references = pd.DataFrame(found_questions_references)
 		
-		unique_explanation_types = list((pd.read_csv(codeconstants.OUTPUT_FOLDER + '/prototypical_questions_explanations_eo.csv')['explanation']).unique())
+		print('Computing accuracy by explanation type')
+		reference_explanation_types = found_questions_references['Explanation type']
+		unique_explanation_types = list(reference_explanation_types.unique())
 		print('Labels for explanation types are ', unique_explanation_types)
 		#print('Results ', list(found_questions_results['Explanation type']))
 		#print('References ', list(found_questions_references['Explanation type']))
-		cm_explanation_types = confusion_matrix(list(found_questions_results['Explanation type'].astype(str)), 
+		# cm_explanation_types = confusion_matrix(list(found_questions_results['Explanation type'].astype(str)), 
+		# 								  list(found_questions_references['Explanation type']), labels=unique_explanation_types)
+		cm_explanation_types = classification_report(list(found_questions_results['Explanation type'].astype(str)), 
 										  list(found_questions_references['Explanation type']), labels=unique_explanation_types)
 		print('Confusion matrix for explanation types is ', cm_explanation_types)
 
