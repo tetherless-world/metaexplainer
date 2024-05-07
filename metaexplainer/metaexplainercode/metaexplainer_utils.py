@@ -3,6 +3,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import f1_score
+import Levenshtein
 
 
 #visualization
@@ -69,12 +70,14 @@ def compute_f1(reference_strs, result_strs):
 	
 
 	gold_toks = sum([sent.split(' ') for sent in reference_strs], [])
-	print('Sample ', gold_toks[:20])
+	#print('Sample ', gold_toks[:20])
 	pred_toks = sum([sent_res.split(' ') for sent_res in result_strs], [])
-	print('Sample pred ', pred_toks[:20])
+	#print('Sample pred ', pred_toks[:20])
 
 	common = collections.Counter(gold_toks) & collections.Counter(pred_toks)
 	num_same = sum(common.values())
+
+	exact_match = num_same / (len(gold_toks) + len(pred_toks))
 
 	if len(gold_toks) == 0 or len(pred_toks) == 0:
 		#if either is no answer, then F1 is 1 if they agree, 0 otherwise
@@ -84,8 +87,30 @@ def compute_f1(reference_strs, result_strs):
 	precision = 1.0 * num_same/len(pred_toks)
 	recall = 1.0*num_same/len(gold_toks)
 	f1 = (2*precision*recall)/(precision + recall)
-	return (f1, precision, recall)
+	return (f1, precision, recall, exact_match)
 
+def compute_f1_levenshtein(reference_strs, result_strs, threshold=0.6):
+	'''
+	Assume you have a list of strings and return F1s for each of those 
+	Inspired by: https://cohere.com/blog/evaluating-llm-outputs
+	'''
+	tp, fp, fn = 0, 0, 0
+
+	for label, pred in zip(reference_strs, result_strs):
+		if not (len(label) == 0 and len(pred) == 0):
+			similarity_score = 1 - Levenshtein.distance(label, pred) / max(len(label), len(pred))
+			if similarity_score >= threshold:
+				tp += 1
+			else:
+				fp += 1
+
+	fn = len(reference_strs) - tp
+
+	precision = tp / (tp + fp)
+	recall = tp / (tp + fn)
+	f1_score = 2 * (precision * recall) / (precision + recall)
+
+	return f1_score, precision, recall
 
 def compute_exact_match(reference_strs, result_strs):
 	'''

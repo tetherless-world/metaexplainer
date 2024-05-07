@@ -8,7 +8,7 @@ from transformers import (
 	pipeline
 )
 
-
+from jinja2 import Template
 from sklearn.metrics import classification_report
 
 import re
@@ -401,6 +401,17 @@ class LLM_ExplanationInterpretor():
 
 		return input_dict
 	
+	def define_result_f1_record(self, field, f1, precision, recall):
+		f1_template = '''
+			\n{{field}}, F1: {{ (f1*100) | round(2) }}%, Precision: {{ (precision*100) | round(2) }}% and Recall: {{ (recall*100) | round(2) }}%
+		'''
+		f1_template = Template(f1_template)
+		return f1_template.render({'field': field,
+							 'f1': f1,
+							 'precision': precision,
+							 'recall': recall
+							 })
+	
 	def compute_metrics(self, domain_name, mode='test'):
 		'''
 		Get the results in a dictionary and then use the input to find outputs based on input
@@ -437,8 +448,19 @@ class LLM_ExplanationInterpretor():
 		reference_explanation_types = found_questions_references['Explanation type']
 		unique_explanation_types = list(reference_explanation_types.unique())
 		print('Labels for explanation types are ', unique_explanation_types)
-		#print('Results ', list(found_questions_results['Explanation type']))
-		#print('References ', list(found_questions_references['Explanation type']))
+
+		#defining comparison lists
+		references_predicates = list(found_questions_references['Machine interpretation'])
+		results_predicates = list(found_questions_results['Machine interpretation'].astype(str))
+
+		references_actions = list(found_questions_references['Action'])
+		results_actions = list(found_questions_results['Action'].astype(str))
+
+		references_likelihoods = list(found_questions_references['Target variable'])
+		results_likelihoods = list(found_questions_results['Target variable'].astype(str))
+
+		
+		
 		metaexplainer_utils.generate_confusion_matrix_and_visualize(list(found_questions_results['Explanation type'].astype(str)),
 															   list(reference_explanation_types), 
 															   unique_explanation_types, 
@@ -447,34 +469,65 @@ class LLM_ExplanationInterpretor():
 		cm_explanation_types = classification_report(list(found_questions_results['Explanation type'].astype(str)), 
 										  list(reference_explanation_types), labels=unique_explanation_types)
 		
-		cm_confusion_explanation_str = 'Confusion matrix for explanation types is \n' + str(cm_explanation_types)
+		cm_confusion_explanation_str = '---Confusion matrix for explanation types--- \n' + str(cm_explanation_types)
 		print(cm_confusion_explanation_str)
 
-		(f1_pred, precision_pred, recall_pred) = metaexplainer_utils.compute_f1(list(found_questions_references['Machine interpretation']),
-															list(found_questions_results['Machine interpretation'].astype(str)))
+		print('---F1 on Exact Match---')
+		(f1_pred, precision_pred, recall_pred, exact_match_pred) = metaexplainer_utils.compute_f1(references_predicates, results_predicates)
 		
-		results_pred = '\nF1 on Machine interpretation ' + str(round(f1_pred*100, 2)) + '% Precision ' + str(round(precision_pred*100, 2)) + '% Recall ' + str(round(recall_pred*100,2)) + '%'
-		print(results_pred)
+		results_pred_str = self.define_result_f1_record('Machine interpretation', f1_pred, precision_pred, recall_pred)
+		print(results_pred_str)
 
-		(f1_action, precision_action, recall_action) = metaexplainer_utils.compute_f1(list(found_questions_references['Action']), list(found_questions_results['Action'].astype(str)))
+		(f1_action, precision_action, recall_action, exact_match_action) = metaexplainer_utils.compute_f1(references_actions, results_actions)
 		
-		results_action = '\nF1 on Action ' + str(round(f1_action*100, 2)) + '% Precision ' + str(round(precision_action*100, 2)) + '% Recall ' + str(round(recall_action*100,2))	+ '%'											
-		print(results_action)
+		results_action_str = self.define_result_f1_record('Action', f1_action, precision_action, recall_action)
+		print(results_action_str)
 
-		(f1_likelihood, precision_likelihood, recall_likelihood) = metaexplainer_utils.compute_f1(list(found_questions_references['Target variable']),
-															list(found_questions_results['Target variable'].astype(str)))
+		(f1_likelihood, precision_likelihood, recall_likelihood, exact_match_likelihood) = metaexplainer_utils.compute_f1(references_likelihoods, results_likelihoods)
 		
-		results_likelihood = '\nF1 on Likelihood ' + str(round(f1_likelihood*100, 2)) + '% Precision ' + str(round(precision_likelihood*100, 2)) + '% Recall ' + str(round(recall_likelihood*100,2))	+ '%'											
+		results_likelihood_str = self.define_result_f1_record('Likelihood', f1_likelihood, precision_likelihood, recall_likelihood)											
+		print(results_likelihood_str)
+		#F1s on Levenshtein
 
-		print(results_likelihood)
+		print('---F1 on Levenshtein distances---')
+		(f1_pred_lev, precision_pred_lev, recall_pred_lev) = metaexplainer_utils.compute_f1_levenshtein(references_predicates, results_predicates)
+		
+		results_lev_pred_str = self.define_result_f1_record('Machine interpretation', f1_pred_lev, precision_pred_lev, recall_pred_lev)
+		print(results_lev_pred_str)
+
+		(f1_action_lev, precision_action_lev, recall_action_lev) = metaexplainer_utils.compute_f1_levenshtein(references_actions, results_actions)
+		
+		results_lev_action_str = self.define_result_f1_record('Action', f1_action_lev, precision_action_lev, recall_action_lev)
+		print(results_lev_action_str)
+
+		(f1_likelihood_lev, precision_likelihood_lev, recall_likelihood_lev) = metaexplainer_utils.compute_f1_levenshtein(references_likelihoods, results_likelihoods)
+		
+		results_lev_likelihood_str = self.define_result_f1_record('Likelihood', f1_likelihood_lev, precision_likelihood_lev, recall_likelihood_lev)											
+		print(results_lev_likelihood_str)
+
+		print('---Exact match ratios---')
+		results_exact_match_pred_str = '\nMachine interpretation, Exact match: ' + str(round(100*exact_match_pred, 2)) +'%'
+		print(results_exact_match_pred_str)
+
+		results_exact_match_action_str = '\nAction, Exact match: ' + str(round(100*exact_match_action, 2)) +'%'
+		print(results_exact_match_action_str)
+
+		results_exact_match_likelihood_str = '\nLikelihood, Exact match: ' + str(round(100*exact_match_likelihood, 2)) +'%'
+		print(results_exact_match_likelihood_str)
+		
 
 		error_str = '\nNon-matches between result and input ' + str(not_found) + '\nThese will be skipped.'
 		#return label level F1 and F1s for other output fields - Machine Interpretation, Action and Likelihood
 		print(error_str)
 
 		with open(codeconstants.OUTPUT_FOLDER + '/llm_results/' + str(self.refined_model_name) + '_' + str(domain_name) + '_results.txt', 'w') as f:
-			f.write(cm_confusion_explanation_str + '\nF1 scores on text fields: \n' 
-				+ results_pred + results_action + results_likelihood + '\n\nErrors: ' + error_str)
+			f.write(cm_confusion_explanation_str + '\nF1 Exact Match scores on text fields: \n' 
+				+ results_pred_str + results_action_str + results_likelihood_str + 
+				'\n---F1 Levenshtein scores on text fields---\n'
+				+ results_lev_pred_str + results_lev_action_str + results_lev_likelihood_str +
+				'\n---Exact match on text fields---\n'
+				+ results_exact_match_pred_str + results_exact_match_action_str + results_exact_match_likelihood_str + 
+				'\n\n---Errors---' + error_str)
 
 	def run(self, mode):
 		'''
