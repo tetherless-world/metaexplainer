@@ -1,0 +1,23 @@
+Confusion matrix for explanation types is 
+                            precision    recall  f1-score   support
+
+          Data Explanation       0.71      0.77      0.74        13
+    Case Based Explanation       0.33      0.83      0.48         6
+   Contrastive Explanation       0.50      0.67      0.57         3
+Counterfactual Explanation       1.00      1.00      1.00         5
+    Contextual Explanation       0.75      0.60      0.67         5
+     Rationale Explanation       0.73      1.00      0.84         8
+
+                 micro avg       0.62      0.82      0.71        40
+                 macro avg       0.67      0.81      0.72        40
+              weighted avg       0.68      0.82      0.73        40
+
+F1 scores on text fields: 
+
+F1 on Machine interpretation 44.18% Precision 64.81% Recall 33.51%
+F1 on Action 65.08% Precision 62.62% Recall 67.73%
+F1 on Likelihood 82.44% Precision 85.35% Recall 79.72%
+
+Errors: 
+Non-matches between result and input []
+These will be skipped.
