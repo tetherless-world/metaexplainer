@@ -348,14 +348,6 @@ class LLM_ExplanationInterpretor():
 		#loads content in decoded form - while writing or returning it back need to use encode.
 		read_content = metaexplainer_utils.read_list_from_file(result_file_name)
 
-		regex = re.compile(r'''
-			[\S]+:                # a key (any word followed by a colon)
-			(?:
-			\s                    # then a space in between
-				(?!\S+:)\S+       # then a value (any word not followed by a colon)
-			)+                    # match multiple values if present
-			''', re.VERBOSE)
-
 		result_dict = []
 
 		for result_str in read_content:
@@ -454,16 +446,35 @@ class LLM_ExplanationInterpretor():
 
 		cm_explanation_types = classification_report(list(found_questions_results['Explanation type'].astype(str)), 
 										  list(reference_explanation_types), labels=unique_explanation_types)
-		print('Confusion matrix for explanation types is \n', cm_explanation_types)
+		
+		cm_confusion_explanation_str = 'Confusion matrix for explanation types is \n' + str(cm_explanation_types)
+		print(cm_confusion_explanation_str)
 
 		(f1_pred, precision_pred, recall_pred) = metaexplainer_utils.compute_f1(list(found_questions_references['Machine interpretation']),
 															list(found_questions_results['Machine interpretation'].astype(str)))
-		print('F1 on  machine interpretation', f1_pred, 'Precision ', precision_pred, 'Recall ', recall_pred)
+		
+		results_pred = '\nF1 on Machine interpretation ' + str(round(f1_pred*100, 2)) + '% Precision ' + str(round(precision_pred*100, 2)) + '% Recall ' + str(round(recall_pred*100,2)) + '%'
+		print(results_pred)
 
+		(f1_action, precision_action, recall_action) = metaexplainer_utils.compute_f1(list(found_questions_references['Action']), list(found_questions_results['Action'].astype(str)))
+		
+		results_action = '\nF1 on Action ' + str(round(f1_action*100, 2)) + '% Precision ' + str(round(precision_action*100, 2)) + '% Recall ' + str(round(recall_action*100,2))	+ '%'											
+		print(results_action)
+
+		(f1_likelihood, precision_likelihood, recall_likelihood) = metaexplainer_utils.compute_f1(list(found_questions_references['Target variable']),
+															list(found_questions_results['Target variable'].astype(str)))
+		
+		results_likelihood = '\nF1 on Likelihood ' + str(round(f1_likelihood*100, 2)) + '% Precision ' + str(round(precision_likelihood*100, 2)) + '% Recall ' + str(round(recall_likelihood*100,2))	+ '%'											
+
+		print(results_likelihood)
+
+		error_str = '\nNon-matches between result and input ' + str(not_found) + '\nThese will be skipped.'
 		#return label level F1 and F1s for other output fields - Machine Interpretation, Action and Likelihood
-		print('Non-matches between result and input', not_found, '\n These will be skipped.')
+		print(error_str)
 
-		return []
+		with open(codeconstants.OUTPUT_FOLDER + '/llm_results/' + str(self.refined_model_name) + '_' + str(domain_name) + '_results.txt', 'w') as f:
+			f.write(cm_confusion_explanation_str + '\nF1 scores on text fields: \n' 
+				+ results_pred + results_action + results_likelihood + '\n\nErrors: ' + error_str)
 
 	def run(self, mode):
 		'''
