@@ -456,6 +456,10 @@ class LLM_ExplanationInterpretor():
 										  list(reference_explanation_types), labels=unique_explanation_types)
 		print('Confusion matrix for explanation types is \n', cm_explanation_types)
 
+		(f1_pred, precision_pred, recall_pred) = metaexplainer_utils.compute_f1(list(found_questions_references['Machine interpretation']),
+															list(found_questions_results['Machine interpretation'].astype(str)))
+		print('F1 on  machine interpretation', f1_pred, 'Precision ', precision_pred, 'Recall ', recall_pred)
+
 		#return label level F1 and F1s for other output fields - Machine Interpretation, Action and Likelihood
 		print('Non-matches between result and input', not_found, '\n These will be skipped.')
 
