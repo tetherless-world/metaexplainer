@@ -421,8 +421,6 @@ class LLM_ExplanationInterpretor():
 		inputs = self.post_process_input(mode)
 		print('Length of results ', len(results.keys()))
 
-		
-
 		#Defining hash key retrievers
 		not_found = []
 		found_questions_results = []
@@ -464,7 +462,7 @@ class LLM_ExplanationInterpretor():
 		metaexplainer_utils.generate_confusion_matrix_and_visualize(list(found_questions_results['Explanation type'].astype(str)),
 															   list(reference_explanation_types), 
 															   unique_explanation_types, 
-															   'llm_results/' + refined_model_name + '_' + domain_name + '_explanation_type_accuracy.png')
+															   'llm_results/' + refined_model_name + '_' + domain_name + '_' + mode + '_explanation_type_accuracy.png')
 
 		cm_explanation_types = classification_report(list(found_questions_results['Explanation type'].astype(str)), 
 										  list(reference_explanation_types), labels=unique_explanation_types)
@@ -520,7 +518,8 @@ class LLM_ExplanationInterpretor():
 		#return label level F1 and F1s for other output fields - Machine Interpretation, Action and Likelihood
 		print(error_str)
 
-		with open(codeconstants.OUTPUT_FOLDER + '/llm_results/' + str(self.refined_model_name) + '_' + str(domain_name) + '_results.txt', 'w') as f:
+		with open(codeconstants.OUTPUT_FOLDER + '/llm_results/' + str(self.refined_model_name) + '_' + str(domain_name) + '_' +
+			mode + '_results.txt', 'w') as f:
 			f.write(cm_confusion_explanation_str + '\nF1 Exact Match scores on text fields: \n' 
 				+ results_pred_str + results_action_str + results_likelihood_str + 
 				'\n---F1 Levenshtein scores on text fields---\n'
@@ -529,7 +528,7 @@ class LLM_ExplanationInterpretor():
 				+ results_exact_match_pred_str + results_exact_match_action_str + results_exact_match_likelihood_str + 
 				'\n\n---Errors---' + error_str)
 
-	def run(self, mode):
+	def run(self, mode, infer_mode='test'):
 		'''
 		Caution: don't run train and test at same time
 		'''
@@ -541,7 +540,12 @@ class LLM_ExplanationInterpretor():
 			print('Running inference on test datatset')
 			self.get_datasets('Diabetes')
 			self.set_refined_model()
-			self.inference(self.test_dataset)
+			if infer_mode == 'train':
+				self.inference(self.train_dataset, mode='train')
+			else:
+				self.inference(self.test_dataset)
+
+
 
 
 if __name__== "__main__":
@@ -562,7 +566,7 @@ if __name__== "__main__":
 	
 
 	#llm_explanation_interpreter.run('train')
-	#llm_explanation_interpreter.run('test')
+	llm_explanation_interpreter.run('test', infer_mode='train')
 
 	#if the compute metrics is called outside of test / train - then call get_datasets
  
@@ -570,5 +574,5 @@ if __name__== "__main__":
 		#maybe the train doesn't have to be domain-specific
 		llm_explanation_interpreter.get_datasets('Diabetes')
 
-	llm_explanation_interpreter.compute_metrics('Diabetes')
+	llm_explanation_interpreter.compute_metrics('Diabetes', mode='train')
 
