@@ -379,20 +379,26 @@ class LLM_ExplanationInterpretor():
 			#print(val_keys)
 		
 		result_dictionary = {}
-		print('Length of results before creating Question: rest dictionary', len(result_dict))
+
+		#print('Length of results before creating Question: rest dictionary', len(result_dict))
 		already_seen = []
+		duplicates = []
 
 		for record in result_dict:
 			question = record['Question']
+
 			if question in already_seen:
-				print('Duplicate question ', already_seen)
+				#print('Duplicate question ', question)
+				duplicates.append(question)
+
 			result_dictionary[question] = {}
 
 			del record['Question']
+
 			already_seen.append(question)
 			result_dictionary[question] = record
 		
-		print('Length of results ', len(result_dictionary))
+		print('Length of results ', len(result_dictionary), 'and duplicates removed ', len(duplicates))
 		return result_dictionary
 
 	
@@ -414,6 +420,7 @@ class LLM_ExplanationInterpretor():
 			#print(record)
 			input_dict[record['input'].strip()] = {output.split(':')[0]: output.split(':')[1].strip() for output in record['output'].split('\n')}
 
+		print(' Length of inputs ', len(input_dict))
 		return input_dict
 	
 	def define_result_f1_record(self, field, f1, precision, recall):
@@ -446,11 +453,13 @@ class LLM_ExplanationInterpretor():
 			if type(result_question) != str:
 				result_question = result_question.decode('utf-8')
 
-			if not result_question in inputs.keys():
+			edited_result_question = result_question.replace('\\', '')
+
+			if not edited_result_question  in inputs.keys():
 				not_found.append(result_question)
 			else:
 				found_questions_results.append(results[result_question])
-				found_questions_references.append(inputs[result_question])
+				found_questions_references.append(inputs[edited_result_question])
 
 		#converting the results and references to pandas since it is easier to load
 		found_questions_results = pd.DataFrame(found_questions_results)
@@ -591,5 +600,5 @@ if __name__== "__main__":
 		#maybe the train doesn't have to be domain-specific
 		llm_explanation_interpreter.get_datasets('Diabetes')
 
-	llm_explanation_interpreter.compute_metrics('Diabetes', mode='train')
+	llm_explanation_interpreter.compute_metrics('Diabetes', mode='test')
 
