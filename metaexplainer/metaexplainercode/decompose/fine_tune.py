@@ -41,7 +41,7 @@ class LLM_ExplanationInterpretor():
 		self.template = yaml.safe_load(open(codeconstants.PROMPTS_FOLDER + '/question_decompose.yaml'))
 		self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
 		#defining variables that get set through setter functions later on
-		self.batch_size = 30
+		self.batch_size = 15
 		self.base_model = None
 		self.refined_model = None
 		self.train_dataset = None
@@ -126,6 +126,7 @@ class LLM_ExplanationInterpretor():
 			self.process_jsonl_file(dataset_file_path, pd.read_csv(domain_dir_path + '/finetune_questions.csv'))
 		
 		dataset = load_dataset('json', data_files= dataset_file_path)
+		#if splits exist - don't regenerate them; unless forced
 		splits = dataset['train'].train_test_split(test_size=0.2) #https://huggingface.co/docs/datasets/v1.8.0/package_reference/main_classes.html#datasets.Dataset.train_test_split
 		self.train_dataset = splits['train']
 		self.test_dataset = splits['test']
@@ -166,7 +167,7 @@ class LLM_ExplanationInterpretor():
 
 		# Training Params
 		train_params = TrainingArguments(
-			output_dir= codeconstants.OUTPUT_FOLDER + "/llm_results/decompose_results_modified",
+			output_dir= codeconstants.OUTPUT_FOLDER + '/llm_results/' + self.refined_model_name + '_decompose_results_modified',
 			num_train_epochs=12,
 			per_device_train_batch_size= self.batch_size,
 			gradient_accumulation_steps=1,
@@ -207,7 +208,7 @@ class LLM_ExplanationInterpretor():
 		
 
 		#efficient way that doesn't work with pipeline framework
-		fine_tuning.model.save_pretrained(codeconstants.OUTPUT_FOLDER + '/llm_results/decompose_refined_model')
+		fine_tuning.model.save_pretrained(codeconstants.OUTPUT_FOLDER + '/llm_results/' + self.refined_model_name + '_decompose_refined_model')
 
 		# Save Model - pipeline way
 		## change this to include the refined model name
@@ -234,7 +235,7 @@ class LLM_ExplanationInterpretor():
 		with torch.no_grad():
 			# Load the Peft configuration from the saved location
 			## change this to include the refined model name
-			peft_config = codeconstants.OUTPUT_FOLDER + '/llm_results/decompose_refined_model'
+			peft_config = codeconstants.OUTPUT_FOLDER + '/llm_results/' + self.refined_model_name + '_decompose_refined_model'
 
 			device_map = {
 				"base_model": self.device,
@@ -557,6 +558,7 @@ class LLM_ExplanationInterpretor():
 		'''
 		if mode == 'train':
 			self.set_base_model()
+			#this shouldn't be called for each model, if there don't call this!
 			self.set_datasets('Diabetes')
 			self.train(self.train_dataset)
 		elif mode == 'test':
@@ -574,9 +576,14 @@ class LLM_ExplanationInterpretor():
 
 if __name__== "__main__":
 
-	# Model and tokenizer names
-	base_model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
-	refined_model_name = "llama-3-8b-charis-explanation" #You can give it your own name
+	# # Model and tokenizer names
+	# base_model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
+	# refined_model_name = "llama-3-8b-charis-explanation" #You can give it your own name
+
+	#Trying the LLama2
+
+	base_model_name = 'NousResearch/Nous-Hermes-Llama2-13b'
+	refined_model_name = "llama-2-13b-charis-explanation" #You can give it your own name
 
 	#defining variables necessary for instantiation
 	llama_tokenizer = AutoTokenizer.from_pretrained(base_model_name, trust_remote_code=True, use_auth_token=True)
@@ -589,16 +596,16 @@ if __name__== "__main__":
 	llm_explanation_interpreter = LLM_ExplanationInterpretor(llama_tokenizer, base_model_name, refined_model_name)
 	
 
-	#llm_explanation_interpreter.run('train')
+	llm_explanation_interpreter.run('train')
 	#llm_explanation_interpreter.run('test', infer_mode='train')
 	#to run inference on test
 	#llm_explanation_interpreter.run('test')
 
 	#if the compute metrics is called outside of test / train - then call get_datasets
  
-	if llm_explanation_interpreter.test_dataset == None or llm_explanation_interpreter.train_dataset == None:
-		#maybe the train doesn't have to be domain-specific
-		llm_explanation_interpreter.get_datasets('Diabetes')
+	# if llm_explanation_interpreter.test_dataset == None or llm_explanation_interpreter.train_dataset == None:
+	# 	#maybe the train doesn't have to be domain-specific
+	# 	llm_explanation_interpreter.get_datasets('Diabetes')
 
-	llm_explanation_interpreter.compute_metrics('Diabetes', mode='test')
+	# llm_explanation_interpreter.compute_metrics('Diabetes', mode='test')
 
