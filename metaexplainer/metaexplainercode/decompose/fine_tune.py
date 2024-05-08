@@ -41,6 +41,7 @@ class LLM_ExplanationInterpretor():
 		self.template = yaml.safe_load(open(codeconstants.PROMPTS_FOLDER + '/question_decompose.yaml'))
 		self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
 		#defining variables that get set through setter functions later on
+		self.batch_size = 30
 		self.base_model = None
 		self.refined_model = None
 		self.train_dataset = None
@@ -167,7 +168,7 @@ class LLM_ExplanationInterpretor():
 		train_params = TrainingArguments(
 			output_dir= codeconstants.OUTPUT_FOLDER + "/llm_results/decompose_results_modified",
 			num_train_epochs=12,
-			per_device_train_batch_size=4,
+			per_device_train_batch_size= self.batch_size,
 			gradient_accumulation_steps=1,
 			optim="paged_adamw_32bit",
 			save_steps=25,
@@ -292,12 +293,20 @@ class LLM_ExplanationInterpretor():
 				inputs.append(prompt)
 
 			print('# of Prompts generated', len(inputs), ' and a sample is \n', inputs[0])
-			#based on https://discuss.huggingface.co/t/llama2-pad-token-for-batched-inference/48020
-			inputs = self.tokenizer(inputs, return_tensors="pt", padding=True).to(self.device)
-			#inputs = {k: v.to("cuda") for k, v in inputs.items()}
-			print(inputs['input_ids'].shape)
 
-			generate_ids = self.refined_model.generate(**inputs, max_length=500, do_sample=True, top_p=0.9)
+			generate_ids = []
+
+			#pseudo-batching because otherwise it crashes during inference
+			#this batch thing might be need to be based on the dataset size, for now - leave as-is
+			for i in range(0, len(inputs), self.batch_size):
+				batch_inputs = inputs[i: i + self.batch_size]
+				print(' Handling batch ', str(i), 'to ', str(i + self.batch_size))
+				#based on https://discuss.huggingface.co/t/llama2-pad-token-for-batched-inference/48020
+				tok_inputs = self.tokenizer(batch_inputs, return_tensors="pt", padding=True).to(self.device)
+				generate_ids += self.refined_model.generate(**tok_inputs, max_length=500, do_sample=True, top_p=0.9)
+
+
+			print('Len of generate IDs ', len(generate_ids))
 			outputs = self.tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)
 		
 			#trying this approach - https://anirbansen2709.medium.com/finetuning-llms-using-lora-77fb02cbbc48
@@ -347,6 +356,7 @@ class LLM_ExplanationInterpretor():
 		
 		#loads content in decoded form - while writing or returning it back need to use encode.
 		read_content = metaexplainer_utils.read_list_from_file(result_file_name)
+		
 
 		result_dict = []
 
@@ -369,15 +379,20 @@ class LLM_ExplanationInterpretor():
 			#print(val_keys)
 		
 		result_dictionary = {}
+		print('Length of results before creating Question: rest dictionary', len(result_dict))
+		already_seen = []
 
 		for record in result_dict:
 			question = record['Question']
+			if question in already_seen:
+				print('Duplicate question ', already_seen)
 			result_dictionary[question] = {}
 
 			del record['Question']
-			
+			already_seen.append(question)
 			result_dictionary[question] = record
 		
+		print('Length of results ', len(result_dictionary))
 		return result_dictionary
 
 	
@@ -419,7 +434,6 @@ class LLM_ExplanationInterpretor():
 		#Call get dataset if files exist
 		results = self.post_process_results(mode)
 		inputs = self.post_process_input(mode)
-		print('Length of results ', len(results.keys()))
 
 		#Defining hash key retrievers
 		not_found = []
@@ -540,6 +554,7 @@ class LLM_ExplanationInterpretor():
 			print('Running inference on test datatset')
 			self.get_datasets('Diabetes')
 			self.set_refined_model()
+
 			if infer_mode == 'train':
 				self.inference(self.train_dataset, mode='train')
 			else:
@@ -566,7 +581,9 @@ if __name__== "__main__":
 	
 
 	#llm_explanation_interpreter.run('train')
-	llm_explanation_interpreter.run('test', infer_mode='train')
+	#llm_explanation_interpreter.run('test', infer_mode='train')
+	#to run inference on test
+	#llm_explanation_interpreter.run('test')
 
 	#if the compute metrics is called outside of test / train - then call get_datasets
  

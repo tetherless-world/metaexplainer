@@ -1,0 +1,45 @@
+---Confusion matrix for explanation types--- 
+                            precision    recall  f1-score   support
+
+     Rationale Explanation       0.59      0.88      0.71        25
+          Data Explanation       0.63      0.78      0.70        40
+    Case Based Explanation       0.36      0.64      0.46        25
+   Contrastive Explanation       0.70      0.89      0.78        18
+Counterfactual Explanation       0.60      0.92      0.73        13
+    Contextual Explanation       0.65      0.65      0.65        17
+
+                 micro avg       0.57      0.78      0.66       138
+                 macro avg       0.59      0.79      0.67       138
+              weighted avg       0.58      0.78      0.66       138
+
+F1 Exact Match scores on text fields: 
+
+			
+Machine interpretation, F1: 45.45%, Precision: 64.81% and Recall: 34.99%
+		
+			
+Action, F1: 72.19%, Precision: 69.43% and Recall: 75.17%
+		
+			
+Likelihood, F1: 80.11%, Precision: 83.52% and Recall: 76.96%
+		
+---F1 Levenshtein scores on text fields---
+
+			
+Machine interpretation, F1: 17.8%, Precision: 17.8% and Recall: 17.8%
+		
+			
+Action, F1: 28.49%, Precision: 30.54% and Recall: 26.7%
+		
+			
+Likelihood, F1: 77.49%, Precision: 77.49% and Recall: 77.49%
+		
+---Exact match on text fields---
+
+Machine interpretation, Exact match: 22.72%
+Action, Exact match: 36.09%
+Likelihood, Exact match: 40.05%
+
+---Errors---
+Non-matches between result and input ["Why use the patient\\'s sex as a key factor in predicting Diabetes instead of their Diabetes Pedigree Function?", "What role does BMI play in the ML model\\'s decision-making process for Diabetes prediction?"]
+These will be skipped.
