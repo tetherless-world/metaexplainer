@@ -130,8 +130,8 @@ class LLM_ExplanationInterpretor():
 		test_dataset_path = domain_dir_path + '/' + domain_name + '_test_dataset.jsonl' 
 
 		try:
-			train_dataset_path = Path(train_dataset_path).resolve(strict=True)
-			test_dataset_path = Path(test_dataset_path).resolve(strict=True)
+			train_dataset_path_check = Path(train_dataset_path).resolve(strict=True)
+			test_dataset_path_check = Path(test_dataset_path).resolve(strict=True)
 			self.train_dataset = load_dataset('json', data_files= train_dataset_path)
 			self.test_dataset = load_dataset('json', data_files= test_dataset_path)
 			print('Dataset split found and datasets loaded. Train: ', len(self.train_dataset), 'And test: ', len(self.test_dataset))
@@ -166,7 +166,7 @@ class LLM_ExplanationInterpretor():
 			self.base_model_name,
 			quantization_config=quant_config,
 			#device_map="{"": 0}",
-			device_map = "auto"
+			#device_map = "auto"
 		)
 		self.base_model.config.use_cache = True
 		self.base_model.config.pretraining_tp = 1
@@ -203,10 +203,15 @@ class LLM_ExplanationInterpretor():
 			report_to="tensorboard"
 		)
 
+		train_source = self.train_dataset
+
+		if 'train' in self.train_dataset.keys():
+			train_source = self.train_dataset['train']
+
 		# Trainer
 		fine_tuning = SFTTrainer(
 			model=self.base_model,
-			train_dataset = train_dataset,
+			train_dataset = train_source,
 			dataset_text_field="text",
 			#eval_dataset = test_dataset,
 			peft_config=peft_parameters,
@@ -512,12 +517,14 @@ class LLM_ExplanationInterpretor():
 
 		
 		
-		metaexplainer_utils.generate_confusion_matrix_and_visualize(list(results_explanation_types),
-															   list(reference_explanation_types), 
+		metaexplainer_utils.generate_confusion_matrix_and_visualize(list(reference_explanation_types),
+															  list(results_explanation_types), 
 															   unique_explanation_types, 
 															   'llm_results/' + refined_model_name + '_' + domain_name + '_' + mode + '_explanation_type_accuracy.png')
 
-		cm_explanation_types = classification_report(list(results_explanation_types),list(reference_explanation_types), labels=unique_explanation_types)
+		cm_explanation_types = classification_report(list(reference_explanation_types), 
+											   list(results_explanation_types), 
+											   labels=unique_explanation_types)
 		
 		cm_confusion_explanation_str = '---Confusion matrix for explanation types--- \n' + str(cm_explanation_types)
 		print(cm_confusion_explanation_str)
@@ -590,7 +597,7 @@ class LLM_ExplanationInterpretor():
 			self.set_datasets('Diabetes')
 			self.train(self.train_dataset)
 		elif mode == 'test':
-			print('Running inference on test datatset')
+			print('Running inference on, ',infer_mode,' datatset')
 			self.get_datasets('Diabetes')
 			self.set_refined_model()
 
@@ -605,18 +612,18 @@ class LLM_ExplanationInterpretor():
 if __name__== "__main__":
 
 	# # Model and tokenizer names
-	# base_model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
-	# refined_model_name = "llama-3-8b-charis-explanation" #You can give it your own name
+	base_model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
+	refined_model_name = "llama-3-8b-charis-explanation" #You can give it your own name
 
-	#Trying the LLama2
+	#LLama2
 
-	base_model_name = 'NousResearch/Nous-Hermes-Llama2-13b'
-	refined_model_name = "llama-2-13b-charis-explanation" #You can give it your own name
+	# base_model_name = 'NousResearch/Nous-Hermes-Llama2-13b'
+	# refined_model_name = "llama-2-13b-charis-explanation" #You can give it your own name
 
 	#defining variables necessary for instantiation
 	llama_tokenizer = AutoTokenizer.from_pretrained(base_model_name, trust_remote_code=True, use_auth_token=True)
 	llama_tokenizer.pad_token = llama_tokenizer.eos_token
-	llama_tokenizer.padding_side = "right"  # Fix for fp16
+	llama_tokenizer.padding_side = "left"  # Fix for fp16
 
 	print('Tokenizer setup ')
 	
@@ -627,7 +634,7 @@ if __name__== "__main__":
 	#llm_explanation_interpreter.run('train')
 	#llm_explanation_interpreter.run('test', infer_mode='train')
 	#to run inference on test
-	llm_explanation_interpreter.run('test')
+	#llm_explanation_interpreter.run('test')
 
 	#if the compute metrics is called outside of test / train - then call get_datasets
  
@@ -635,5 +642,5 @@ if __name__== "__main__":
 		#maybe the train doesn't have to be domain-specific
 		llm_explanation_interpreter.get_datasets('Diabetes')
 
-	llm_explanation_interpreter.compute_metrics('Diabetes', mode='test')
+	llm_explanation_interpreter.compute_metrics('Diabetes', mode='train')
 

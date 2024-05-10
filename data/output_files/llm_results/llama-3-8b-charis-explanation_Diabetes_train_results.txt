@@ -1,44 +1,44 @@
 ---Confusion matrix for explanation types--- 
                             precision    recall  f1-score   support
 
-     Rationale Explanation       0.59      0.88      0.71        25
-          Data Explanation       0.62      0.78      0.69        40
-    Case Based Explanation       0.36      0.64      0.46        25
-   Contrastive Explanation       0.71      0.89      0.79        19
-Counterfactual Explanation       0.60      0.92      0.73        13
-    Contextual Explanation       0.65      0.65      0.65        17
+    Case Based Explanation       0.54      0.16      0.24        45
+     Rationale Explanation       0.86      0.51      0.64        35
+          Data Explanation       0.69      0.36      0.47        50
+Counterfactual Explanation       0.68      0.59      0.63        22
+   Contrastive Explanation       0.42      0.46      0.44        24
+    Contextual Explanation       0.62      0.29      0.40        17
 
-                 micro avg       0.56      0.78      0.66       139
-                 macro avg       0.59      0.79      0.67       139
-              weighted avg       0.58      0.78      0.66       139
+                 micro avg       0.64      0.37      0.47       193
+                 macro avg       0.64      0.40      0.47       193
+              weighted avg       0.65      0.37      0.46       193
 
 F1 Exact Match scores on text fields: 
 
 			
-Machine interpretation, F1: 45.31%, Precision: 64.68% and Recall: 34.87%
+Machine interpretation, F1: 43.92%, Precision: 60.76% and Recall: 34.39%
 		
 			
-Action, F1: 72.85%, Precision: 70.42% and Recall: 75.46%
+Action, F1: 60.85%, Precision: 67.14% and Recall: 55.63%
 		
 			
-Likelihood, F1: 80.03%, Precision: 83.22% and Recall: 77.07%
+Likelihood, F1: 62.44%, Precision: 76.02% and Recall: 52.98%
 		
 ---F1 Levenshtein scores on text fields---
 
 			
-Machine interpretation, F1: 17.62%, Precision: 17.62% and Recall: 17.62%
+Machine interpretation, F1: 11.4%, Precision: 11.4% and Recall: 11.4%
 		
 			
-Action, F1: 28.73%, Precision: 30.77% and Recall: 26.94%
+Action, F1: 8.38%, Precision: 9.09% and Recall: 7.77%
 		
 			
-Likelihood, F1: 77.2%, Precision: 77.2% and Recall: 77.2%
+Likelihood, F1: 50.78%, Precision: 50.78% and Recall: 50.78%
 		
 ---Exact match on text fields---
 
-Machine interpretation, Exact match: 22.66%
-Action, Exact match: 36.43%
-Likelihood, Exact match: 40.01%
+Machine interpretation, Exact match: 21.96%
+Action, Exact match: 30.42%
+Likelihood, Exact match: 31.22%
 
 ---Errors---
 Non-matches between result and input []
