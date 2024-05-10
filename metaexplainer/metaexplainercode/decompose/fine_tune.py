@@ -8,6 +8,8 @@ from transformers import (
 	pipeline
 )
 
+from accelerate import Accelerator
+
 from jinja2 import Template
 from sklearn.metrics import classification_report
 
@@ -39,7 +41,14 @@ class LLM_ExplanationInterpretor():
 		self.base_model_name = base_model_name
 		self.refined_model_name = refined_model_name
 		self.template = yaml.safe_load(open(codeconstants.PROMPTS_FOLDER + '/question_decompose.yaml'))
-		self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
+
+		accelerator = Accelerator() #when using cpu: cpu=True
+
+		device = accelerator.device
+		self.device = device
+
+		#self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 		#defining variables that get set through setter functions later on
 		self.batch_size = 15
 		self.base_model = None
@@ -121,20 +130,27 @@ class LLM_ExplanationInterpretor():
 		test_dataset_path = domain_dir_path + '/' + domain_name + '_test_dataset.jsonl' 
 
 		try:
-			my_abs_path = Path(dataset_file_path).resolve(strict=True)
+			train_dataset_path = Path(train_dataset_path).resolve(strict=True)
+			test_dataset_path = Path(test_dataset_path).resolve(strict=True)
+			self.train_dataset = load_dataset('json', data_files= train_dataset_path)
+			self.test_dataset = load_dataset('json', data_files= test_dataset_path)
+			print('Dataset split found and datasets loaded. Train: ', len(self.train_dataset), 'And test: ', len(self.test_dataset))
 		except FileNotFoundError:
-			self.process_jsonl_file(dataset_file_path, pd.read_csv(domain_dir_path + '/finetune_questions.csv'))
-		
-		dataset = load_dataset('json', data_files= dataset_file_path)
-		#if splits exist - don't regenerate them; unless forced
-		splits = dataset['train'].train_test_split(test_size=0.2) #https://huggingface.co/docs/datasets/v1.8.0/package_reference/main_classes.html#datasets.Dataset.train_test_split
-		self.train_dataset = splits['train']
-		self.test_dataset = splits['test']
-		self.dump_jsonl(self.train_dataset, train_dataset_path)
-		self.dump_jsonl(self.test_dataset, test_dataset_path)
-		print('Dataset split generated and datasets loaded. Train: ', len(self.train_dataset),
-		'And test: ', len(self.test_dataset))
-		#return train_dataset, test_dataset
+			try:
+				my_abs_path = Path(dataset_file_path).resolve(strict=True)
+			except FileNotFoundError:
+				self.process_jsonl_file(dataset_file_path, pd.read_csv(domain_dir_path + '/finetune_questions.csv'))
+			
+				dataset = load_dataset('json', data_files= dataset_file_path)
+
+				#https://huggingface.co/docs/datasets/v1.8.0/package_reference/main_classes.html#datasets.Dataset.train_test_split
+				splits = dataset['train'].train_test_split(test_size=0.2)
+				self.train_dataset = splits['train']
+				self.test_dataset = splits['test']
+				self.dump_jsonl(self.train_dataset, train_dataset_path)
+				self.dump_jsonl(self.test_dataset, test_dataset_path)
+				print('Dataset split generated and datasets loaded. Train: ', len(self.train_dataset),
+				'And test: ', len(self.test_dataset))
 	
 	def set_base_model(self):
 		# Quantization Config
@@ -149,7 +165,8 @@ class LLM_ExplanationInterpretor():
 		self.base_model = AutoModelForCausalLM.from_pretrained(
 			self.base_model_name,
 			quantization_config=quant_config,
-			device_map={"": 0}
+			#device_map="{"": 0}",
+			device_map = "auto"
 		)
 		self.base_model.config.use_cache = True
 		self.base_model.config.pretraining_tp = 1
@@ -222,7 +239,7 @@ class LLM_ExplanationInterpretor():
 		base_model = AutoModelForCausalLM.from_pretrained(
 				self.base_model_name,
 				torch_dtype=torch.float16,
-				device_map="auto",
+				#device_map="auto",
 				#quantization_config=quant_config,
 			)
 		return base_model
@@ -249,7 +266,8 @@ class LLM_ExplanationInterpretor():
 			refined_model.merge_adapter()
 
 			# refined_model = AutoModelForCausalLM.from_pretrained(gdrive_path + 'llama')
-
+			#use multiple GPUs if available
+			#refined_model = torch.nn.DataParallel(refined_model)
 			refined_model  = refined_model.to(self.device)
 
 			torch.cuda.empty_cache()
@@ -286,6 +304,11 @@ class LLM_ExplanationInterpretor():
 	def inference(self, passed_dataset, mode='test'):
 		inputs = []
 		outputs = []
+
+		
+		accelerator = Accelerator()
+		model = accelerator.prepare(self.refined_model)
+		is_main_process = accelerator.is_main_process
 		
 		with torch.no_grad():
 			for dataset_record in passed_dataset['train']:
@@ -296,15 +319,17 @@ class LLM_ExplanationInterpretor():
 			print('# of Prompts generated', len(inputs), ' and a sample is \n', inputs[0])
 
 			generate_ids = []
+			generate_batch_size = 4 # you can also say generate_batch_size = self.batch_size
 
 			#pseudo-batching because otherwise it crashes during inference
 			#this batch thing might be need to be based on the dataset size, for now - leave as-is
-			for i in range(0, len(inputs), self.batch_size):
-				batch_inputs = inputs[i: i + self.batch_size]
-				print(' Handling batch ', str(i), 'to ', str(i + self.batch_size))
+			for i in range(0, len(inputs), generate_batch_size):
+				batch_inputs = inputs[i: i + generate_batch_size]
+				print(' Handling batch ', str(i), 'to ', str(i + generate_batch_size))
 				#based on https://discuss.huggingface.co/t/llama2-pad-token-for-batched-inference/48020
 				tok_inputs = self.tokenizer(batch_inputs, return_tensors="pt", padding=True).to(self.device)
-				generate_ids += self.refined_model.generate(**tok_inputs, max_length=500, do_sample=True, top_p=0.9)
+				#print('Debug ', self.device)
+				generate_ids += model.generate(**tok_inputs, max_length=500, do_sample=True, top_p=0.9).to(self.device)
 
 
 			print('Len of generate IDs ', len(generate_ids))
@@ -468,8 +493,12 @@ class LLM_ExplanationInterpretor():
 		
 		print('Computing accuracy by explanation type')
 		reference_explanation_types = found_questions_references['Explanation type']
+		results_explanation_types = found_questions_results['Explanation type'].astype(str)
+
 		unique_explanation_types = list(reference_explanation_types.unique())
 		print('Labels for explanation types are ', unique_explanation_types)
+		unique_explanation_types_results = list(results_explanation_types.unique())
+		print('Unique explanation types - to see the variety of answers ', unique_explanation_types_results)
 
 		#defining comparison lists
 		references_predicates = list(found_questions_references['Machine interpretation'])
@@ -483,13 +512,12 @@ class LLM_ExplanationInterpretor():
 
 		
 		
-		metaexplainer_utils.generate_confusion_matrix_and_visualize(list(found_questions_results['Explanation type'].astype(str)),
+		metaexplainer_utils.generate_confusion_matrix_and_visualize(list(results_explanation_types),
 															   list(reference_explanation_types), 
 															   unique_explanation_types, 
 															   'llm_results/' + refined_model_name + '_' + domain_name + '_' + mode + '_explanation_type_accuracy.png')
 
-		cm_explanation_types = classification_report(list(found_questions_results['Explanation type'].astype(str)), 
-										  list(reference_explanation_types), labels=unique_explanation_types)
+		cm_explanation_types = classification_report(list(results_explanation_types),list(reference_explanation_types), labels=unique_explanation_types)
 		
 		cm_confusion_explanation_str = '---Confusion matrix for explanation types--- \n' + str(cm_explanation_types)
 		print(cm_confusion_explanation_str)
@@ -596,16 +624,16 @@ if __name__== "__main__":
 	llm_explanation_interpreter = LLM_ExplanationInterpretor(llama_tokenizer, base_model_name, refined_model_name)
 	
 
-	llm_explanation_interpreter.run('train')
+	#llm_explanation_interpreter.run('train')
 	#llm_explanation_interpreter.run('test', infer_mode='train')
 	#to run inference on test
-	#llm_explanation_interpreter.run('test')
+	llm_explanation_interpreter.run('test')
 
 	#if the compute metrics is called outside of test / train - then call get_datasets
  
-	# if llm_explanation_interpreter.test_dataset == None or llm_explanation_interpreter.train_dataset == None:
-	# 	#maybe the train doesn't have to be domain-specific
-	# 	llm_explanation_interpreter.get_datasets('Diabetes')
+	if llm_explanation_interpreter.test_dataset == None or llm_explanation_interpreter.train_dataset == None:
+		#maybe the train doesn't have to be domain-specific
+		llm_explanation_interpreter.get_datasets('Diabetes')
 
-	# llm_explanation_interpreter.compute_metrics('Diabetes', mode='test')
+	llm_explanation_interpreter.compute_metrics('Diabetes', mode='test')
 
