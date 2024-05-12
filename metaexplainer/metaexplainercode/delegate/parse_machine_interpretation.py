@@ -38,15 +38,30 @@ def parse_machine_interpretation(record):
     The explanation type already tells you what explainer to run
     '''
     machine_interpretation = record['Machine interpretation']
+    actions = re.findall(r'([^()]+)\(', machine_interpretation)
     parantheses_groups = re.findall(r'\(([^()]+)\)', machine_interpretation)
-    print(machine_interpretation)
-    print('All actionable groups ', parantheses_groups)
+
+    return {'Actions': actions, 'Groups': parantheses_groups}
+
+def get_explanation_type(record):
+    '''
+    Simple function to retrieve explanation type
+    '''
+    explan_type = record['Explanation type'].strip()
+    
+    return {'Explanation type': explan_type}
 
 if __name__=='__main__':
     interpretations_records = read_interpretations_from_file('Diabetes')
     sample_record = retrieve_random_record(interpretations_records)
     print('Sample record ', sample_record)
-    parse_machine_interpretation(sample_record)
+
+    parsed_mi = parse_machine_interpretation(sample_record)
+    explanation_type = get_explanation_type(sample_record)
+
+    parsed_mi.update(explanation_type)
+
+    print('\n\n Parsed \n', parsed_mi)
 
 
 
