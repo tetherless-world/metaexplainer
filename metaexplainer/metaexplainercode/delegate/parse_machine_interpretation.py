@@ -1,4 +1,6 @@
 import pandas as pd
+import random
+import re
 
 import sys
 sys.path.append('../')
@@ -10,20 +12,41 @@ from metaexplainercode import metaexplainer_utils
 Parse machine-interpretations and delegate to the specific explanation type - model classes and also to the particular functions
 '''
 
-def read_interpretations_from_file(domain_name):
+def read_interpretations_from_file(domain_name, mode='fine-tune'):
     '''
     The interpretations from GPT directly are stored in output_files/decompose/<domain_name>/finetune_questions.csv
     We will mainly need to parse the Explanation type and Machine interpretation columns
     '''
-    interpretations_file = pd.read_csv(codeconstants.DECOMPOSE_QUESTIONS_FOLDER + '/' + domain_name + '/finetune_questions.csv')
+    interpretations_records = pd.read_csv(codeconstants.DECOMPOSE_QUESTIONS_FOLDER + '/' + domain_name + '/finetune_questions.csv')
 
-    sample_record = dict(interpretations_file.iloc[0])
+    #the sample record will be removed once there is a way to either read from output file or fine-tuned data
+    return interpretations_records
 
-    print(sample_record)
+def retrieve_random_record(questions_dataset):
+    '''
+    Use a randint to retrieve record and parse it
+    '''
+    rand_int = random.randint(0, len(questions_dataset) - 1)
+    record = dict(questions_dataset.iloc[rand_int])
+    return record
 
+def parse_machine_interpretation(record):
+    '''
+    The goal is to return:
+    - Keywords
+    - Filter groups
+    The explanation type already tells you what explainer to run
+    '''
+    machine_interpretation = record['Machine interpretation']
+    parantheses_groups = re.findall(r'\(([^()]+)\)', machine_interpretation)
+    print(machine_interpretation)
+    print('All actionable groups ', parantheses_groups)
 
 if __name__=='__main__':
-    read_interpretations_from_file('Diabetes')
+    interpretations_records = read_interpretations_from_file('Diabetes')
+    sample_record = retrieve_random_record(interpretations_records)
+    print('Sample record ', sample_record)
+    parse_machine_interpretation(sample_record)
 
 
 
