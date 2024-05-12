@@ -41,6 +41,8 @@ def parse_machine_interpretation(record):
     actions = re.findall(r'([^()]+)\(', machine_interpretation)
     parantheses_groups = re.findall(r'\(([^()]+)\)', machine_interpretation)
 
+    print('Length of action and paranthesis groups are ', len(actions), len(parantheses_groups))
+
     return {'Actions': actions, 'Groups': parantheses_groups}
 
 def get_explanation_type(record):
@@ -53,15 +55,18 @@ def get_explanation_type(record):
 
 if __name__=='__main__':
     interpretations_records = read_interpretations_from_file('Diabetes')
-    sample_record = retrieve_random_record(interpretations_records)
-    print('Sample record ', sample_record)
 
-    parsed_mi = parse_machine_interpretation(sample_record)
-    explanation_type = get_explanation_type(sample_record)
+    for i in range(0, 10):
+        sample_record = retrieve_random_record(interpretations_records)
+        
+        print('Sample record ', sample_record)
 
-    parsed_mi.update(explanation_type)
+        parsed_mi = parse_machine_interpretation(sample_record)
+        explanation_type = get_explanation_type(sample_record)
 
-    print('\n\n Parsed \n', parsed_mi)
+        parsed_mi.update(explanation_type)
+
+        print('\n\n Parsed \n', parsed_mi, '------\n\n')
 
 
 
