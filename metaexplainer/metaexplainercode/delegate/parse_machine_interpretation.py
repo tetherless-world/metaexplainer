@@ -41,9 +41,20 @@ def parse_machine_interpretation(record):
     actions = re.findall(r'([^()]+)\(', machine_interpretation)
     parantheses_groups = re.findall(r'\(([^()]+)\)', machine_interpretation)
 
+    len_actions = len(actions)
+    len_groups = len(parantheses_groups)
+
+    if len_actions == len_groups + 1:
+        actions = actions[1:]
+        len_actions = len(actions)
+
+    combined = []
+    if len_actions == len_groups:
+        combined = [actions[i].strip() + ' <> ' + parantheses_groups[i].strip() for i in range(0, len_groups)]
+
     print('Length of action and paranthesis groups are ', len(actions), len(parantheses_groups))
 
-    return {'Actions': actions, 'Groups': parantheses_groups}
+    return {'Actions': actions, 'Groups': parantheses_groups, 'Combined': combined}
 
 def get_explanation_type(record):
     '''
@@ -59,14 +70,14 @@ if __name__=='__main__':
     for i in range(0, 10):
         sample_record = retrieve_random_record(interpretations_records)
         
-        print('Sample record ', sample_record)
+        #print('Sample record ', sample_record)
 
         parsed_mi = parse_machine_interpretation(sample_record)
         explanation_type = get_explanation_type(sample_record)
 
         parsed_mi.update(explanation_type)
 
-        print('\n\n Parsed \n', parsed_mi, '------\n\n')
+        print('\n\n Parsed \n', parsed_mi, '---------\n\n')
 
 
 
