@@ -84,6 +84,7 @@ def parse_machine_interpretation(record, column_names):
         len_actions = len(actions)
 
     combined = []
+
     if len_actions == len_groups:
         combined = [actions[i].strip() + ' <> ' + parantheses_groups[i].strip() for i in range(0, len_groups)]
 
@@ -93,24 +94,16 @@ def parse_machine_interpretation(record, column_names):
     If there are combined features in groups extract those and set filter vals -> (feature, range_pair)
     '''
 
-    alternate_view = {}
+    feature_groups_all = []
+    
 
-    for action_features in combined:
-        val_split = action_features.split(' <> ')
-
-        action = val_split[0]
-        feature_groups = extract_feature_value_pairs(val_split[1])
-
-        alternate_view[action] = feature_groups
-
-
-       
-
-
+    for feature_group in parantheses_groups:
+        feature_groups = extract_feature_value_pairs(feature_group.strip())
+        feature_groups_all.append(feature_groups)
 
     #print('Length of action and paranthesis groups are ', len(actions), len(parantheses_groups))
 
-    return {'Actions': actions, 'Groups': parantheses_groups, 'Combined': combined, 'Alternate': alternate_view}
+    return {'Actions': actions, 'Groups': parantheses_groups, 'Combined': combined, 'Alternate': feature_groups_all}
 
 def get_explanation_type(record):
     '''
@@ -135,6 +128,7 @@ if __name__=='__main__':
     output_txt = ''
 
     for i in range(0, len(interpretations_records)):
+        #This whole below part should be a function that takes as input an interpretation - which is {'Question': ,'Explanation type': , 'Machine interpretation': }
         #sample_record = retrieve_random_record(interpretations_records)
         sample_record = dict(interpretations_records.iloc[i])
         #print(sample_record)
@@ -145,10 +139,12 @@ if __name__=='__main__':
         explanation_type = get_explanation_type(sample_record)
 
         parsed_mi.update(explanation_type)
-        print(parsed_mi['Alternate'])
 
-        for parsed in parsed_mi['Combined']:
-            output_txt += 'Parsed: ' + parsed + '\n'
+        for action in parsed_mi['Actions']:
+            output_txt += 'Actio: ' + action + '\n'
+
+        for parsed_alts in parsed_mi['Alternate']:
+            output_txt += 'Intermediate: ' + str(parsed_alts) + '\n'
 
         output_txt += 'Explanation type: ' + str(parsed_mi['Explanation type']) + '\n---------\n'
     
