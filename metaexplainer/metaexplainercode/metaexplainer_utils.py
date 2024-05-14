@@ -59,7 +59,8 @@ def load_column_names(domain_name):
 	'''
 	Return list of column names for dataset
 	'''
-	domain_dataset = pd.read_csv(codeconstants.DATA_FOLDER + '/' + domain_name.lower() + '.csv')
+	file_name = '_'.join(domain_name.lower().split(' '))
+	domain_dataset = pd.read_csv(codeconstants.DATA_FOLDER + '/' + domain_name + '/' + file_name + '.csv')
 	return list(domain_dataset.columns)
 
 '''
