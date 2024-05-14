@@ -43,7 +43,7 @@ def parse_machine_interpretation(record):
     The explanation type already tells you what explainer to run
     '''
     machine_interpretation = str(record['Machine interpretation'])
-    actions = re.findall(r'([^()]+)\(', machine_interpretation)
+    actions = re.findall(r'([\w]+)\(', machine_interpretation)
     parantheses_groups = re.findall(r'\(([^()]+)\)', machine_interpretation)
 
     len_actions = len(actions)
@@ -93,7 +93,7 @@ if __name__=='__main__':
         parsed_mi.update(explanation_type)
 
         for parsed in parsed_mi['Combined']:
-            output_txt += 'Parsed:' + parsed + '\n'
+            output_txt += 'Parsed: ' + parsed + '\n'
 
         output_txt += 'Explanation type: ' + str(parsed_mi['Explanation type']) + '\n---------\n'
     
