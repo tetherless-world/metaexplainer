@@ -119,16 +119,28 @@ def extract_key_value_from_string(response_str, find_key):
 		extract_str = ''
 
 		extracted_val = re.split('(' + find_key + '):\n?', response_str)[1:3]
+		#print(type(extracted_val), extracted_val, len(extracted_val))
 		
-
 		if len(extracted_val) > 1:
-			parts = extracted_val[1].split('\\n')
+			part_to_split = extracted_val[1]
+
+			#fixer for getting more responses, because sometimes \n is encoded as \\n
+			splitter = '\\n'
+
+			if splitter not in part_to_split:
+				splitter = '\n'
+
+			parts = part_to_split.split(splitter)
+			
+			#print(parts)
+
 			for str_val in parts:
 				if str_val != '':
 					#find first non empty string and set that!
 					extract_str = str_val.strip()
 					break
 		
+		#print('Extracted', extract_str)
 		return extract_str
 
 def process_decompose_llm_result(model_name, domain_name, mode, output_mode='dictionary'):
@@ -162,6 +174,10 @@ def process_decompose_llm_result(model_name, domain_name, mode, output_mode='dic
 
 			
 			val_keys['Question'] = extract_key_value_from_string(str(rest_of_string), 'User')
+
+			if val_keys['Question'] == 'What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 45-year-old female with a BMI of 28 and a Diabetes Pedigree Function of 0.3?':
+				print(response)
+				print(val_keys)
 			
 			result_dict.append(val_keys)
 			#print(val_keys)
