@@ -19,6 +19,10 @@ def read_interpretations_from_file(domain_name, mode='fine-tune'):
     '''
     interpretations_records = pd.read_csv(codeconstants.DECOMPOSE_QUESTIONS_FOLDER + '/' + domain_name + '/finetune_questions.csv')
 
+    if mode == 'generated':
+        result_dictionary = pd.DataFrame(metaexplainer_utils.process_decompose_llm_result('llama-3-8b-charis-explanation', 'Diabetes', 'test'))
+
+
     #the sample record will be removed once there is a way to either read from output file or fine-tuned data
     return interpretations_records
 
@@ -65,7 +69,7 @@ def get_explanation_type(record):
     return {'Explanation type': explan_type}
 
 if __name__=='__main__':
-    interpretations_records = read_interpretations_from_file('Diabetes')
+    interpretations_records = read_interpretations_from_file('Diabetes', mode='generated')
 
     for i in range(0, 10):
         sample_record = retrieve_random_record(interpretations_records)

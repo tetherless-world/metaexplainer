@@ -361,76 +361,16 @@ class LLM_ExplanationInterpretor():
 		print('Inference ran on ', mode, 'dataset ')
 		return outputs
 
-	def extract_key_value_from_string(self, response_str, find_key):
-		extract_str = ''
-
-		extracted_val = re.split('(' + find_key + '):\n?', response_str)[1:3]
-		
-
-		if len(extracted_val) > 1:
-			parts = extracted_val[1].split('\\n')
-			for str_val in parts:
-				if str_val != '':
-					#find first non empty string and set that!
-					extract_str = str_val.strip()
-					break
-		
-		return extract_str
+	
 
 	def post_process_results(self, mode='test'):
 		'''
 		Need to remove instruction from the responses and retain the top-1 alone
 		This would need to be called at the compute-F1
 		'''
-		result_file_name = codeconstants.OUTPUT_FOLDER + '/llm_results/' + self.refined_model_name + '_' + mode + '_outputs.txt'
-		keys = ['Explanation type', 'Machine interpretation', 'Action', 'Target variable']
-		
-		#loads content in decoded form - while writing or returning it back need to use encode.
-		read_content = metaexplainer_utils.read_list_from_file(result_file_name)
-		
-
-		result_dict = []
-
-		for result_str in read_content:
-			#only get response onward 
-			split_at_response = result_str.split('### Response:')
-			rest_of_string = split_at_response[0]
-			response = split_at_response[1]
-			#print(response)
-			#print(rest_of_string)
-			val_keys = {field_key: '' for field_key in keys}
-
-			for field in keys:
-				val_keys[field] = self.extract_key_value_from_string(response, field).encode('utf-8')
-
-			
-			val_keys['Question'] = self.extract_key_value_from_string(str(rest_of_string), 'User')
-			
-			result_dict.append(val_keys)
-			#print(val_keys)
-		
-		result_dictionary = {}
-
-		#print('Length of results before creating Question: rest dictionary', len(result_dict))
-		already_seen = []
-		duplicates = []
-
-		for record in result_dict:
-			question = record['Question']
-
-			if question in already_seen:
-				#print('Duplicate question ', question)
-				duplicates.append(question)
-
-			result_dictionary[question] = {}
-
-			del record['Question']
-
-			already_seen.append(question)
-			result_dictionary[question] = record
-		
-		print('Length of results ', len(result_dictionary), 'and duplicates removed ', len(duplicates))
+		result_dictionary = metaexplainer_utils.process_decompose_llm_result(self.refined_model_name, 'Diabetes', mode)
 		return result_dictionary
+		
 
 	
 	def post_process_input(self, mode='test'):
@@ -612,13 +552,17 @@ class LLM_ExplanationInterpretor():
 if __name__== "__main__":
 
 	# # Model and tokenizer names
-	base_model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
-	refined_model_name = "llama-3-8b-charis-explanation" #You can give it your own name
+	# base_model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
+	# refined_model_name = "llama-3-8b-charis-explanation" #You can give it your own name
 
 	#LLama2
 
 	# base_model_name = 'NousResearch/Nous-Hermes-Llama2-13b'
 	# refined_model_name = "llama-2-13b-charis-explanation" #You can give it your own name
+
+	#IBM Granite
+	base_model_name = 'ibm-granite/granite-8b-code-instruct'
+	refined_model_name = "ibm-granite-8b-charis-explanation" #You can give it your own name
 
 	#defining variables necessary for instantiation
 	llama_tokenizer = AutoTokenizer.from_pretrained(base_model_name, trust_remote_code=True, use_auth_token=True)
@@ -631,16 +575,16 @@ if __name__== "__main__":
 	llm_explanation_interpreter = LLM_ExplanationInterpretor(llama_tokenizer, base_model_name, refined_model_name)
 	
 
-	#llm_explanation_interpreter.run('train')
+	llm_explanation_interpreter.run('train')
 	#llm_explanation_interpreter.run('test', infer_mode='train')
 	#to run inference on test
 	#llm_explanation_interpreter.run('test')
 
 	#if the compute metrics is called outside of test / train - then call get_datasets
  
-	if llm_explanation_interpreter.test_dataset == None or llm_explanation_interpreter.train_dataset == None:
-		#maybe the train doesn't have to be domain-specific
-		llm_explanation_interpreter.get_datasets('Diabetes')
+	# if llm_explanation_interpreter.test_dataset == None or llm_explanation_interpreter.train_dataset == None:
+	# 	#maybe the train doesn't have to be domain-specific
+	# 	llm_explanation_interpreter.get_datasets('Diabetes')
 
-	llm_explanation_interpreter.compute_metrics('Diabetes', mode='train')
+	# llm_explanation_interpreter.compute_metrics('Diabetes', mode='test')
 
