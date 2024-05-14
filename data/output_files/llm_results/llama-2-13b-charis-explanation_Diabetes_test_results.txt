@@ -2,26 +2,26 @@
                             precision    recall  f1-score   support
 
     Contextual Explanation       0.00      0.00      0.00         6
-          Data Explanation       0.62      0.38      0.48        13
-   Contrastive Explanation       1.00      0.20      0.33         5
+          Data Explanation       0.67      0.46      0.55        13
+   Contrastive Explanation       0.50      0.20      0.29         5
     Case Based Explanation       1.00      0.14      0.25        14
      Rationale Explanation       1.00      0.17      0.29        12
-Counterfactual Explanation       1.00      0.67      0.80         3
+Counterfactual Explanation       1.00      1.00      1.00         3
 
-                 micro avg       0.71      0.23      0.34        53
-                 macro avg       0.77      0.26      0.36        53
-              weighted avg       0.79      0.23      0.32        53
+                 micro avg       0.70      0.26      0.38        53
+                 macro avg       0.69      0.33      0.39        53
+              weighted avg       0.76      0.26      0.35        53
 
 F1 Exact Match scores on text fields: 
 
 			
-Machine interpretation, F1: 45.81%, Precision: 61.2% and Recall: 36.6%
+Machine interpretation, F1: 46.34%, Precision: 61.29% and Recall: 37.25%
 		
 			
-Action, F1: 54.19%, Precision: 61.5% and Recall: 48.43%
+Action, F1: 57.74%, Precision: 57.64% and Recall: 57.84%
 		
 			
-Likelihood, F1: 41.74%, Precision: 61.47% and Recall: 31.6%
+Likelihood, F1: 50.14%, Precision: 59.35% and Recall: 43.4%
 		
 ---F1 Levenshtein scores on text fields---
 
@@ -29,16 +29,16 @@ Likelihood, F1: 41.74%, Precision: 61.47% and Recall: 31.6%
 Machine interpretation, F1: 11.32%, Precision: 11.32% and Recall: 11.32%
 		
 			
-Action, F1: 6.45%, Precision: 7.5% and Recall: 5.66%
+Action, F1: 8.25%, Precision: 9.09% and Recall: 7.55%
 		
 			
-Likelihood, F1: 33.96%, Precision: 33.96% and Recall: 33.96%
+Likelihood, F1: 47.17%, Precision: 47.17% and Recall: 47.17%
 		
 ---Exact match on text fields---
 
-Machine interpretation, Exact match: 22.9%
-Action, Exact match: 27.1%
-Likelihood, Exact match: 20.87%
+Machine interpretation, Exact match: 23.17%
+Action, Exact match: 28.87%
+Likelihood, Exact match: 25.07%
 
 ---Errors---
 Non-matches between result and input []
