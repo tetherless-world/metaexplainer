@@ -1,6 +1,7 @@
 import pandas as pd
 import random
 import re
+import os
 
 import sys
 sys.path.append('../')
@@ -20,7 +21,7 @@ def read_interpretations_from_file(domain_name, mode='fine-tune'):
     interpretations_records = pd.read_csv(codeconstants.DECOMPOSE_QUESTIONS_FOLDER + '/' + domain_name + '/finetune_questions.csv')
 
     if mode == 'generated':
-        result_dictionary = pd.DataFrame(metaexplainer_utils.process_decompose_llm_result('llama-3-8b-charis-explanation', 'Diabetes', 'test'))
+        interpretations_records = pd.DataFrame(metaexplainer_utils.process_decompose_llm_result('llama-3-8b-charis-explanation', 'Diabetes', 'test', output_mode='list'))
 
 
     #the sample record will be removed once there is a way to either read from output file or fine-tuned data
@@ -41,7 +42,7 @@ def parse_machine_interpretation(record):
     - Filter groups
     The explanation type already tells you what explainer to run
     '''
-    machine_interpretation = record['Machine interpretation']
+    machine_interpretation = str(record['Machine interpretation'])
     actions = re.findall(r'([^()]+)\(', machine_interpretation)
     parantheses_groups = re.findall(r'\(([^()]+)\)', machine_interpretation)
 
@@ -56,7 +57,7 @@ def parse_machine_interpretation(record):
     if len_actions == len_groups:
         combined = [actions[i].strip() + ' <> ' + parantheses_groups[i].strip() for i in range(0, len_groups)]
 
-    print('Length of action and paranthesis groups are ', len(actions), len(parantheses_groups))
+    #print('Length of action and paranthesis groups are ', len(actions), len(parantheses_groups))
 
     return {'Actions': actions, 'Groups': parantheses_groups, 'Combined': combined}
 
@@ -69,19 +70,37 @@ def get_explanation_type(record):
     return {'Explanation type': explan_type}
 
 if __name__=='__main__':
-    interpretations_records = read_interpretations_from_file('Diabetes', mode='generated')
+    domain_name = 'Diabetes'
+    interpretations_records = read_interpretations_from_file(domain_name, mode='generated')
 
-    for i in range(0, 10):
-        sample_record = retrieve_random_record(interpretations_records)
+    delegate_folder = codeconstants.DELEGATE_FOLDER 
+
+    if not os.path.isdir(delegate_folder):
+        os.mkdir(delegate_folder)
+
+    output_txt = ''
+
+    for i in range(0, len(interpretations_records)):
+        #sample_record = retrieve_random_record(interpretations_records)
+        sample_record = dict(interpretations_records.iloc[i])
+        #print(sample_record)
         
-        #print('Sample record ', sample_record)
+        output_txt += 'Question: ' + str(sample_record['Question']) + '\n' + 'Machine interpretation: ' + str(sample_record['Machine interpretation']) + '\n'
 
         parsed_mi = parse_machine_interpretation(sample_record)
         explanation_type = get_explanation_type(sample_record)
 
         parsed_mi.update(explanation_type)
 
-        print('\n\n Parsed \n', parsed_mi, '---------\n\n')
+        for parsed in parsed_mi['Combined']:
+            output_txt += 'Parsed:' + parsed + '\n'
+
+        output_txt += 'Explanation type: ' + str(parsed_mi['Explanation type']) + '\n---------\n'
+    
+    with open(codeconstants.DELEGATE_FOLDER + '/' + domain_name + '_parsed_delegate_instructions.txt', 'w') as f:
+        f.write(output_txt)
+    
+
 
 
 

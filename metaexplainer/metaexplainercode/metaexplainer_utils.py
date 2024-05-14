@@ -131,7 +131,7 @@ def extract_key_value_from_string(response_str, find_key):
 		
 		return extract_str
 
-def process_decompose_llm_result(model_name, domain_name, mode='test'):
+def process_decompose_llm_result(model_name, domain_name, mode, output_mode='dictionary'):
 		'''
 		Need to remove instruction from the responses and retain the top-1 alone
 		In the future, will use domain_name - for now it is redundant		
@@ -139,6 +139,8 @@ def process_decompose_llm_result(model_name, domain_name, mode='test'):
 
 		result_file_name = codeconstants.OUTPUT_FOLDER + '/llm_results/' + model_name + '_' + mode + '_outputs.txt'
 		keys = ['Explanation type', 'Machine interpretation', 'Action', 'Target variable']
+
+		print('Output mode ', output_mode)
 		
 		#loads content in decoded form - while writing or returning it back need to use encode.
 		read_content = read_list_from_file(result_file_name)
@@ -164,7 +166,10 @@ def process_decompose_llm_result(model_name, domain_name, mode='test'):
 			result_dict.append(val_keys)
 			#print(val_keys)
 		
-		result_dictionary = {}
+		result_datastructure = {}
+
+		if output_mode == 'list':
+			result_datastructure = []
 
 		#print('Length of results before creating Question: rest dictionary', len(result_dict))
 		already_seen = []
@@ -177,13 +182,19 @@ def process_decompose_llm_result(model_name, domain_name, mode='test'):
 				#print('Duplicate question ', question)
 				duplicates.append(question)
 
-			result_dictionary[question] = {}
+			#result_datastructure[question] = {}
 
 			del record['Question']
 
 			already_seen.append(question)
-			result_dictionary[question] = record
+
+			if output_mode == 'dictionary':
+				result_datastructure[question] = record
+			elif output_mode == 'list':
+				quest_dict = {'Question': question}
+				quest_dict.update(record)
+				result_datastructure.append(quest_dict)
 		
-		print('Length of results ', len(result_dictionary), 'and duplicates removed ', len(duplicates))
-		return result_dictionary
+		print('Length of results ', len(result_datastructure), 'and duplicates removed ', len(duplicates))
+		return result_datastructure
 	

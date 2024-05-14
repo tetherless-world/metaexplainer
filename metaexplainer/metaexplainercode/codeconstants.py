@@ -6,6 +6,7 @@ DATA_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../da
 PROMPTS_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/prompts/'))
 
 OUTPUT_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/output_files/'))
+DELEGATE_FOLDER = OUTPUT_FOLDER + '/delegate/'
 DECOMPOSE_QUESTIONS_FOLDER = OUTPUT_FOLDER + '/decompose_questions/'
 
 

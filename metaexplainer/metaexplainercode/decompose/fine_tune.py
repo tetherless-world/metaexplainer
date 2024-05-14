@@ -370,8 +370,6 @@ class LLM_ExplanationInterpretor():
 		'''
 		result_dictionary = metaexplainer_utils.process_decompose_llm_result(self.refined_model_name, 'Diabetes', mode)
 		return result_dictionary
-		
-
 	
 	def post_process_input(self, mode='test'):
 		'''
