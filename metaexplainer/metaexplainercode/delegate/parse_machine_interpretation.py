@@ -35,7 +35,37 @@ def retrieve_random_record(questions_dataset):
     record = dict(questions_dataset.iloc[rand_int])
     return record
 
-def parse_machine_interpretation(record):
+def extract_feature_value_pairs(feature_val_string):
+    '''
+    Return a dictionary of feature: value pairs from a feature_val_string
+    '''
+
+    features_vals = feature_val_string.strip().split(',')
+    #print(features_vals)
+    features_dict = {}
+    vals = []
+
+    for feature_or_val in features_vals:
+        feature_or_val = feature_or_val.strip()
+
+        if feature_or_val.isnumeric():
+            vals.append(feature_or_val)
+        elif '=' in feature_or_val:
+            feature_val = feature_or_val.split('=')
+            features_dict[feature_val[0].strip()] = feature_val[1].strip()
+        else:
+            features_dict[feature_or_val] = ''
+
+            if len(vals) > 0:
+                features_dict[feature_or_val] = vals.pop()
+    
+    if len(vals) > 0:
+        features_dict['Unnamed'] = vals.pop()
+    
+    return features_dict
+
+
+def parse_machine_interpretation(record, column_names):
     '''
     The goal is to return:
     - Keywords
@@ -57,9 +87,30 @@ def parse_machine_interpretation(record):
     if len_actions == len_groups:
         combined = [actions[i].strip() + ' <> ' + parantheses_groups[i].strip() for i in range(0, len_groups)]
 
+    '''
+    Could be that action is in column name, in that case -> need to extract value right adjacent to it 
+    Else leave action as is 
+    If there are combined features in groups extract those and set filter vals -> (feature, range_pair)
+    '''
+
+    alternate_view = {}
+
+    for action_features in combined:
+        val_split = action_features.split(' <> ')
+
+        action = val_split[0]
+        feature_groups = extract_feature_value_pairs(val_split[1])
+
+        alternate_view[action] = feature_groups
+
+
+       
+
+
+
     #print('Length of action and paranthesis groups are ', len(actions), len(parantheses_groups))
 
-    return {'Actions': actions, 'Groups': parantheses_groups, 'Combined': combined}
+    return {'Actions': actions, 'Groups': parantheses_groups, 'Combined': combined, 'Alternate': alternate_view}
 
 def get_explanation_type(record):
     '''
@@ -90,10 +141,11 @@ if __name__=='__main__':
         
         output_txt += 'Question: ' + str(sample_record['Question']) + '\n' + 'Machine interpretation: ' + str(sample_record['Machine interpretation']) + '\n'
 
-        parsed_mi = parse_machine_interpretation(sample_record)
+        parsed_mi = parse_machine_interpretation(sample_record, column_names)
         explanation_type = get_explanation_type(sample_record)
 
         parsed_mi.update(explanation_type)
+        print(parsed_mi['Alternate'])
 
         for parsed in parsed_mi['Combined']:
             output_txt += 'Parsed: ' + parsed + '\n'
