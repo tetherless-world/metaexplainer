@@ -69,9 +69,12 @@ def get_explanation_type(record):
     
     return {'Explanation type': explan_type}
 
+
 if __name__=='__main__':
     domain_name = 'Diabetes'
     interpretations_records = read_interpretations_from_file(domain_name, mode='generated')
+    column_names = metaexplainer_utils.load_column_names(domain_name)
+    print(column_names)
 
     delegate_folder = codeconstants.DELEGATE_FOLDER 
 

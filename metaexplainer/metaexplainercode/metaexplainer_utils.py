@@ -55,6 +55,16 @@ def read_list_from_file(file_name):
 	lines = f.read().splitlines()
 	return lines
 
+def load_column_names(domain_name):
+	'''
+	Return list of column names for dataset
+	'''
+	domain_dataset = pd.read_csv(codeconstants.DATA_FOLDER + '/' + domain_name.lower() + '.csv')
+	return list(domain_dataset.columns)
+
+'''
+Result generation functions
+'''
 def generate_confusion_matrix_and_visualize(y_true, y_pred, labels, output_file_path): 
 	cm = confusion_matrix(y_true, y_pred, labels=labels)
 	cm_array_df = pd.DataFrame(cm, index=labels, columns=labels)
