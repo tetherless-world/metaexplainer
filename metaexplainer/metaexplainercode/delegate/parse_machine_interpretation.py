@@ -107,6 +107,16 @@ def parse_machine_interpretation(record, column_names):
         feature_groups = extract_feature_value_pairs(feature_group.strip(), column_names)
         feature_groups_all.append(feature_groups)
 
+    for action_i in range(len(actions)):
+        action = actions[action_i]
+
+        if metaexplainer_utils.check_if_label(action, column_names) and (action_i < len(feature_groups_all)):
+            feature_group_at_i = feature_groups_all[action_i]
+
+            if 'Unnamed' in feature_group_at_i.keys():
+                feature_group_at_i[action] = feature_group_at_i['Unnamed']
+                del feature_group_at_i['Unnamed']
+
     #print('Length of action and paranthesis groups are ', len(actions), len(parantheses_groups))
 
     return {'Actions': actions, 'Groups': parantheses_groups, 'Combined': combined, 'Alternate': feature_groups_all}
