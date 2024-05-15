@@ -48,7 +48,7 @@ def extract_feature_value_pairs(feature_val_string):
     for feature_or_val in features_vals:
         feature_or_val = feature_or_val.strip()
 
-        if feature_or_val.isnumeric():
+        if metaexplainer_utils.is_valid_number(feature_or_val):
             vals.append(feature_or_val)
         elif '=' in feature_or_val:
             feature_val = feature_or_val.split('=')

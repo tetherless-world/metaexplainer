@@ -63,6 +63,13 @@ def load_column_names(domain_name):
 	domain_dataset = pd.read_csv(codeconstants.DATA_FOLDER + '/' + domain_name + '/' + file_name + '.csv')
 	return list(domain_dataset.columns)
 
+def is_valid_number(string):
+	try:
+		val = float(string)
+		return True
+	except Exception:
+		return False
+
 '''
 Result generation functions
 '''
