@@ -188,6 +188,9 @@ def process_decompose_llm_result(model_name, domain_name, mode, output_mode='dic
 		'''
 
 		result_file_name = codeconstants.OUTPUT_FOLDER + '/llm_results/' + model_name + '_' + mode + '_outputs.txt'
+
+		loaded_explanations = [x.strip() for x in open(codeconstants.EXPLANATIONS_LOADED_FROM_EO, 'r').readlines()]
+
 		keys = ['Explanation type', 'Machine interpretation', 'Action', 'Target variable']
 
 		print('Output mode ', output_mode)
@@ -199,7 +202,7 @@ def process_decompose_llm_result(model_name, domain_name, mode, output_mode='dic
 		result_dict = []
 
 		for result_str in read_content:
-			#only get response onward 
+			#only get response onward
 			split_at_response = result_str.split('### Response:')
 			rest_of_string = split_at_response[0]
 			response = split_at_response[1]
@@ -208,14 +211,25 @@ def process_decompose_llm_result(model_name, domain_name, mode, output_mode='dic
 			val_keys = {field_key: '' for field_key in keys}
 
 			for field in keys:
-				val_keys[field] = extract_key_value_from_string(response, field).encode('utf-8')
+				val = extract_key_value_from_string(response, field)
+
+				if field == 'Explanation type':
+					matched_explanation = list(filter(lambda x: str(val) in x, loaded_explanations))
+					if len(matched_explanation) > 0:
+						val = matched_explanation[0]
+
+					#print(str(val))
+
+				val_keys[field] = val
+
 
 			
 			val_keys['Question'] = extract_key_value_from_string(str(rest_of_string), 'User')
 
-			if val_keys['Question'] == 'Why focus on the BMI range of 18-25 for predicting Diabetes instead of 26-30?':
-				print(response)
-				print(val_keys)
+
+			# if val_keys['Question'] == 'Why focus on the BMI range of 18-25 for predicting Diabetes instead of 26-30?':
+			# 	print(response)
+			# 	print(val_keys)
 			
 			result_dict.append(val_keys)
 			#print(val_keys)
