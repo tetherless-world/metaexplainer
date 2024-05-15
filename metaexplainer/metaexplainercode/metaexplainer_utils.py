@@ -214,7 +214,8 @@ def process_decompose_llm_result(model_name, domain_name, mode, output_mode='dic
 				val = extract_key_value_from_string(response, field)
 
 				if field == 'Explanation type':
-					matched_explanation = list(filter(lambda x: str(val) in x, loaded_explanations))
+					matched_explanation = list(filter(lambda x: x.lower() in val.lower(), loaded_explanations))
+
 					if len(matched_explanation) > 0:
 						val = matched_explanation[0]
 
