@@ -24,8 +24,8 @@ Question: Why emphasize the Diabetes Pedigree Function of 0.25 in predicting Dia
 Machine interpretation: b'Emphasize(DiabetesPedigreeFunction, 0.25, Female, 45, BMI = 26) over Emphasize(DiabetesPedigreeFunction, 0.25, Male, 70, BMI = 18)'
 Actio: Emphasize
 Actio: Emphasize
-Intermediate: {'DiabetesPedigreeFunction': '', '0.25': '', 'Female': '', 'BMI': '26', 'Unnamed': '45'}
-Intermediate: {'DiabetesPedigreeFunction': '', '0.25': '', 'Male': '', 'BMI': '18', 'Unnamed': '70'}
+Intermediate: {'DiabetesPedigreeFunction': '0.25', 'Female': '', 'BMI': '26', 'Unnamed': '45'}
+Intermediate: {'DiabetesPedigreeFunction': '0.25', 'Male': '', 'BMI': '18', 'Unnamed': '70'}
 Explanation type: b'Reason Explanation'
 ---------
 Question: How did the model reach the conclusion that a 35-year-old male with a BMI of 21 and a Diabetes Pedigree Function of 0.25 is at high risk of having Diabetes?
@@ -113,8 +113,8 @@ Question: How would the Diabetes prediction change if the patient had a Diabetes
 Machine interpretation: b'If DiabetesPedigreeFunction(patient, 0.3) and DiabetesPedigreeFunction(patient, 0.1), how would the Diabetes prediction change?'
 Actio: DiabetesPedigreeFunction
 Actio: DiabetesPedigreeFunction
-Intermediate: {'patient': '', '0.3': ''}
-Intermediate: {'patient': '', '0.1': ''}
+Intermediate: {'patient': '', 'Unnamed': '0.3'}
+Intermediate: {'patient': '', 'Unnamed': '0.1'}
 Explanation type: b'Counterfactual'
 ---------
 Question: Why did the model classify a 30-year-old male with a BMI of 24 and a Diabetes Pedigree Function of 0.1 as not having Diabetes?
@@ -133,7 +133,7 @@ Actio: Recommendation
 Intermediate: {'x': '', 'Unnamed': '55'}
 Intermediate: {'Male': ''}
 Intermediate: {'x': '', 'Unnamed': '27'}
-Intermediate: {'x': '', '0.18': ''}
+Intermediate: {'x': '', 'Unnamed': '0.18'}
 Intermediate: {'Suggestion': ''}
 Explanation type: b'Contextual Explanation'
 ---------
@@ -299,7 +299,7 @@ Explanation type: b'Case Based Explanation'
 Question: What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 40-year-old female with a BMI of 25 and a Diabetes Pedigree Function of 0.3?
 Machine interpretation: b'Prompted(Suggestion(Diabetes, 40, Female, 25, BMI, 0.3, Diabetes Pedigree Function))'
 Actio: Suggestion
-Intermediate: {'Diabetes': '', 'Female': '40', 'BMI': '25', '0.3': '', 'Diabetes Pedigree Function': ''}
+Intermediate: {'Diabetes': '', 'Female': '40', 'BMI': '25', 'Diabetes Pedigree Function': '0.3'}
 Explanation type: b'Reason Explanation'
 ---------
 Question: What led the model to predict no Diabetes for a 45-year-old male with a BMI of 24 and a Diabetes Pedigree Function of 0.1?

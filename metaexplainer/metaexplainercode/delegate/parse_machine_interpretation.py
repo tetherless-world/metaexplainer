@@ -13,7 +13,7 @@ from metaexplainercode import metaexplainer_utils
 Parse machine-interpretations and delegate to the specific explanation type - model classes and also to the particular functions
 '''
 
-def read_interpretations_from_file(domain_name, mode='fine-tune'):
+def read_interpretations_from_file(domain_name, mode='fine-tune', data_split='test'):
     '''
     The interpretations from GPT directly are stored in output_files/decompose/<domain_name>/finetune_questions.csv
     We will mainly need to parse the Explanation type and Machine interpretation columns
@@ -21,7 +21,7 @@ def read_interpretations_from_file(domain_name, mode='fine-tune'):
     interpretations_records = pd.read_csv(codeconstants.DECOMPOSE_QUESTIONS_FOLDER + '/' + domain_name + '/finetune_questions.csv')
 
     if mode == 'generated':
-        interpretations_records = pd.DataFrame(metaexplainer_utils.process_decompose_llm_result('llama-3-8b-charis-explanation', 'Diabetes', 'test', output_mode='list'))
+        interpretations_records = pd.DataFrame(metaexplainer_utils.process_decompose_llm_result('llama-3-8b-charis-explanation', 'Diabetes',data_split, output_mode='list'))
 
 
     #the sample record will be removed once there is a way to either read from output file or fine-tuned data
@@ -122,8 +122,17 @@ def get_explanation_type(record):
 
 if __name__=='__main__':
     domain_name = 'Diabetes'
-    interpretations_records = read_interpretations_from_file(domain_name, mode='generated')
+    
+
+    mode = 'generated' # 'fine-tuned'
+
+    #only makes sense if the mode is generated and not fine-tuned 
+
+    data_split = 'test'
+
+    interpretations_records = read_interpretations_from_file(domain_name, mode=mode, data_split=data_split)
     column_names = metaexplainer_utils.load_column_names(domain_name)
+    
     print(column_names)
 
     delegate_folder = codeconstants.DELEGATE_FOLDER 
@@ -154,7 +163,13 @@ if __name__=='__main__':
 
         output_txt += 'Explanation type: ' + str(parsed_mi['Explanation type']) + '\n---------\n'
     
-    with open(codeconstants.DELEGATE_FOLDER + '/' + domain_name + '_parsed_delegate_instructions.txt', 'w') as f:
+    output_file_name = codeconstants.DELEGATE_FOLDER + '/' + domain_name + '_parsed_' + mode + '_delegate_instructions.txt'
+
+    if mode == 'generated':
+        output_file_name = codeconstants.DELEGATE_FOLDER + '/' + domain_name + '_parsed_' + mode + '_' + data_split + '_delegate_instructions.txt'
+        
+
+    with open(output_file_name, 'w') as f:
         f.write(output_txt)
     
 
