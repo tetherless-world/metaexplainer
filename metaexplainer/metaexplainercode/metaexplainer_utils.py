@@ -63,6 +63,18 @@ def load_column_names(domain_name):
 	domain_dataset = pd.read_csv(codeconstants.DATA_FOLDER + '/' + domain_name + '/' + file_name + '.csv')
 	return list(domain_dataset.columns)
 
+def check_if_label(field_key, labels):
+	'''
+	Check if field is in labels
+	Ignore case and spaces
+	Need to see how to handle abbreviations
+	'''
+	field_key = field_key.replace(' ','').lower()
+	labels = [label.replace(' ', '').lower() for label in labels]
+	if field_key in labels:
+		return True
+	return False
+
 def is_valid_number(string):
 	try:
 		val = float(string)

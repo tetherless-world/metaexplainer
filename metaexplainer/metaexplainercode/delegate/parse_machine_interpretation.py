@@ -35,7 +35,7 @@ def retrieve_random_record(questions_dataset):
     record = dict(questions_dataset.iloc[rand_int])
     return record
 
-def extract_feature_value_pairs(feature_val_string):
+def extract_feature_value_pairs(feature_val_string, column_names):
     '''
     Return a dictionary of feature: value pairs from a feature_val_string
     '''
@@ -44,17 +44,23 @@ def extract_feature_value_pairs(feature_val_string):
     #print(features_vals)
     features_dict = {}
     vals = []
+    last_added_feature = ''
 
     for feature_or_val in features_vals:
         feature_or_val = feature_or_val.strip()
 
         if metaexplainer_utils.is_valid_number(feature_or_val):
-            vals.append(feature_or_val)
+            if (features_dict[last_added_feature] == '') and metaexplainer_utils.check_if_label(last_added_feature, column_names):
+                #need to add check for feature - else add this as unnamed
+                features_dict[last_added_feature] = feature_or_val
+            else:
+                vals.append(feature_or_val)
         elif '=' in feature_or_val:
             feature_val = feature_or_val.split('=')
             features_dict[feature_val[0].strip()] = feature_val[1].strip()
         else:
             features_dict[feature_or_val] = ''
+            last_added_feature = feature_or_val
 
             if len(vals) > 0:
                 features_dict[feature_or_val] = vals.pop()
@@ -98,7 +104,7 @@ def parse_machine_interpretation(record, column_names):
     
 
     for feature_group in parantheses_groups:
-        feature_groups = extract_feature_value_pairs(feature_group.strip())
+        feature_groups = extract_feature_value_pairs(feature_group.strip(), column_names)
         feature_groups_all.append(feature_groups)
 
     #print('Length of action and paranthesis groups are ', len(actions), len(parantheses_groups))
