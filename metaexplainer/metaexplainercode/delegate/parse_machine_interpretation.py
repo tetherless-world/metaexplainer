@@ -50,7 +50,7 @@ def extract_feature_value_pairs(feature_val_string, column_names):
         feature_or_val = feature_or_val.strip()
 
         if metaexplainer_utils.is_valid_number(feature_or_val):
-            if (features_dict[last_added_feature] == '') and metaexplainer_utils.check_if_label(last_added_feature, column_names):
+            if (last_added_feature != '') and (features_dict[last_added_feature] == '') and metaexplainer_utils.check_if_label(last_added_feature, column_names):
                 #need to add check for feature - else add this as unnamed
                 features_dict[last_added_feature] = feature_or_val
             else:
@@ -58,7 +58,7 @@ def extract_feature_value_pairs(feature_val_string, column_names):
         elif '=' in feature_or_val:
             feature_val = feature_or_val.split('=')
             features_dict[feature_val[0].strip()] = feature_val[1].strip()
-        else:
+        elif feature_or_val != '':
             features_dict[feature_or_val] = ''
             last_added_feature = feature_or_val
 
@@ -128,7 +128,7 @@ if __name__=='__main__':
 
     #only makes sense if the mode is generated and not fine-tuned 
 
-    data_split = 'test'
+    data_split = 'train'
 
     interpretations_records = read_interpretations_from_file(domain_name, mode=mode, data_split=data_split)
     column_names = metaexplainer_utils.load_column_names(domain_name)
@@ -148,7 +148,7 @@ if __name__=='__main__':
         sample_record = dict(interpretations_records.iloc[i])
         #print(sample_record)
         
-        output_txt += 'Question: ' + str(sample_record['Question']) + '\n' + 'Machine interpretation: ' + str(sample_record['Machine interpretation']) + '\n'
+        output_txt += 'Question : ' + str(sample_record['Question']) + '\n' + 'Machine interpretation : ' + str(sample_record['Machine interpretation']) + '\n'
 
         parsed_mi = parse_machine_interpretation(sample_record, column_names)
         explanation_type = get_explanation_type(sample_record)
@@ -156,12 +156,12 @@ if __name__=='__main__':
         parsed_mi.update(explanation_type)
 
         for action in parsed_mi['Actions']:
-            output_txt += 'Actio: ' + action + '\n'
+            output_txt += 'Action : ' + action + '\n'
 
         for parsed_alts in parsed_mi['Alternate']:
-            output_txt += 'Intermediate: ' + str(parsed_alts) + '\n'
+            output_txt += 'Intermediate : ' + str(parsed_alts) + '\n'
 
-        output_txt += 'Explanation type: ' + str(parsed_mi['Explanation type']) + '\n---------\n'
+        output_txt += 'Explanation type : ' + str(parsed_mi['Explanation type']) + '\n---------\n'
     
     output_file_name = codeconstants.DELEGATE_FOLDER + '/' + domain_name + '_parsed_' + mode + '_delegate_instructions.txt'
 

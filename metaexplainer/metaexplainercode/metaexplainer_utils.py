@@ -148,7 +148,7 @@ def compute_f1_levenshtein(reference_strs, result_strs, threshold=0.6):
 def extract_key_value_from_string(response_str, find_key):
 		extract_str = ''
 
-		extracted_val = re.split('(' + find_key + '):\n?', response_str)[1:3]
+		extracted_val = re.split('(' + find_key + '):?[\n=]?', response_str)[1:3]
 		#print(type(extracted_val), extracted_val, len(extracted_val))
 		
 		if len(extracted_val) > 1:
@@ -158,8 +158,11 @@ def extract_key_value_from_string(response_str, find_key):
 			splitter = '\\n'
 
 			if not splitter in part_to_split:
-				splitter = '\n'
-				print('Changing split')
+				if '\n' in part_to_split:
+					splitter = '\n'
+				elif '=' in part_to_split:
+					splitter = '='
+				print('Changing split', splitter)
 
 			#print(part_to_split, splitter)
 			parts = part_to_split.split(splitter)
@@ -210,9 +213,9 @@ def process_decompose_llm_result(model_name, domain_name, mode, output_mode='dic
 			
 			val_keys['Question'] = extract_key_value_from_string(str(rest_of_string), 'User')
 
-			# if val_keys['Question'] == 'What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 45-year-old female with a BMI of 28 and a Diabetes Pedigree Function of 0.3?':
-			# 	print(response)
-			# 	print(val_keys)
+			if val_keys['Question'] == 'Why focus on the BMI range of 18-25 for predicting Diabetes instead of 26-30?':
+				print(response)
+				print(val_keys)
 			
 			result_dict.append(val_keys)
 			#print(val_keys)
