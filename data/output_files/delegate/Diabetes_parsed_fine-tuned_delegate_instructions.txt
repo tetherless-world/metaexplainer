@@ -74,8 +74,8 @@ Explanation type : Data Explanation
 ---------
 Question : What impact does the BMI feature scaling have on the ML model's performance in predicting Diabetes?
 Machine interpretation : Summary(BMI, Diabetes) and Summary(unprocessed(BMI), Diabetes)
-Action : Summary
 Action : unprocessed
+Action : Summary
 Feature groups : {'BMI': '', 'Diabetes': ''}
 Feature groups : {'BMI': ''}
 Explanation type : Data Explanation
@@ -499,7 +499,6 @@ Explanation type : Data Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 45-year-old female with a BMI of 28 and a Diabetes Pedigree Function of 0.3?
 Machine interpretation :  ∃x (Age(x, 45) ∧ Sex(Female) ∧ BMI(x, 28) ∧ DPF(x, 0.3) ∧ DiabetesPrediction(x, High))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '45'}
 Feature groups : {'Female': ''}
@@ -510,7 +509,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 60-year-old male with a BMI of 22 and a Diabetes Pedigree Function of 0.1?
 Machine interpretation :  ∃x (Age(x, 60) ∧ Sex(Male) ∧ BMI(x, 22) ∧ DPF(x, 0.1) ∧ DiabetesPrediction(x, Low))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '60'}
 Feature groups : {'Male': ''}
@@ -521,7 +519,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 35-year-old female with a BMI of 25 and a Diabetes Pedigree Function of 0.2?
 Machine interpretation :  ∃x (Age(x, 35) ∧ Sex(Female) ∧ BMI(x, 25) ∧ DPF(x, 0.2) ∧ DiabetesPrediction(x, High))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '35'}
 Feature groups : {'Female': ''}
@@ -532,7 +529,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 50-year-old male with a BMI of 20 and a Diabetes Pedigree Function of 0.1?
 Machine interpretation :  ∃x (Age(x, 50) ∧ Sex(Male) ∧ BMI(x, 20) ∧ DPF(x, 0.1) ∧ DiabetesPrediction(x, Low))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '50'}
 Feature groups : {'Male': ''}
@@ -543,7 +539,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 40-year-old female with a BMI of 30 and a Diabetes Pedigree Function of 0.25?
 Machine interpretation :  ∃x (Age(x, 40) ∧ Sex(Female) ∧ BMI(x, 30) ∧ DPF(x, 0.25) ∧ DiabetesPrediction(x, High))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '40'}
 Feature groups : {'Female': ''}
@@ -614,7 +609,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 45-year-old female with a BMI of 28 and a Diabetes Pedigree Function of 0.3?
 Machine interpretation :  ∃x (Age(x, 45) ∧ Sex(Female) ∧ BMI(x, 28) ∧ DPF(x, 0.3) ∧ DiabetesPrediction(x, High))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '45'}
 Feature groups : {'Female': ''}
@@ -625,7 +619,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 60-year-old male with a BMI of 22 and a Diabetes Pedigree Function of 0.1?
 Machine interpretation :  ∃x (Age(x, 60) ∧ Sex(Male) ∧ BMI(x, 22) ∧ DPF(x, 0.1) ∧ DiabetesPrediction(x, Low))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '60'}
 Feature groups : {'Male': ''}
@@ -636,7 +629,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 35-year-old female with a BMI of 30 and a Diabetes Pedigree Function of 0.2?
 Machine interpretation :  ∃x (Age(x, 35) ∧ Sex(Female) ∧ BMI(x, 30) ∧ DPF(x, 0.2) ∧ DiabetesPrediction(x, High))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '35'}
 Feature groups : {'Female': ''}
@@ -647,7 +639,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 50-year-old male with a BMI of 18 and a Diabetes Pedigree Function of 0.1?
 Machine interpretation :  ∃x (Age(x, 50) ∧ Sex(Male) ∧ BMI(x, 18) ∧ DPF(x, 0.1) ∧ DiabetesPrediction(x, Low))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '50'}
 Feature groups : {'Male': ''}
@@ -658,7 +649,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 40-year-old female with a BMI of 25 and a Diabetes Pedigree Function of 0.3?
 Machine interpretation :  ∃x (Age(x, 40) ∧ Sex(Female) ∧ BMI(x, 25) ∧ DPF(x, 0.3) ∧ DiabetesPrediction(x, High))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '40'}
 Feature groups : {'Female': ''}
@@ -669,7 +659,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 55-year-old male with a BMI of 20 and a Diabetes Pedigree Function of 0.2?
 Machine interpretation :  ∃x (Age(x, 55) ∧ Sex(Male) ∧ BMI(x, 20) ∧ DPF(x, 0.2) ∧ DiabetesPrediction(x, Low))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '55'}
 Feature groups : {'Male': ''}
@@ -680,7 +669,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 45-year-old female with a BMI of 28 and a Diabetes Pedigree Function of 0.3?
 Machine interpretation :  ∃x (Age(x, 45) ∧ Sex(Female) ∧ BMI(x, 28) ∧ DPF(x, 0.3) ∧ DiabetesPrediction(x, High))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '45'}
 Feature groups : {'Female': ''}
@@ -691,7 +679,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 60-year-old male with a BMI of 22 and a Diabetes Pedigree Function of 0.1?
 Machine interpretation :  ∃x (Age(x, 60) ∧ Sex(Male) ∧ BMI(x, 22) ∧ DPF(x, 0.1) ∧ DiabetesPrediction(x, Low))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '60'}
 Feature groups : {'Male': ''}
@@ -702,7 +689,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 35-year-old female with a BMI of 30 and a Diabetes Pedigree Function of 0.2?
 Machine interpretation :  ∃x (Age(x, 35) ∧ Sex(Female) ∧ BMI(x, 30) ∧ DPF(x, 0.2) ∧ DiabetesPrediction(x, High))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '35'}
 Feature groups : {'Female': ''}
@@ -713,7 +699,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 50-year-old male with a BMI of 18 and a Diabetes Pedigree Function of 0.1?
 Machine interpretation :  ∃x (Age(x, 50) ∧ Sex(Male) ∧ BMI(x, 18) ∧ DPF(x, 0.1) ∧ DiabetesPrediction(x, Low))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '50'}
 Feature groups : {'Male': ''}
@@ -724,7 +709,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 40-year-old female with a BMI of 25 and a Diabetes Pedigree Function of 0.3?
 Machine interpretation :  ∃x (Age(x, 40) ∧ Sex(Female) ∧ BMI(x, 25) ∧ DPF(x, 0.3) ∧ DiabetesPrediction(x, High))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '40'}
 Feature groups : {'Female': ''}
@@ -735,7 +719,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 55-year-old male with a BMI of 20 and a Diabetes Pedigree Function of 0.2?
 Machine interpretation :  ∃x (Age(x, 55) ∧ Sex(Male) ∧ BMI(x, 20) ∧ DPF(x, 0.2) ∧ DiabetesPrediction(x, Low))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '55'}
 Feature groups : {'Male': ''}
@@ -746,7 +729,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 45-year-old female with a BMI of 28 and a Diabetes Pedigree Function of 0.3?
 Machine interpretation :  ∃x (Age(x, 45) ∧ Sex(Female) ∧ BMI(x, 28) ∧ DPF(x, 0.3) ∧ DiabetesPrediction(x, High))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '45'}
 Feature groups : {'Female': ''}
@@ -757,7 +739,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 60-year-old male with a BMI of 22 and a Diabetes Pedigree Function of 0.1?
 Machine interpretation :  ∃x (Age(x, 60) ∧ Sex(Male) ∧ BMI(x, 22) ∧ DPF(x, 0.1) ∧ DiabetesPrediction(x, Low))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '60'}
 Feature groups : {'Male': ''}
@@ -768,7 +749,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 35-year-old female with a BMI of 30 and a Diabetes Pedigree Function of 0.2?
 Machine interpretation :  ∃x (Age(x, 35) ∧ Sex(Female) ∧ BMI(x, 30) ∧ DPF(x, 0.2) ∧ DiabetesPrediction(x, High))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '35'}
 Feature groups : {'Female': ''}
@@ -779,7 +759,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 50-year-old male with a BMI of 18 and a Diabetes Pedigree Function of 0.1?
 Machine interpretation :  ∃x (Age(x, 50) ∧ Sex(Male) ∧ BMI(x, 18) ∧ DPF(x, 0.1) ∧ DiabetesPrediction(x, Low))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '50'}
 Feature groups : {'Male': ''}
@@ -790,7 +769,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 40-year-old female with a BMI of 25 and a Diabetes Pedigree Function of 0.3?
 Machine interpretation :  ∃x (Age(x, 40) ∧ Sex(Female) ∧ BMI(x, 25) ∧ DPF(x, 0.3) ∧ DiabetesPrediction(x, High))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '40'}
 Feature groups : {'Female': ''}
@@ -801,7 +779,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 55-year-old male with a BMI of 20 and a Diabetes Pedigree Function of 0.2?
 Machine interpretation :  ∃x (Age(x, 55) ∧ Sex(Male) ∧ BMI(x, 20) ∧ DPF(x, 0.2) ∧ DiabetesPrediction(x, Low))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '55'}
 Feature groups : {'Male': ''}
@@ -812,7 +789,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 45-year-old female with a BMI of 28 and a Diabetes Pedigree Function of 0.3?
 Machine interpretation :  ∃x (Age(x, 45) ∧ Sex(Female) ∧ BMI(x, 28) ∧ DPF(x, 0.3) ∧ DiabetesPrediction(x, High))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '45'}
 Feature groups : {'Female': ''}
@@ -823,7 +799,6 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 60-year-old male with a BMI of 22 and a Diabetes Pedigree Function of 0.1?
 Machine interpretation :  ∃x (Age(x, 60) ∧ Sex(Male) ∧ BMI(x, 22) ∧ DPF(x, 0.1) ∧ DiabetesPrediction(x, Low))
-Action : Sex
 Action : DiabetesPrediction
 Feature groups : {'Age': '60'}
 Feature groups : {'Male': ''}
@@ -856,9 +831,8 @@ Explanation type : Counterfactual Explanation
 ---------
 Question :  If the patient was male instead of female, would the likelihood of having Diabetes be affected?
 Machine interpretation :  If Sex(patient, Male) ∧ ¬Sex(patient, Female), then P(Diabetes) changes.
-Action : Sex
-Feature groups : {'patient': '', 'Male': ''}
-Feature groups : {'patient': '', 'Female': ''}
+Feature groups : {'Male': '', 'Sex': ''}
+Feature groups : {'Female': '', 'Sex': ''}
 Feature groups : {'Diabetes': ''}
 Explanation type : Counterfactual Explanation
 ---------
@@ -898,10 +872,9 @@ Explanation type : Counterfactual Explanation
 ---------
 Question :  If the patient was male instead of female, would the risk of Diabetes prediction increase?
 Machine interpretation :  If Sex(patient, Male) and not If Sex(patient, Female) -> Diabetes_Prediction(patient, ?)
-Action : Sex
 Action : Diabetes_Prediction
-Feature groups : {'patient': '', 'Male': ''}
-Feature groups : {'patient': '', 'Female': ''}
+Feature groups : {'Male': '', 'Sex': ''}
+Feature groups : {'Female': '', 'Sex': ''}
 Feature groups : {'patient': '', '?': ''}
 Explanation type : Counterfactual Explanation
 ---------
@@ -944,10 +917,9 @@ Explanation type : Counterfactual Explanation
 ---------
 Question :  How would the Diabetes prediction change if the patient was female with a BMI of 22 and a Diabetes Pedigree Function of 0.3?
 Machine interpretation :  If Sex(patient, Female) AND BMI(patient, 22) AND DP_Function(patient, 0.3) -> Diabetes_Prediction(patient, ?)
-Action : Sex
 Action : DP_Function
 Action : Diabetes_Prediction
-Feature groups : {'patient': '', 'Female': ''}
+Feature groups : {'Female': '', 'Sex': ''}
 Feature groups : {'BMI': '22'}
 Feature groups : {'patient': '0.3'}
 Feature groups : {'patient': '', '?': ''}
@@ -983,9 +955,8 @@ Explanation type : Counterfactual Explanation
 ---------
 Question :  If the patient was male instead of female, would the prediction for Diabetes be different?
 Machine interpretation :  If Sex(patient, Male) and not If Sex(patient, Female)-> Diabetes Prediction Change
-Action : Sex
-Feature groups : {'patient': '', 'Male': ''}
-Feature groups : {'patient': '', 'Female': ''}
+Feature groups : {'Male': '', 'Sex': ''}
+Feature groups : {'Female': '', 'Sex': ''}
 Explanation type : Counterfactual Explanation
 ---------
 Question :  How would the likelihood of Diabetes change if the patient's age was 60, BMI was 22, and Diabetes Pedigree Function was 0.4?
@@ -1140,8 +1111,8 @@ Explanation type : Case Based Explanation
 ---------
 Question :  Are there any age groups where the prediction of Diabetes is more uncertain for patients with a BMI of 28?
 Machine interpretation : Filter(Age) Predict(BMI = 28, Diabetes = uncertain)
-Action : Predict
 Action : Filter
+Action : Predict
 Feature groups : {'Age': ''}
 Feature groups : {'BMI': '28', 'Diabetes': 'uncertain'}
 Explanation type : Case Based Explanation
@@ -1192,8 +1163,8 @@ Explanation type : Case Based Explanation
 ---------
 Question :  What BMI values are commonly associated with accurate Diabetes predictions in similar cases?
 Machine interpretation : Filter(BMI) and (Diabetes = accurate)
-Action : and
 Action : Filter
+Action : and
 Feature groups : {'BMI': ''}
 Feature groups : {'Diabetes': 'accurate'}
 Explanation type : Case Based Explanation
@@ -1224,8 +1195,8 @@ Explanation type : Case Based Explanation
 ---------
 Question :  In what instances from the training data are high BMI values indicative of a higher likelihood of Diabetes prediction?
 Machine interpretation : Filter(BMI) and (Diabetes = high)
-Action : and
 Action : Filter
+Action : and
 Feature groups : {'BMI': ''}
 Feature groups : {'Diabetes': 'high'}
 Explanation type : Case Based Explanation
@@ -1244,8 +1215,8 @@ Explanation type : Case Based Explanation
 ---------
 Question :  What BMI ranges are commonly associated with a lower likelihood of accurate Diabetes prediction in similar cases?
 Machine interpretation : Filter(BMI) and (Accuracy = low)
-Action : and
 Action : Filter
+Action : and
 Feature groups : {'BMI': ''}
 Feature groups : {'Accuracy': 'low'}
 Explanation type : Case Based Explanation
@@ -1299,8 +1270,8 @@ Explanation type : Case Based Explanation
 ---------
 Question :  Are there specific BMI ranges where the prediction for Diabetes tends to be more accurate?
 Machine interpretation : Filter(BMI) and (Diabetes = accurate)
-Action : and
 Action : Filter
+Action : and
 Feature groups : {'BMI': ''}
 Feature groups : {'Diabetes': 'accurate'}
 Explanation type : Case Based Explanation
@@ -1319,24 +1290,24 @@ Explanation type : Case Based Explanation
 ---------
 Question :  What are the common trends observed in the Diabetes Pedigree Function values of patients with accurate prediction outcomes?
 Machine interpretation : Filter(DPF) and (Diabetes = accuracy)
-Action : and
 Action : Filter
+Action : and
 Feature groups : {'DPF': ''}
 Feature groups : {'Diabetes': 'accuracy'}
 Explanation type : Case Based Explanation
 ---------
 Question :  To what extent does sex play a role in the accuracy of Diabetes prediction based on the given features?
 Machine interpretation : Filter(Sex) and (Diabetes = accurate)
-Action : and
 Action : Filter
+Action : and
 Feature groups : {'Sex': ''}
 Feature groups : {'Diabetes': 'accurate'}
 Explanation type : Case Based Explanation
 ---------
 Question :  What age group tends to have the highest occurrence of Diabetes based on the prediction outcomes?
 Machine interpretation : Filter(Age) and (Diabetes = high)
-Action : and
 Action : Filter
+Action : and
 Feature groups : {'Age': ''}
 Feature groups : {'Diabetes': 'high'}
 Explanation type : Case Based Explanation
@@ -1350,16 +1321,16 @@ Explanation type : Case Based Explanation
 ---------
 Question :  In what scenarios has the Diabetes Pedigree Function value been a decisive factor in predicting Diabetes accurately?
 Machine interpretation : Filter(DPF) and (Diabetes = accuracy)
-Action : and
 Action : Filter
+Action : and
 Feature groups : {'DPF': ''}
 Feature groups : {'Diabetes': 'accuracy'}
 Explanation type : Case Based Explanation
 ---------
 Question :  Are there specific age ranges where the prediction for Diabetes tends to be more challenging to determine accurately?
 Machine interpretation : Filter(Age) and (Diabetes = low accuracy)
-Action : and
 Action : Filter
+Action : and
 Feature groups : {'Age': ''}
 Feature groups : {'Diabetes': 'low accuracy'}
 Explanation type : Case Based Explanation
@@ -1372,8 +1343,8 @@ Explanation type : Case Based Explanation
 ---------
 Question :  What BMI range is commonly associated with accurate Diabetes predictions across different cases?
 Machine interpretation : Filter(BMI) and (Diabetes = accurate)
-Action : and
 Action : Filter
+Action : and
 Feature groups : {'BMI': ''}
 Feature groups : {'Diabetes': 'accurate'}
 Explanation type : Case Based Explanation
@@ -1540,8 +1511,8 @@ Explanation type : Contrastive Explanation
 ---------
 Question : Why emphasize the BMI range of 25-30 in determining Diabetes risk over the Diabetes Pedigree Function?
 Machine interpretation : Predict(BMI = 25 - 30) and Feature_importance(DPF)
-Action : Predict
 Action : Feature_importance
+Action : Predict
 Feature groups : {'BMI': '25 - 30'}
 Feature groups : {'DPF': ''}
 Explanation type : Contrastive Explanation

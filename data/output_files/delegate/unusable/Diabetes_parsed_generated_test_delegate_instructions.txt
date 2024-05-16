@@ -46,13 +46,13 @@ Explanation type : Difference Explanation
 ---------
 Question : What are the common features among patients with a low likelihood of Diabetes despite having a high BMI?
 Machine interpretation : What are the typical characteristics of patients with low Diabetes prediction outcomes despite having high BMI values?
-Feature groups : {'', 'BMI'}
+Feature groups : {'BMI': ''}
 Explanation type : Feature Explanation
 ---------
 Question : How has the BMI distribution been utilized to improve the accuracy of the Diabetes prediction model?
 Machine interpretation : Feature_importance(BMI) and Model_accuracy(BMI)
-Action : Feature_importance
 Action : Model_accuracy
+Action : Feature_importance
 Feature groups : {'BMI': ''}
 Feature groups : {'BMI': ''}
 Explanation type : Explanation of how a feature is used in a machine learning model.

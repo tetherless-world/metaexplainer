@@ -167,7 +167,7 @@ def parse_machine_interpretation(record, column_names):
     record_mi = record['Machine interpretation']
     record_question = record['Question']
 
-    (edited_cols, acronym_cols) = metaexplainer_utils.generate_acronyms_possibilities(column_names)
+    (edited_cols, expanded_cols, acronym_cols) = metaexplainer_utils.generate_acronyms_possibilities(column_names)
 
     #if there are no recognized feature groups, then extract them from the machine interpretation / question
     if len(feature_groups_all) == 0:
@@ -182,12 +182,17 @@ def parse_machine_interpretation(record, column_names):
             matched_col = list(filter(lambda x: x.lower() in search_string.lower(), edited_cols.keys()))
 
             if len(matched_col) > 0:
-                feature_groups_all.append({edited_cols[matched_col[0]], ''})
+                feature_groups_all.append({edited_cols[matched_col[0]]: ''})
             else:
-                matched_col = list(filter(lambda x: x.lower() in search_string.lower(), acronym_cols.keys()))
+                matched_col = list(filter(lambda x: x.lower() in search_string.lower(), expanded_cols.keys()))
 
                 if len(matched_col) > 0:
-                    feature_groups_all.append({acronym_cols[matched_col[0]], ''})
+                    feature_groups_all.append({expanded_cols[matched_col[0]]: ''})
+                else:
+                    matched_col = list(filter(lambda x: x.lower() in search_string.lower(), acronym_cols.keys()))
+
+                    if len(matched_col) > 0:
+                        feature_groups_all.append({acronym_cols[matched_col[0]]: ''})
 
 
     #print('Length of action and paranthesis groups are ', len(actions), len(parantheses_groups))
@@ -253,11 +258,11 @@ if __name__=='__main__':
     domain_name = 'Diabetes'
     
 
-    mode = 'generated' # 'fine-tuned'
+    mode = 'fine-tuned' # 'fine-tuned' / 'generated'
 
     #only makes sense if the mode is generated and not fine-tuned 
 
-    data_split = 'train'
+    data_split = 'test'
 
     interpretations_records = read_interpretations_from_file(domain_name, mode=mode, data_split=data_split)
     column_names = metaexplainer_utils.load_column_names(domain_name)

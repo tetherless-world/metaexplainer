@@ -1,0 +1,6 @@
+high
+low
+higher
+lower
+large
+small

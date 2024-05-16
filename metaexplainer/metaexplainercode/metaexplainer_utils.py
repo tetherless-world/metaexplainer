@@ -70,6 +70,7 @@ def load_column_names(domain_name):
 
 def generate_acronyms_possibilities(list_of_conts):
 	list_edited = {ele.replace(' ', '').lower():ele for ele in list_of_conts}
+	list_expanded = {}
 	acronyms_list = {}
 
 	#based off of: https://stackoverflow.com/questions/4355201/creating-acronyms-in-python
@@ -78,8 +79,13 @@ def generate_acronyms_possibilities(list_of_conts):
 			acronyms_list[''.join(w[0].upper() for w in ele_l.split(' '))] = ele_l
 		else:
 			acronyms_list[''.join(list(filter(str.isupper, ele_l)))] = ele_l
+
+		if '_' in ele_l:
+			list_expanded[ele_l.replace('_', ' ')] = ele_l
+		else:
+			list_expanded[re.sub('([A-Z])', r' \1', ele_l)] = ele_l
 		
-	return (list_edited, acronyms_list)
+	return (list_edited, list_expanded, acronyms_list)
 
 def check_if_label(field_key, labels):
 	'''
@@ -88,10 +94,12 @@ def check_if_label(field_key, labels):
 	Need to see how to handle abbreviations
 	'''
 	field_key = field_key.replace(' ','').replace('_','').lower()
-	(labels_edited, acronyms_labels) = generate_acronyms_possibilities(labels)
+	(labels_edited, labels_expanded, acronyms_labels) = generate_acronyms_possibilities(labels)
 
 	if (field_key in labels_edited.keys()):
 		return (True, labels_edited[field_key])
+	elif (field_key in labels_expanded.keys()):
+		return (True, labels_expanded[field_key])
 	elif (field_key.upper() in acronyms_labels.keys()):
 		return (True, acronyms_labels[field_key.upper()])
 	return (False, '')
