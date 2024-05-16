@@ -57,6 +57,8 @@ def extract_feature_value_pairs(feature_val_string, column_names):
                     #need to add check for feature - else add this as unnamed
                     features_dict[replacement_label] = feature_or_val
                     del features_dict[last_added_feature]
+                else:
+                    features_dict[last_added_feature] = feature_or_val
             else:
                 vals.append(feature_or_val)
         elif '=' in feature_or_val:
@@ -86,6 +88,9 @@ def parse_machine_interpretation(record, column_names):
 
     actions = re.findall(r'([\w]+)\s?\(', machine_interpretation)
     parantheses_groups = re.findall(r'\(([^()]+)\)', machine_interpretation)
+
+    if record['Question'] == 'What broader information about the current situation prompted the suggestion of this recommendation for a 55-year-old male with a BMI of 27 and a Diabetes Pedigree Function of 0.18?':
+        print(parantheses_groups)
 
     len_actions = len(actions)
     len_groups = len(parantheses_groups)
@@ -121,6 +126,12 @@ def parse_machine_interpretation(record, column_names):
                     replaced_actions.append(action)
 
                     del feature_groups_all[action_i]['Unnamed']
+                elif 'x' in feature_groups_all[action_i].keys():
+                    feature_groups_all[action_i][replacement_label] = feature_groups_all[action_i]['x']
+
+                    replaced_actions.append(action)
+
+                    del feature_groups_all[action_i]['x']
                     #print(feature_groups_all[action_i])
     
     actions = set(actions) - set(replaced_actions)
