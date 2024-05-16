@@ -68,6 +68,19 @@ def load_column_names(domain_name):
 	domain_dataset = pd.read_csv(codeconstants.DATA_FOLDER + '/' + domain_name + '/' + file_name + '.csv')
 	return list(domain_dataset.columns)
 
+def generate_acronyms_possibilities(list_of_conts):
+	list_edited = {ele.replace(' ', '').lower():ele for ele in list_of_conts}
+	acronyms_list = {}
+
+	#based off of: https://stackoverflow.com/questions/4355201/creating-acronyms-in-python
+	for ele_l in list_of_conts:
+		if ' ' in ele_l:
+			acronyms_list[''.join(w[0].upper() for w in ele_l.split(' '))] = ele_l
+		else:
+			acronyms_list[''.join(list(filter(str.isupper, ele_l)))] = ele_l
+		
+	return (list_edited, acronyms_list)
+
 def check_if_label(field_key, labels):
 	'''
 	Check if field is in labels
@@ -75,23 +88,14 @@ def check_if_label(field_key, labels):
 	Need to see how to handle abbreviations
 	'''
 	field_key = field_key.replace(' ','').replace('_','').lower()
-	labels_edited = {label.replace(' ', '').lower():label for label in labels}
-	acronyms_labels = {}
-
-	#based off of: https://stackoverflow.com/questions/4355201/creating-acronyms-in-python
-	for label in labels:
-		if ' ' in label:
-			acronyms_labels[''.join(w[0].upper() for w in label.split(' '))] = label
-		else:
-			acronyms_labels[''.join(list(filter(str.isupper, label)))] = label
-	
-	#print(acronyms_labels)
+	(labels_edited, acronyms_labels) = generate_acronyms_possibilities(labels)
 
 	if (field_key in labels_edited.keys()):
 		return (True, labels_edited[field_key])
 	elif (field_key.upper() in acronyms_labels.keys()):
 		return (True, acronyms_labels[field_key.upper()])
 	return (False, '')
+
 
 def is_valid_number(string):
 	try:
@@ -163,6 +167,9 @@ def compute_f1_levenshtein(reference_strs, result_strs, threshold=0.6):
 
 	return f1_score, precision, recall
 
+'''
+Loading records from Llama outputs
+'''
 def extract_key_value_from_string(response_str, find_key):
 		extract_str = ''
 

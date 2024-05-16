@@ -162,12 +162,58 @@ def parse_machine_interpretation(record, column_names):
             replace_unnamed_columns(skipped_i, feature_groups_all, skipped[skipped_action])
             skipped_i += 1
 
-    actions = set(actions) - set(replaced_actions)
+    actions = list(set(actions) - set(replaced_actions))
+
+    record_mi = record['Machine interpretation']
+    record_question = record['Question']
+
+    (edited_cols, acronym_cols) = metaexplainer_utils.generate_acronyms_possibilities(column_names)
+
+    #if there are no recognized feature groups, then extract them from the machine interpretation / question
+    if len(feature_groups_all) == 0:
+        search_string = record_mi
+
+        if search_string == '':
+            search_string = record_question
+
+        if search_string != '':
+            #record_mi might contain label!
+
+            matched_col = list(filter(lambda x: x.lower() in search_string.lower(), edited_cols.keys()))
+
+            if len(matched_col) > 0:
+                feature_groups_all.append({edited_cols[matched_col[0]], ''})
+            else:
+                matched_col = list(filter(lambda x: x.lower() in search_string.lower(), acronym_cols.keys()))
+
+                if len(matched_col) > 0:
+                    feature_groups_all.append({acronym_cols[matched_col[0]], ''})
+
 
     #print('Length of action and paranthesis groups are ', len(actions), len(parantheses_groups))
 
-    return {'Actions': actions, 'Groups': parantheses_groups, 'Feature groups': feature_groups_all, 'Explanation type': get_explanation_type(record)}
+    return {'Question': record['Question'],
+            'Machine interpretation': record['Machine interpretation'],
+        'Actions': actions, 
+        'Groups': parantheses_groups, 
+        'Feature groups': feature_groups_all, 
+        'Explanation type': get_explanation_type(record)}
 
+def print_record(record):
+    '''
+    Returns a string version of the parsed record
+    '''
+    record_txt = 'Question : ' + str(record['Question']) + '\n' + 'Machine interpretation : ' + str(record['Machine interpretation']) + '\n'
+
+    for action in record['Actions']:
+        record_txt += 'Action : ' + action + '\n'
+
+    for parsed_alts in record['Feature groups']:
+        record_txt += 'Feature groups : ' + str(parsed_alts) + '\n'
+
+    record_txt += 'Explanation type : ' + str(record['Explanation type']) + '\n---------\n'
+    
+    return record_txt
 
 def report_usability(record):
     '''
@@ -177,14 +223,31 @@ def report_usability(record):
     '''
     valid_explanations = metaexplainer_utils.load_selected_explanation_types()
 
-    if record['Actions'] == [] or record['Feature groups'] == {}:
-        print('I enter for actions and feature groups')
+    if len(record['Feature groups']) == []:
+        #print('I enter for actions and feature groups')
         return False
-    elif (record['Explanation type'] == '') or not(record['Explanation type'] in valid_explanations):
+    
+    if (record['Explanation type'] == '') or not(record['Explanation type'] in valid_explanations):
         #print('I enter for explanations', record['Explanation type'], record['Explanation type'] in valid_explanations)
         return False
 
     return True
+
+def generate_output_file_name(domain_name, mode, data_split, records_type):
+    write_folder = codeconstants.DELEGATE_FOLDER 
+    output_file_name = ''
+
+    if records_type == 'unusable':
+        write_folder += '/' + 'unusable'
+
+        os.makedirs(write_folder, exist_ok=True)
+
+    output_file_name = write_folder + '/' + domain_name + '_parsed_' + mode + '_delegate_instructions.txt'
+
+    if mode == 'generated':
+        output_file_name = write_folder + '/' + domain_name + '_parsed_' + mode + '_' + data_split + '_delegate_instructions.txt'
+    
+    return output_file_name
 
 if __name__=='__main__':
     domain_name = 'Diabetes'
@@ -200,13 +263,15 @@ if __name__=='__main__':
     column_names = metaexplainer_utils.load_column_names(domain_name)
     
     print(column_names)
+    print('Generating delegate parses for ', mode, ' data from ', data_split, 'split')
 
     delegate_folder = codeconstants.DELEGATE_FOLDER 
 
-    if not os.path.isdir(delegate_folder):
-        os.mkdir(delegate_folder)
+    os.makedirs(delegate_folder, exist_ok=True)
 
-    output_txt = ''
+    usable_output_txt = ''
+    unusable_output_txt = ''
+
     usable_records = []
 
     for i in range(0, len(interpretations_records)):
@@ -215,29 +280,26 @@ if __name__=='__main__':
         sample_record = dict(interpretations_records.iloc[i])
         #print(sample_record)
         
-        output_txt += 'Question : ' + str(sample_record['Question']) + '\n' + 'Machine interpretation : ' + str(sample_record['Machine interpretation']) + '\n'
-
         parsed_mi = parse_machine_interpretation(sample_record, column_names)
+        record_output_txt = print_record(parsed_mi)
 
-        for action in parsed_mi['Actions']:
-            output_txt += 'Action : ' + action + '\n'
-
-        for parsed_alts in parsed_mi['Feature groups']:
-            output_txt += 'Intermediate : ' + str(parsed_alts) + '\n'
-
-        output_txt += 'Explanation type : ' + str(parsed_mi['Explanation type']) + '\n---------\n'
 
         if report_usability(parsed_mi):
+            usable_output_txt += record_output_txt
             usable_records.append(parsed_mi)
+        else:
+            unusable_output_txt += record_output_txt
     
-    output_file_name = codeconstants.DELEGATE_FOLDER + '/' + domain_name + '_parsed_' + mode + '_delegate_instructions.txt'
+    usable_output_file_name = generate_output_file_name(domain_name, mode, data_split, 'usable')        
 
-    if mode == 'generated':
-        output_file_name = codeconstants.DELEGATE_FOLDER + '/' + domain_name + '_parsed_' + mode + '_' + data_split + '_delegate_instructions.txt'
-        
+    with open(usable_output_file_name, 'w') as f:
+        f.write(usable_output_txt)
+    
+    unusable_output_file_name = generate_output_file_name(domain_name, mode, data_split, 'unusable')        
 
-    with open(output_file_name, 'w') as f:
-        f.write(output_txt)
+    with open(unusable_output_file_name, 'w') as f:
+        f.write(unusable_output_txt)
+    
     
     print('Usable records ', len(usable_records))
     
