@@ -50,9 +50,13 @@ def extract_feature_value_pairs(feature_val_string, column_names):
         feature_or_val = feature_or_val.strip()
 
         if metaexplainer_utils.is_valid_number(feature_or_val):
-            if (last_added_feature != '') and (features_dict[last_added_feature] == '') and metaexplainer_utils.check_if_label(last_added_feature, column_names):
-                #need to add check for feature - else add this as unnamed
-                features_dict[last_added_feature] = feature_or_val
+            if (last_added_feature != '') and (features_dict[last_added_feature] == ''):
+                (if_label, replacement_label) = metaexplainer_utils.check_if_label(last_added_feature, column_names)
+
+                if if_label:
+                    #need to add check for feature - else add this as unnamed
+                    features_dict[replacement_label] = feature_or_val
+                    del features_dict[last_added_feature]
             else:
                 vals.append(feature_or_val)
         elif '=' in feature_or_val:
@@ -79,7 +83,8 @@ def parse_machine_interpretation(record, column_names):
     The explanation type already tells you what explainer to run
     '''
     machine_interpretation = str(record['Machine interpretation'])
-    actions = re.findall(r'([\w]+)\(', machine_interpretation)
+
+    actions = re.findall(r'([\w]+)\s?\(', machine_interpretation)
     parantheses_groups = re.findall(r'\(([^()]+)\)', machine_interpretation)
 
     len_actions = len(actions)
@@ -88,11 +93,6 @@ def parse_machine_interpretation(record, column_names):
     if len_actions == len_groups + 1:
         actions = actions[1:]
         len_actions = len(actions)
-
-    combined = []
-
-    if len_actions == len_groups:
-        combined = [actions[i].strip() + ' <> ' + parantheses_groups[i].strip() for i in range(0, len_groups)]
 
     '''
     Could be that action is in column name, in that case -> need to extract value right adjacent to it 
@@ -107,19 +107,27 @@ def parse_machine_interpretation(record, column_names):
         feature_groups = extract_feature_value_pairs(feature_group.strip(), column_names)
         feature_groups_all.append(feature_groups)
 
+    replaced_actions = []
+
     for action_i in range(len(actions)):
         action = actions[action_i]
+        (if_label, replacement_label) = metaexplainer_utils.check_if_label(action, column_names)
 
-        if metaexplainer_utils.check_if_label(action, column_names) and (action_i < len(feature_groups_all)):
-            feature_group_at_i = feature_groups_all[action_i]
+        if if_label:
+            if (action_i < len(feature_groups_all)):
+                if 'Unnamed' in feature_groups_all[action_i].keys():
+                    feature_groups_all[action_i][replacement_label] = feature_groups_all[action_i]['Unnamed']
 
-            if 'Unnamed' in feature_group_at_i.keys():
-                feature_group_at_i[action] = feature_group_at_i['Unnamed']
-                del feature_group_at_i['Unnamed']
+                    replaced_actions.append(action)
+
+                    del feature_groups_all[action_i]['Unnamed']
+                    #print(feature_groups_all[action_i])
+    
+    actions = set(actions) - set(replaced_actions)
 
     #print('Length of action and paranthesis groups are ', len(actions), len(parantheses_groups))
 
-    return {'Actions': actions, 'Groups': parantheses_groups, 'Combined': combined, 'Alternate': feature_groups_all}
+    return {'Actions': actions, 'Groups': parantheses_groups, 'Alternate': feature_groups_all}
 
 def get_explanation_type(record):
     '''
@@ -138,7 +146,7 @@ if __name__=='__main__':
 
     #only makes sense if the mode is generated and not fine-tuned 
 
-    data_split = 'train'
+    data_split = 'test'
 
     interpretations_records = read_interpretations_from_file(domain_name, mode=mode, data_split=data_split)
     column_names = metaexplainer_utils.load_column_names(domain_name)

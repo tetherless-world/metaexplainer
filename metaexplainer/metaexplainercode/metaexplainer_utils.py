@@ -69,11 +69,16 @@ def check_if_label(field_key, labels):
 	Ignore case and spaces
 	Need to see how to handle abbreviations
 	'''
-	field_key = field_key.replace(' ','').lower()
-	labels = [label.replace(' ', '').lower() for label in labels]
-	if field_key in labels:
-		return True
-	return False
+	field_key = field_key.replace(' ','').replace('_','').lower()
+	labels_edited = {label.replace(' ', '').lower():label for label in labels}
+	acronyms_labels = {''.join(w[0].upper() for w in label.split(' ')):label for label in labels}
+	#print(acronyms_labels)
+
+	if (field_key in labels_edited.keys()):
+		return (True, labels_edited[field_key])
+	elif (field_key.upper() in acronyms_labels.keys()):
+		return (True, acronyms_labels[field_key.upper()])
+	return (False, '')
 
 def is_valid_number(string):
 	try:
