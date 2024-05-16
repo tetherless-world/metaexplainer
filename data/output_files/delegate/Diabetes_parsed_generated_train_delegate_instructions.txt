@@ -4,8 +4,8 @@ Explanation type : Data Explanation
 ---------
 Question : In what instances from the training data has gender played a significant role in predicting Diabetes?
 Machine interpretation : Instances(where Sex) and Diabetes(pretreatment)
-Action : Diabetes
 Action : Instances
+Action : Diabetes
 Intermediate : {'where Sex': ''}
 Intermediate : {'pretreatment': ''}
 Explanation type : Counterfactual Explanation
@@ -95,8 +95,8 @@ Explanation type : Counterfactual Explanation
 ---------
 Question : If the patient had a BMI of 18 instead of 22, would the prediction for Diabetes be lower?
 Machine interpretation : =  If BMI(patient, 18) and not Diabetes(patient), then Diabetes Prediction(patient) would be lower.
-Action : Diabetes
 Action : Prediction
+Action : Diabetes
 Intermediate : {'BMI': '18'}
 Intermediate : {'patient': ''}
 Intermediate : {'patient': ''}
@@ -164,8 +164,8 @@ Explanation type : Contextual Explanation
 ---------
 Question : How have age and BMI values been used to identify outliers in the dataset for Diabetes prediction?
 Machine interpretation : = Outliers(Diabetes) and (Age and BMI)
-Action : Outliers
 Action : and
+Action : Outliers
 Intermediate : {'Diabetes': ''}
 Intermediate : {'Age and BMI': ''}
 Explanation type : Case Based Explanation
@@ -252,8 +252,8 @@ Explanation type : Counterfactual Explanation
 ---------
 Question : What factors led the model to predict that a 60-year-old male with a BMI of 28 and a Diabetes Pedigree Function of 0.1 does not have Diabetes?
 Machine interpretation : Predict(Diabetes) and not Diabetes (Age = 60, Sex = Male, BMI = 28, Diabetes Pedigree Function = 0.1)
-Action : Diabetes
 Action : Predict
+Action : Diabetes
 Intermediate : {'Diabetes': ''}
 Intermediate : {'Age': '60', 'Sex': 'Male', 'BMI': '28', 'Diabetes Pedigree Function': '0.1'}
 Explanation type : Contrastive Explanation
@@ -278,8 +278,8 @@ Explanation type : Contrastive Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 40-year-old female with a BMI of 30 and a Diabetes Pedigree Function of 0.25?
 Machine interpretation : Prompted(Suggestion(Diabetes, High) , Situation(Current, 40, Female, 30, BMI, 0.25, Diabetes Pedigree Function))
-Action : Situation
 Action : Suggestion
+Action : Situation
 Intermediate : {'Diabetes': '', 'High': ''}
 Intermediate : {'Current': '40', 'Female': '30', 'Diabetes Pedigree Function': ''}
 Explanation type : Reason Explanation
@@ -393,8 +393,8 @@ Explanation type : Case Based Explanation
 ---------
 Question : Why emphasize the age of 55 as a crucial factor in predicting Diabetes for a female with a BMI of 30, rather than the age of 35 in a male with a BMI of 20 and a Diabetes Pedigree Function of 0.2?
 Machine interpretation : Emphasize(Age) and Emphasize(Age, Mismatch(BMI, 30, Female), 55) and Emphasize(Age, Mismatch(BMI, 20, Male), 35)
-Action : Emphasize
 Action : Mismatch
+Action : Emphasize
 Intermediate : {'Age': ''}
 Intermediate : {'Female': ''}
 Intermediate : {'Male': ''}
@@ -449,8 +449,8 @@ Explanation type : Counterfactual Explanation
 ---------
 Question : Why emphasize the BMI range of 25-30 in determining Diabetes risk over the Diabetes Pedigree Function?
 Machine interpretation : Why Emphasize(BMI = 25 - 30, Diabetes Prediction) over (Diabetes Pedigree Function)?
-Action : Emphasize
 Action : over
+Action : Emphasize
 Intermediate : {'BMI': '25 - 30', 'Diabetes Prediction': ''}
 Intermediate : {'Diabetes Pedigree Function': ''}
 Explanation type : Contrastive Explanation
@@ -512,8 +512,8 @@ Explanation type : Case Based Explanation
 ---------
 Question : How has the distribution of Diabetes Pedigree Function values been used to identify high-risk individuals for Diabetes prediction?
 Machine interpretation : = Predict(Diabetes) and Pedigree(Diabetes Pedigree Function) -> Diabetes Pedigree Function
-Action : Pedigree
 Action : Predict
+Action : Pedigree
 Intermediate : {'Diabetes': ''}
 Intermediate : {'Diabetes Pedigree Function': ''}
 Explanation type : Case Based Explanation
@@ -556,9 +556,9 @@ Explanation type : Counterfactual Explanation
 ---------
 Question : What instances from the training data suggest that low BMI values are indicative of a lower likelihood of Diabetes prediction?
 Machine interpretation : = Instances(BMI) and (Diabetes = low),  Action = Suggest,  Explanation type =  Case Based Explanation and  Target variable = Diabetes prediction (low likelihood).
-Action : prediction
-Action : and
 Action : Instances
+Action : and
+Action : prediction
 Intermediate : {'BMI': ''}
 Intermediate : {'Diabetes': 'low'}
 Intermediate : {'low likelihood': ''}
@@ -630,8 +630,8 @@ Explanation type : Data Explanation
 ---------
 Question : How has the distribution of Diabetes Pedigree Function values been used to identify high-risk individuals for Diabetes prediction?
 Machine interpretation : = Predict(Diabetes) and Pedigree(Diabetes Pedigree Function) -> Diabetes Pedigree Function
-Action : Pedigree
 Action : Predict
+Action : Pedigree
 Intermediate : {'Diabetes': ''}
 Intermediate : {'Diabetes Pedigree Function': ''}
 Explanation type : Case Based Explanation
@@ -646,8 +646,8 @@ Explanation type : Data Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 60-year-old male with a BMI of 22 and a Diabetes Pedigree Function of 0.1?
 Machine interpretation : Prompted(Suggestion(Low Likelihood(Diabetes, 60, Male, BMI = 22, Diabetes Pedigree Function = 0.1)))
-Action : Likelihood
 Action : Prompted
+Action : Likelihood
 Action : Suggestion
 Intermediate : {'Diabetes': '60', 'Male': '', 'BMI': '22', 'Diabetes Pedigree Function': '0.1'}
 Explanation type : Reason Explanation
@@ -678,8 +678,8 @@ Explanation type : Contextual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 55-year-old male with a BMI of 20 and a Diabetes Pedigree Function of 0.2?
 Machine interpretation : Prompted(Suggestion(Low Likelihood(Diabetes, 55, Male, 20, BMI, 0.2, Diabetes Pedigree Function)))
-Action : Likelihood
 Action : Prompted
+Action : Likelihood
 Action : Suggestion
 Intermediate : {'Diabetes': '55', 'Male': '20', 'Diabetes Pedigree Function': ''}
 Explanation type : Reason Explanation
@@ -971,9 +971,9 @@ Explanation type : Contrastive Explanation
 ---------
 Question : Why predict Diabetes for a 50-year-old female with a BMI of 25 and a Diabetes Pedigree Function of 0.3, rather than a 40-year-old male with a BMI of 22 and a Diabetes Pedigree Function of 0.1?
 Machine interpretation : Predict(Diabetes, Female(age = 50, BMI = 25, DPF = 0.3)) and not Predict(Diabetes, Male(age = 40, BMI = 22, DPF = 0.1)
-Action : Female
-Action : Male
 Action : Predict
+Action : Male
+Action : Female
 Intermediate : {'age': '50', 'BMI': '25', 'DPF': '0.3'}
 Intermediate : {'age': '40', 'BMI': '22', 'DPF': '0.1'}
 Explanation type : Rationale Explanation
@@ -1097,8 +1097,8 @@ Explanation type : =  Case Explanation
 ---------
 Question : If the patient had a BMI of 30 and a high Diabetes Pedigree Function of 0.4, would the treatment plan need to be adjusted?
 Machine interpretation : If BMI(patient, 30) and Diabetes Pedigree Function(patient, 0.4) -> Treatment Plan(patient, ?)
-Action : Plan
 Action : Function
+Action : Plan
 Intermediate : {'BMI': '30'}
 Intermediate : {'patient': '0.4'}
 Intermediate : {'patient': '', '?': ''}
@@ -1210,8 +1210,8 @@ Explanation type : Counterfactual Explanation
 ---------
 Question : Would the likelihood of Diabetes change if the patient's Diabetes Pedigree Function was 0.3 instead of 0.1?
 Machine interpretation : =  Diabetes Pedigree Function(patient, 0.3) \xe2\x88\xa7 Diabetes Pedigree Function(patient, 0.1) \xe2\x86\x92 Diabetes Likelihood(patient, ?)
-Action : Likelihood
 Action : Function
+Action : Likelihood
 Intermediate : {'patient': '0.3'}
 Intermediate : {'patient': '0.1'}
 Intermediate : {'patient': '', '?': ''}
@@ -1219,8 +1219,8 @@ Explanation type : Counterfactual Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 60-year-old male with a BMI of 22 and a Diabetes Pedigree Function of 0.1?
 Machine interpretation : Prompted(Suggestion(Low Likelihood(Diabetes, 60, Male, 22, BMI, 0.1, Diabetes Pedigree Function)))
-Action : Likelihood
 Action : Prompted
+Action : Likelihood
 Action : Suggestion
 Intermediate : {'Diabetes': '60', 'Male': '22', 'Diabetes Pedigree Function': ''}
 Explanation type : Reason Explanation

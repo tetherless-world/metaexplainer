@@ -88,6 +88,15 @@ def replace_unnamed_columns(field_key_i, dictionary_replace, replacement_label):
         dictionary_replace[field_key_i][replacement_label] = dictionary_replace[field_key_i][replace_match[0]]
         del dictionary_replace[field_key_i][replace_match[0]]
 
+
+def get_explanation_type(record):
+    '''
+    Simple function to retrieve explanation type
+    '''
+    explan_type = record['Explanation type'].strip()
+    
+    return explan_type
+
 def parse_machine_interpretation(record, column_names):
     '''
     The goal is to return:
@@ -157,16 +166,25 @@ def parse_machine_interpretation(record, column_names):
 
     #print('Length of action and paranthesis groups are ', len(actions), len(parantheses_groups))
 
-    return {'Actions': actions, 'Groups': parantheses_groups, 'Alternate': feature_groups_all}
+    return {'Actions': actions, 'Groups': parantheses_groups, 'Feature groups': feature_groups_all, 'Explanation type': get_explanation_type(record)}
 
-def get_explanation_type(record):
-    '''
-    Simple function to retrieve explanation type
-    '''
-    explan_type = record['Explanation type'].strip()
-    
-    return {'Explanation type': explan_type}
 
+def report_usability(record):
+    '''
+    records are unusable if they:
+    - have an unrecognized / no explanation type
+    - machine interpretation / action /  is empty 
+    '''
+    valid_explanations = metaexplainer_utils.load_selected_explanation_types()
+
+    if record['Actions'] == [] or record['Feature groups'] == {}:
+        print('I enter for actions and feature groups')
+        return False
+    elif (record['Explanation type'] == '') or not(record['Explanation type'] in valid_explanations):
+        #print('I enter for explanations', record['Explanation type'], record['Explanation type'] in valid_explanations)
+        return False
+
+    return True
 
 if __name__=='__main__':
     domain_name = 'Diabetes'
@@ -176,7 +194,7 @@ if __name__=='__main__':
 
     #only makes sense if the mode is generated and not fine-tuned 
 
-    data_split = 'test'
+    data_split = 'train'
 
     interpretations_records = read_interpretations_from_file(domain_name, mode=mode, data_split=data_split)
     column_names = metaexplainer_utils.load_column_names(domain_name)
@@ -189,6 +207,7 @@ if __name__=='__main__':
         os.mkdir(delegate_folder)
 
     output_txt = ''
+    usable_records = []
 
     for i in range(0, len(interpretations_records)):
         #This whole below part should be a function that takes as input an interpretation - which is {'Question': ,'Explanation type': , 'Machine interpretation': }
@@ -199,17 +218,17 @@ if __name__=='__main__':
         output_txt += 'Question : ' + str(sample_record['Question']) + '\n' + 'Machine interpretation : ' + str(sample_record['Machine interpretation']) + '\n'
 
         parsed_mi = parse_machine_interpretation(sample_record, column_names)
-        explanation_type = get_explanation_type(sample_record)
-
-        parsed_mi.update(explanation_type)
 
         for action in parsed_mi['Actions']:
             output_txt += 'Action : ' + action + '\n'
 
-        for parsed_alts in parsed_mi['Alternate']:
+        for parsed_alts in parsed_mi['Feature groups']:
             output_txt += 'Intermediate : ' + str(parsed_alts) + '\n'
 
         output_txt += 'Explanation type : ' + str(parsed_mi['Explanation type']) + '\n---------\n'
+
+        if report_usability(parsed_mi):
+            usable_records.append(parsed_mi)
     
     output_file_name = codeconstants.DELEGATE_FOLDER + '/' + domain_name + '_parsed_' + mode + '_delegate_instructions.txt'
 
@@ -219,6 +238,8 @@ if __name__=='__main__':
 
     with open(output_file_name, 'w') as f:
         f.write(output_txt)
+    
+    print('Usable records ', len(usable_records))
     
 
 

@@ -55,6 +55,11 @@ def read_list_from_file(file_name):
 	lines = f.read().splitlines()
 	return lines
 
+def load_selected_explanation_types():
+	loaded_explanations = [x.strip() for x in open(codeconstants.EXPLANATIONS_LOADED_FROM_EO, 'r').readlines()]
+	return loaded_explanations
+
+
 def load_column_names(domain_name):
 	'''
 	Return list of column names for dataset
