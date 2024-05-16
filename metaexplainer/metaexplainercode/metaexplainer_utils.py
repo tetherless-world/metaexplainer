@@ -71,7 +71,15 @@ def check_if_label(field_key, labels):
 	'''
 	field_key = field_key.replace(' ','').replace('_','').lower()
 	labels_edited = {label.replace(' ', '').lower():label for label in labels}
-	acronyms_labels = {''.join(w[0].upper() for w in label.split(' ')):label for label in labels}
+	acronyms_labels = {}
+
+	#based off of: https://stackoverflow.com/questions/4355201/creating-acronyms-in-python
+	for label in labels:
+		if ' ' in label:
+			acronyms_labels[''.join(w[0].upper() for w in label.split(' '))] = label
+		else:
+			acronyms_labels[''.join(list(filter(str.isupper, label)))] = label
+	
 	#print(acronyms_labels)
 
 	if (field_key in labels_edited.keys()):

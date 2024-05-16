@@ -89,8 +89,12 @@ def parse_machine_interpretation(record, column_names):
     actions = re.findall(r'([\w]+)\s?\(', machine_interpretation)
     parantheses_groups = re.findall(r'\(([^()]+)\)', machine_interpretation)
 
-    if record['Question'] == 'What broader information about the current situation prompted the suggestion of this recommendation for a 55-year-old male with a BMI of 27 and a Diabetes Pedigree Function of 0.18?':
-        print(parantheses_groups)
+    printer = False
+
+    # if record['Question'] == 'What broader information about the current situation prompted the suggestion of this recommendation for a 55-year-old male with a BMI of 27 and a Diabetes Pedigree Function of 0.18?':
+    #     #print(actions)
+    #     #print(parantheses_groups)
+    #     printer = True
 
     len_actions = len(actions)
     len_groups = len(parantheses_groups)
@@ -117,6 +121,9 @@ def parse_machine_interpretation(record, column_names):
     for action_i in range(len(actions)):
         action = actions[action_i]
         (if_label, replacement_label) = metaexplainer_utils.check_if_label(action, column_names)
+
+        if printer:
+            print(action, if_label, replacement_label)
 
         if if_label:
             if (action_i < len(feature_groups_all)):
@@ -157,7 +164,7 @@ if __name__=='__main__':
 
     #only makes sense if the mode is generated and not fine-tuned 
 
-    data_split = 'test'
+    data_split = 'train'
 
     interpretations_records = read_interpretations_from_file(domain_name, mode=mode, data_split=data_split)
     column_names = metaexplainer_utils.load_column_names(domain_name)
