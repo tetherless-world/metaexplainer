@@ -77,6 +77,17 @@ def extract_feature_value_pairs(feature_val_string, column_names):
     return features_dict
 
 
+def replace_unnamed_columns(field_key_i, dictionary_replace, replacement_label):
+    '''
+    Used by the next parse function to replace actions with column names 
+    '''
+    replacement_terms = ['Unnamed', 'x', 'patient']
+    replace_match = list(set(dictionary_replace[field_key_i].keys()).intersection(replacement_terms))
+    
+    if len(replace_match) > 0:
+        dictionary_replace[field_key_i][replacement_label] = dictionary_replace[field_key_i][replace_match[0]]
+        del dictionary_replace[field_key_i][replace_match[0]]
+
 def parse_machine_interpretation(record, column_names):
     '''
     The goal is to return:
@@ -91,10 +102,11 @@ def parse_machine_interpretation(record, column_names):
 
     printer = False
 
-    # if record['Question'] == 'What broader information about the current situation prompted the suggestion of this recommendation for a 55-year-old male with a BMI of 27 and a Diabetes Pedigree Function of 0.18?':
-    #     #print(actions)
-    #     #print(parantheses_groups)
-    #     printer = True
+    # if record['Question'] == 'If the patient had a BMI of 30 instead of 25, would the likelihood of having Diabetes increase significantly?':
+    #     print(record['Question'])
+    #     print('A', actions)
+    #     print('PG', parantheses_groups)
+    #     printer = False
 
     len_actions = len(actions)
     len_groups = len(parantheses_groups)
@@ -117,6 +129,7 @@ def parse_machine_interpretation(record, column_names):
         feature_groups_all.append(feature_groups)
 
     replaced_actions = []
+    skipped = {}
 
     for action_i in range(len(actions)):
         action = actions[action_i]
@@ -126,21 +139,20 @@ def parse_machine_interpretation(record, column_names):
             print(action, if_label, replacement_label)
 
         if if_label:
+            replaced_actions.append(action)
+
             if (action_i < len(feature_groups_all)):
-                if 'Unnamed' in feature_groups_all[action_i].keys():
-                    feature_groups_all[action_i][replacement_label] = feature_groups_all[action_i]['Unnamed']
+                replace_unnamed_columns(action_i, feature_groups_all, replacement_label)
+            else:
+                skipped[action] = replacement_label
 
-                    replaced_actions.append(action)
+    if len(skipped) > 0:
+        skipped_i = 0
 
-                    del feature_groups_all[action_i]['Unnamed']
-                elif 'x' in feature_groups_all[action_i].keys():
-                    feature_groups_all[action_i][replacement_label] = feature_groups_all[action_i]['x']
+        for skipped_action in skipped.keys():
+            replace_unnamed_columns(skipped_i, feature_groups_all, skipped[skipped_action])
+            skipped_i += 1
 
-                    replaced_actions.append(action)
-
-                    del feature_groups_all[action_i]['x']
-                    #print(feature_groups_all[action_i])
-    
     actions = set(actions) - set(replaced_actions)
 
     #print('Length of action and paranthesis groups are ', len(actions), len(parantheses_groups))
@@ -164,7 +176,7 @@ if __name__=='__main__':
 
     #only makes sense if the mode is generated and not fine-tuned 
 
-    data_split = 'train'
+    data_split = 'test'
 
     interpretations_records = read_interpretations_from_file(domain_name, mode=mode, data_split=data_split)
     column_names = metaexplainer_utils.load_column_names(domain_name)
