@@ -5,6 +5,8 @@ import os
 DATA_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/datasets/'))
 PROMPTS_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/prompts/'))
 
+EXPLANATIONS_LOADED_FROM_EO = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/defaults/explanations_selected.txt'))
+
 OUTPUT_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/output_files/'))
 DELEGATE_FOLDER = OUTPUT_FOLDER + '/delegate/'
 DECOMPOSE_QUESTIONS_FOLDER = OUTPUT_FOLDER + '/decompose_questions/'

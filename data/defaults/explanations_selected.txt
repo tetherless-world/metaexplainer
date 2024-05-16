@@ -1,0 +1,6 @@
+Case Based Explanation
+Contrastive Explanation
+Data Explanation
+Rationale Explanation
+Contextual Explanation
+Counterfactual Explanation
