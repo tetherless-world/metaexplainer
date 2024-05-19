@@ -3,9 +3,13 @@ import rdflib
 import ontospy
 import pandas as pd
 
+import sys
+sys.path.append('../')
+from metaexplainercode import codeconstants
 
 def load_eo():
-	eo_model = ontospy.Ontospy("https://purl.org/heals/eo",verbose=True)
+	#eo_model = ontospy.Ontospy("https://purl.org/heals/eo",verbose=True)
+	eo_model = ontospy.Ontospy(codeconstants.ONTOLOGY_FOLDER + 'explanation-ontology.owl', verbose=True)
 	return eo_model
 
 def get_property_value(class_obj, URIRef):
@@ -27,7 +31,10 @@ def get_class_term(loaded_ont, label, search_index):
 	'''
 	Return class found if there is more than 1 match, allow the user to pick
 	'''
-	class_list = loaded_ont.get_class(class_term)
+	label_edited = label.replace(' ', '')
+
+	class_list = loaded_ont.get_class(label_edited)
+	#print(class_list)
 	#class_parents = [class_o.parents() for class_o in class_list]
 	#print('Parents ', class_parents)
 	
