@@ -20,6 +20,7 @@ sys.path.append('../')
 from metaexplainercode import codeconstants
 
 from metaexplainercode import metaexplainer_utils
+from metaexplainercode import ontology_utils
 
 '''
 GPT Question processing functions
@@ -177,42 +178,6 @@ def rename_columns(explanation_sheet_df_colnames):
 '''
 Ontology loading and processing functions 
 '''
-def get_children_of_class(ont_class):
-	'''
-	Return a list of all children of a class
-	'''
-	children_list = ont_class.descendants()
-	return children_list
-
-def get_class_term(loaded_ont, class_term, search_index):
-	'''
-	Return class found if there is more than 1 match, allow the user to pick
-	'''
-	class_list = loaded_ont.get_class(class_term)
-	#class_parents = [class_o.parents() for class_o in class_list]
-	#print('Parents ', class_parents)
-	
-	class_at_index = [class_matched for class_matched in class_list if get_property_value(class_matched, 'http://www.w3.org/2000/01/rdf-schema#label') == 'Explanation'][0]
-	#print('All exps ', class_list[-1])
-	return class_at_index
-
-
-def get_property_value(class_obj, URIRef):
-	'''
-	Trying to get a value for a given property on a class
-	For property pass the entire URI including namespace and property name 
-	'''
-	value_uri = class_obj.getValuesForProperty(rdflib.term.URIRef(URIRef))
-
-	#retrieve string value of question if present
-	if len(value_uri) > 0:
-		value_uri = value_uri[0].toPython()
-	else:
-		value_uri = ''
-
-	return value_uri
-
-
 def get_example_question(class_obj):
 	'''
 	Get example questions listed against each explanation class
@@ -223,8 +188,8 @@ def get_example_question(class_obj):
 
 	class_obj._buildGraph()
 	child_uri = class_obj.uri
-	quest = get_property_value(class_obj, skos_example_URI)
-	label = get_property_value(class_obj, label_URI)	
+	quest = ontology_utils.get_property_value(class_obj, skos_example_URI)
+	label = ontology_utils.get_property_value(class_obj, label_URI)	
 
 	return (label, quest)
 
@@ -277,10 +242,10 @@ def get_class_content(ont_class):
 if __name__=="__main__":
 	if not os.path.exists(codeconstants.OUTPUT_FOLDER + '/prototypical_questions_explanations_eo.csv'):
 		#Trying to load EO and inspect it; this works better than others
-		eo_model = ontospy.Ontospy("https://purl.org/heals/eo",verbose=True)
+		eo_model = ontology_utils.load_eo()
 		#eo_model.printClassTree()
-		explanation_class = get_class_term(eo_model, "explanation", -1)
-		children_list_exp = get_children_of_class(explanation_class)
+		explanation_class = ontology_utils.get_class_term(eo_model, "explanation", -1)
+		children_list_exp = ontology_utils.get_children_of_class(explanation_class)
 		print('Explanations Extracted', children_list_exp, '\n # of explanations ', len(children_list_exp))
 
 		print("Example questions for each child are")
