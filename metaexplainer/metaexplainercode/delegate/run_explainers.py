@@ -7,6 +7,7 @@ from metaexplainercode import codeconstants
 from metaexplainercode import metaexplainer_utils
 from train_models.run_model import *
 
+import matplotlib as plt
 
 # Importing shap KernelExplainer (aix360 style)
 from aix360.algorithms.shap import KernelExplainer
@@ -15,12 +16,17 @@ from aix360.algorithms.shap import KernelExplainer
 import shap
 
 def run_shap(model, X_train, X_test, single_instance=True):
-	shapexplainer = KernelExplainer(model.predict_proba, X_train)
+	shapexplainer = KernelExplainer(model.predict_proba, X_test)
+	# shapexplainer = shap.Explainer(model.predict_proba, X_test)
+	# shapvals = shapexplainer(X_test)
 	print(type(shapexplainer))
 
 	if single_instance:
+		print(X_test.iloc[0,:])
 		shap_values = shapexplainer.explain_instance(X_test.iloc[0,:])
 		print(shap_values)
+	
+	#shap.plots.waterfall(shapvals[0, 0], max_display=10) #https://www.datacamp.com/tutorial/introduction-to-shap-values-machine-learning-interpretability#
 
 
 def run_on_diabetes(diabetes_path):
@@ -62,5 +68,5 @@ if __name__=='__main__':
 	- Dataset splits
 	- Model 
 	'''
-	(trained_model, x_train, x_test, y_train, y_test) = run_on_diabetes(codeconstants.DATA_FOLDER + '/diabetes/diabetes_val_corrected.csv')
+	(trained_model, x_train, x_test, y_train, y_test) = run_on_diabetes(codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv')
 	run_shap(trained_model, x_train, x_test)

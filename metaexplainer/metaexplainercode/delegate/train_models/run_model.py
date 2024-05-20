@@ -26,6 +26,9 @@ def transform_data(df):
 	generate a normalized dataframe for training
 	'''
 	q  = QuantileTransformer()
+	#for quick fix drop sex - will need to do this soon - https://scikit-learn.org/stable/auto_examples/compose/plot_column_transformer_mixed_types.html
+	df = df.drop(['Sex'], axis=1) 
+	print(df.columns)
 	X = q.fit_transform(df)
 	transformedDF = q.transform(X)
 	transformedDF = pd.DataFrame(X)
@@ -115,7 +118,7 @@ def fit_and_predict_model(mod_num, model, x_train, y_train, x_test, y_test):
 	class_report = classification_report(y_test, y_pred_model, output_dict=True)
 	#converting report to dataframe
 	class_report = pd.DataFrame(class_report).T
-	class_report = class_report.set_axis(class_report.columns, axis=1, inplace=False).rename_axis('dimensions',axis=0)
+	class_report = class_report.set_axis(class_report.columns, axis=1).rename_axis('dimensions',axis=0)
 	class_report.reset_index(inplace=True)
 	#printing and returning report
 	#print(class_report)

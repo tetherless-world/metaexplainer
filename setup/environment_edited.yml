@@ -1,13 +1,16 @@
-name: heals1.0
+name: metaexplainer
 channels:
   - pytorch
   - conda-forge
   - defaults
 dependencies:
   - pip
+  - pip3
   - python==3.7.6
   - altair
   - matplotlib=3.1.1
+  - aix360
+  - shap
   - nb_conda=2.2.1
   - numpy>=1.17.*
   - pandas=0.25.*
@@ -20,6 +23,8 @@ dependencies:
   - ipdb
   - xgboost=1.0.2
   - seaborn
+  - llama-index 
+  - llama-index-experimental
   - ibm_db
   - shap
   - uwsgi==2.0.18  
