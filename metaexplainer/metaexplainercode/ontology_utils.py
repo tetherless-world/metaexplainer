@@ -8,8 +8,8 @@ sys.path.append('../')
 from metaexplainercode import codeconstants
 
 def load_eo():
-	#eo_model = ontospy.Ontospy("https://purl.org/heals/eo",verbose=True)
-	eo_model = ontospy.Ontospy(codeconstants.ONTOLOGY_FOLDER + 'explanation-ontology.owl', verbose=True)
+	eo_model = ontospy.Ontospy("https://purl.org/heals/eo",verbose=True)
+	#eo_model = ontospy.Ontospy(codeconstants.ONTOLOGY_FOLDER + 'explanation-ontology.owl', verbose=True)
 	return eo_model
 
 def get_property_value(class_obj, URIRef):
