@@ -20,10 +20,10 @@ def run_query_on_explanation_graph(explanation_type_label):
 	"prefix owl:<http://www.w3.org/2002/07/owl#> "\
 	"prefix ep: <http://linkedu.eu/dedalo/explanationPattern.owl#> " \
 	"prefix prov: <http://www.w3.org/ns/prov#> " \
-	"select ?class ?property ?taskObject where {" \
+	"select DISTINCT ?taskObject where {" \
 	"?class (rdfs:subClassOf|owl:equivalentClass)/owl:onProperty ep:isBasedOn ." \
 	"?class (rdfs:subClassOf|owl:equivalentClass)/owl:someValuesFrom ?object ." \
-	"?object owl:intersectionOf ?collections ." \ 
+	"?object owl:intersectionOf ?collections ." \
 	"?collections rdf:rest*/rdf:first ?comps ." \
 	"?comps rdf:type owl:Restriction ." \
 	"?comps owl:onProperty ?property ." \
@@ -31,6 +31,10 @@ def run_query_on_explanation_graph(explanation_type_label):
 	"?class rdfs:label \"" + explanation_type_label + "\" . }" 
 	explanation_graph = explanation.rdflib_graph
 	method_results = explanation_graph.query(explanation_method_query)
+	
+	for result in method_results:
+		print(result)
+
 	return method_results
 
 

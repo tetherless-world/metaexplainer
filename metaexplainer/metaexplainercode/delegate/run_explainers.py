@@ -15,8 +15,12 @@ from aix360.algorithms.shap import KernelExplainer
 # the following import is required for access to shap plotting functions and datasets
 import shap
 
+def run_dice():
+	#use https://interpret.ml/DiCE/
+	pass
+
 def run_shap(model, X_train, X_test, single_instance=True):
-	shapexplainer = KernelExplainer(model.predict_proba, X_test)
+	shapexplainer = KernelExplainer(model.predict_proba, X_test) - #https://shap.readthedocs.io/en/latest/generated/shap.KernelExplainer.html
 	# shapexplainer = shap.Explainer(model.predict_proba, X_test)
 	# shapvals = shapexplainer(X_test)
 	print(type(shapexplainer))
