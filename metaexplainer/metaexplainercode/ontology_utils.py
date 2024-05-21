@@ -8,7 +8,8 @@ sys.path.append('../')
 from metaexplainercode import codeconstants
 
 def load_eo():
-	eo_model = ontospy.Ontospy("https://purl.org/heals/eo",verbose=True)
+	#eo_model = ontospy.Ontospy("https://purl.org/heals/eo",verbose=True)
+	eo_model = ontospy.Ontospy("https://raw.githubusercontent.com/tetherless-world/explanation-ontology/master/Ontologies/v3/explanation-ontology.owl", verbose=True)
 	#eo_model = ontospy.Ontospy(codeconstants.ONTOLOGY_FOLDER + 'explanation-ontology.owl', verbose=True)
 	return eo_model
 
@@ -26,6 +27,9 @@ def get_property_value(class_obj, URIRef):
 		value_uri = ''
 
 	return value_uri
+
+def get_label_class(class_obj):
+	return get_property_value(class_obj, 'http://www.w3.org/2000/01/rdf-schema#label')
 
 def get_class_term(loaded_ont, label, search_index):
 	'''
@@ -48,3 +52,26 @@ def get_children_of_class(ont_class):
 	'''
 	children_list = ont_class.descendants()
 	return children_list
+
+def get_instances_of_class(ont_model, ont_class_label):
+	'''
+	Returns all instances of class and their labels
+	'''
+	ont_class = get_class_term(ont_model, ont_class_label, -1)	
+
+	if not ont_class is None:
+		ont_class_graph = ont_class.rdflib_graph
+
+		instance_query = "prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#> " \
+		"prefix owl:<http://www.w3.org/2002/07/owl#> "\
+		"prefix ep: <http://linkedu.eu/dedalo/explanationPattern.owl#> " \
+		"select ?class where {" \
+		"?instance a ?class . " \
+		"?class rdfs:label \"" + ont_class_label + "\" . }" 
+
+		instances = ont_class_graph.query(instance_query)
+
+		return instances
+
+	return []
+	

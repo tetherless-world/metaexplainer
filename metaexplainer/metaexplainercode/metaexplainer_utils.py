@@ -5,6 +5,8 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import f1_score
 import Levenshtein
 
+import inflect
+
 
 #visualization
 import matplotlib.pyplot as plt
@@ -67,6 +69,15 @@ def load_column_names(domain_name):
 	file_name = '_'.join(domain_name.lower().split(' '))
 	domain_dataset = pd.read_csv(codeconstants.DATA_FOLDER + '/' + domain_name + '/' + file_name + '.csv')
 	return list(domain_dataset.columns)
+
+def get_multi_word_phrase_from_capitalized_string(capitalized_word):
+	'''
+	Generate a multi-word phrase from capitalized words
+	E.g., DairyFreeMilk -> Dairy Free Milk
+	'''
+	inflect_engine = inflect.engine()
+	subbed_string = re.sub('([A-Z])', r' \1', capitalized_word).strip()
+	return subbed_string
 
 def generate_acronyms_possibilities(list_of_conts):
 	list_edited = {ele.replace(' ', '').lower():ele for ele in list_of_conts}

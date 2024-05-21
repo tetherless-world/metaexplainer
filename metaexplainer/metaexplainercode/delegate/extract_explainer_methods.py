@@ -13,7 +13,7 @@ from metaexplainercode import codeconstants
 from metaexplainercode import metaexplainer_utils
 from metaexplainercode import ontology_utils
 
-def run_query_on_explanation_graph(explanation_type_label):
+def run_query_on_explanation_graph(explanation_type_label, ont_model):
 	explanation = ontology_utils.get_class_term(eo_model, explanation_type_label, -1)
 	#base it off of" https://stackoverflow.com/questions/16829351/is-there-a-hello-world-example-for-sparql-with-rdflib
 	explanation_method_query = "prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#> " \
@@ -29,11 +29,14 @@ def run_query_on_explanation_graph(explanation_type_label):
 	"?comps owl:onProperty ?property ." \
 	"?comps owl:someValuesFrom ?taskObject ." \
 	"?class rdfs:label \"" + explanation_type_label + "\" . }" 
+
 	explanation_graph = explanation.rdflib_graph
 	method_results = explanation_graph.query(explanation_method_query)
 	
 	for result in method_results:
-		print(result)
+		class_label = metaexplainer_utils.get_multi_word_phrase_from_capitalized_string(result[0].split('#')[1])
+		print(class_label)
+		print(ontology_utils.get_instances_of_class(ont_model, class_label))
 
 	return method_results
 
@@ -41,7 +44,7 @@ def run_query_on_explanation_graph(explanation_type_label):
 if __name__ == '__main__':
 	eo_model = ontology_utils.load_eo()
 
-	methods = run_query_on_explanation_graph('Data Explanation')
+	methods = run_query_on_explanation_graph('Data Explanation', eo_model)
 
 	print(list(methods))
 
