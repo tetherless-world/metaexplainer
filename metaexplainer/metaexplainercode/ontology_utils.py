@@ -60,16 +60,16 @@ def get_instances_of_class(ont_model, ont_class_label):
 	ont_class = get_class_term(ont_model, ont_class_label, -1)	
 
 	if not ont_class is None:
-		ont_class_graph = ont_class.rdflib_graph
+		#ont_class_graph = ont_class.rdflib_graph
 
 		instance_query = "prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#> " \
 		"prefix owl:<http://www.w3.org/2002/07/owl#> "\
 		"prefix ep: <http://linkedu.eu/dedalo/explanationPattern.owl#> " \
-		"select ?class where {" \
+		"select ?instance where {" \
 		"?instance a ?class . " \
 		"?class rdfs:label \"" + ont_class_label + "\" . }" 
 
-		instances = ont_class_graph.query(instance_query)
+		instances = ont_model.query(instance_query)
 
 		return instances
 
