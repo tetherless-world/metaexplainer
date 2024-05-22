@@ -25,17 +25,20 @@ def run_shap(model, X_train, X_test, single_instance=True):
 	https://aix360.readthedocs.io/en/latest/lbbe.html#shap-explainers
 	https://shap.readthedocs.io/en/latest/generated/shap.KernelExplainer.html
 	'''
-	shapexplainer = KernelExplainer(model.predict_proba, X_test) 
+	shapexplainer = KernelExplainer(model.predict_proba, X_test, feature_names=X_test.columns) 
 
 	if single_instance:
 		print(X_test.iloc[0,:])
 		shap_values = shapexplainer.explain_instance(X_test.iloc[0,:])
 		print(shap_values)
 	else:
-		shap_values = shapexplainer.explainer(X_test)
+		print(model.classes_, 'Column names', X_test.columns)
+		sampled_dist = shap.sample(X_test,10)
+		shap_values = shapexplainer.explainer(sampled_dist)
 		print(shap_values)
 		#feature_names is failing
-		shap.plots.bar(shap_values)
+		#shap.plots.bar(shap_values, class_names=model.classes_)
+		shap.summary_plot(shap_values, sampled_dist, class_names=model.classes_)
 
 def run_on_diabetes(diabetes_path):
 	'''
