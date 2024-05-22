@@ -1,0 +1,9 @@
+,Explanation Type,Methods,Instances
+0,Case Based Explanation,Exemplar Method,Protodash
+1,Contrastive Explanation,Contrastive Saliency Method,SHAP
+2,Contrastive Explanation,Contrastive Saliency Method,LIME
+3,Data Explanation,Exemplar Method,Protodash
+4,Rationale Explanation,Providing Rationale Method,BRCG
+5,Rationale Explanation,Providing Rationale Method,GLRM
+6,Contextual Explanation,Restricted Neural Network Architecture,CEN
+7,Counterfactual Explanation,Counterfactual Saliency Method,DICE
