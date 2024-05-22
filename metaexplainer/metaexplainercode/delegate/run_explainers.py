@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 import sys
 sys.path.append('../')
@@ -19,6 +20,13 @@ def run_dice():
 	#use https://interpret.ml/DiCE/
 	pass
 
+def generate_fnames_shap(shap_values, cols):
+	vals= np.abs(shap_values.values).mean(0)
+	feature_importance = pd.DataFrame(list(zip(cols,vals)),columns=['col_name','feature_importance_vals'])
+	#print(feature_importance.head())
+	feature_importance.sort_values(by=['feature_importance_vals'], key=lambda col: col.map(lambda x: x[1]), ascending=False, inplace=True)
+	return feature_importance
+
 def run_shap(model, X_train, X_test, single_instance=True):
 	'''
 	Based on: 
@@ -35,10 +43,12 @@ def run_shap(model, X_train, X_test, single_instance=True):
 		print(model.classes_, 'Column names', X_test.columns)
 		sampled_dist = shap.sample(X_test,10)
 		shap_values = shapexplainer.explainer(sampled_dist)
-		print(shap_values)
-		#feature_names is failing
+		
+		feature_importances = generate_fnames_shap(shap_values, X_test.columns)
+		print(feature_importances)
+		
 		#shap.plots.bar(shap_values, class_names=model.classes_)
-		shap.summary_plot(shap_values, sampled_dist, class_names=model.classes_)
+		#shap.summary_plot(shap_values, sampled_dist, class_names=model.classes_)
 
 def run_on_diabetes(diabetes_path):
 	'''
