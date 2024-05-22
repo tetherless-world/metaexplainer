@@ -14,11 +14,15 @@ from metaexplainercode import metaexplainer_utils
 from metaexplainercode import ontology_utils
 
 def run_query_on_explanation_graph(explanation_type_label, ont_model):
-	explanation = ontology_utils.get_class_term(eo_model, explanation_type_label, -1)
+	explanation = ontology_utils.get_class_term(ont_model, explanation_type_label, -1)
+	#print('Explanation object ', explanation)
+
 	#base it off of" https://stackoverflow.com/questions/16829351/is-there-a-hello-world-example-for-sparql-with-rdflib
 	explanation_method_query = "prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#> " \
 	"prefix owl:<http://www.w3.org/2002/07/owl#> "\
 	"prefix ep: <http://linkedu.eu/dedalo/explanationPattern.owl#> " \
+	"prefix eo: <https://purl.org/heals/eo#> " \
+	"prefix sio: <http://semanticscience.org/resource/> " \
 	"prefix prov: <http://www.w3.org/ns/prov#> " \
 	"select DISTINCT ?taskObject where {" \
 	"?class (rdfs:subClassOf|owl:equivalentClass)/owl:onProperty ep:isBasedOn ." \
@@ -26,25 +30,32 @@ def run_query_on_explanation_graph(explanation_type_label, ont_model):
 	"?object owl:intersectionOf ?collections ." \
 	"?collections rdf:rest*/rdf:first ?comps ." \
 	"?comps rdf:type owl:Restriction ." \
-	"?comps owl:onProperty ?property ." \
+	"?comps owl:onProperty sio:SIO_000232 ." \
 	"?comps owl:someValuesFrom ?taskObject ." \
 	"?class rdfs:label \"" + explanation_type_label + "\" . }" 
 
 	explanation_graph = explanation.rdflib_graph
 	method_results = explanation_graph.query(explanation_method_query)
+	#print('Debugging ', list(method_results))
+	instances = []
 	
 	for result in method_results:
 		class_label = metaexplainer_utils.get_multi_word_phrase_from_capitalized_string(result[0].split('#')[1])
-		print(class_label)
-		print(ontology_utils.get_instances_of_class(ont_model, class_label))
+		#print(class_label)
+		instances = ontology_utils.get_instances_of_class(ont_model, class_label)
 
-	return method_results
+		if len(instances) > 0:
+			print(class_label, instances)
+
+	return (method_results, instances)
 
 
 if __name__ == '__main__':
 	eo_model = ontology_utils.load_eo()
 
-	methods = run_query_on_explanation_graph('Data Explanation', eo_model)
+	loaded_explanations = metaexplainer_utils.load_selected_explanation_types()
 
-	print(list(methods))
-
+	for explanation in loaded_explanations:
+		print('Explanation ', explanation)
+		(methods, instances) = run_query_on_explanation_graph(explanation, eo_model)
+		print('------')
