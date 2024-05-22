@@ -37,17 +37,18 @@ def run_query_on_explanation_graph(explanation_type_label, ont_model):
 	explanation_graph = explanation.rdflib_graph
 	method_results = explanation_graph.query(explanation_method_query)
 	#print('Debugging ', list(method_results))
-	instances = []
+	methods_instances = {}
 	
 	for result in method_results:
-		class_label = metaexplainer_utils.get_multi_word_phrase_from_capitalized_string(result[0].split('#')[1])
+		class_label = ontology_utils.get_label_from_URI(result[0])
+		methods_instances[class_label] = []
 		#print(class_label)
-		instances = ontology_utils.get_instances_of_class(ont_model, class_label)
+		instances_m = ontology_utils.get_instances_of_class(ont_model, class_label)
 
-		if len(instances) > 0:
-			print(class_label, instances)
+		if len(instances_m) > 0:
+			methods_instances[class_label] += [ontology_utils.get_label_from_URI(instance[0], split=False) for instance in instances_m]
 
-	return (method_results, instances)
+	return methods_instances
 
 
 if __name__ == '__main__':
@@ -57,5 +58,6 @@ if __name__ == '__main__':
 
 	for explanation in loaded_explanations:
 		print('Explanation ', explanation)
-		(methods, instances) = run_query_on_explanation_graph(explanation, eo_model)
+		explanation_methods_instances = run_query_on_explanation_graph(explanation, eo_model)
+		print('Methods - Instances', explanation_methods_instances)
 		print('------')

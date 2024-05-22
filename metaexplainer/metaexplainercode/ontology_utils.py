@@ -6,6 +6,7 @@ import pandas as pd
 import sys
 sys.path.append('../')
 from metaexplainercode import codeconstants
+from metaexplainercode import metaexplainer_utils
 
 def load_eo():
 	#eo_model = ontospy.Ontospy("https://purl.org/heals/eo",verbose=True)
@@ -74,4 +75,16 @@ def get_instances_of_class(ont_model, ont_class_label):
 		return instances
 
 	return []
+
+def get_label_from_URI(uri_ref, split=True):
+	'''
+	return capitalized version of everything after #; i.e., if it is EO the last character is always a #
+	'''
+	last_bit = uri_ref.split('#')[1]
+	#print(last_bit)
+
+	if split == False:
+		return last_bit
+
+	return metaexplainer_utils.get_multi_word_phrase_from_capitalized_string(last_bit)
 	

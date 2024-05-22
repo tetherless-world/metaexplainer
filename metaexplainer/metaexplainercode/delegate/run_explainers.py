@@ -20,18 +20,22 @@ def run_dice():
 	pass
 
 def run_shap(model, X_train, X_test, single_instance=True):
-	shapexplainer = KernelExplainer(model.predict_proba, X_test) - #https://shap.readthedocs.io/en/latest/generated/shap.KernelExplainer.html
-	# shapexplainer = shap.Explainer(model.predict_proba, X_test)
-	# shapvals = shapexplainer(X_test)
-	print(type(shapexplainer))
+	'''
+	Based on: 
+	https://aix360.readthedocs.io/en/latest/lbbe.html#shap-explainers
+	https://shap.readthedocs.io/en/latest/generated/shap.KernelExplainer.html
+	'''
+	shapexplainer = KernelExplainer(model.predict_proba, X_test) 
 
 	if single_instance:
 		print(X_test.iloc[0,:])
 		shap_values = shapexplainer.explain_instance(X_test.iloc[0,:])
 		print(shap_values)
-	
-	#shap.plots.waterfall(shapvals[0, 0], max_display=10) #https://www.datacamp.com/tutorial/introduction-to-shap-values-machine-learning-interpretability#
-
+	else:
+		shap_values = shapexplainer.explainer(X_test)
+		print(shap_values)
+		#feature_names is failing
+		shap.plots.bar(shap_values)
 
 def run_on_diabetes(diabetes_path):
 	'''
@@ -72,5 +76,9 @@ if __name__=='__main__':
 	- Dataset splits
 	- Model 
 	'''
-	(trained_model, x_train, x_test, y_train, y_test) = run_on_diabetes(codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv')
-	run_shap(trained_model, x_train, x_test)
+
+	domain_name = 'Diabetes'
+
+	if domain_name == 'Diabetes':
+		(trained_model, x_train, x_test, y_train, y_test) = run_on_diabetes(codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv')
+		run_shap(trained_model, x_train, x_test, single_instance=False)
