@@ -548,19 +548,18 @@ class LLM_ExplanationInterpretor():
 
 
 if __name__== "__main__":
-
-	# # Model and tokenizer names
-	# base_model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
-	# refined_model_name = "llama-3-8b-charis-explanation" #You can give it your own name
+	# Model and tokenizer names
+	base_model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
+	refined_model_name = "llama-3-8b-charis-explanation" #You can give it your own name
 
 	#LLama2
 
 	# base_model_name = 'NousResearch/Nous-Hermes-Llama2-13b'
 	# refined_model_name = "llama-2-13b-charis-explanation" #You can give it your own name
 
-	#IBM Granite
-	base_model_name = 'ibm-granite/granite-8b-code-instruct'
-	refined_model_name = "ibm-granite-8b-charis-explanation" #You can give it your own name
+	# #IBM Granite
+	# base_model_name = 'ibm-granite/granite-8b-code-instruct'
+	# refined_model_name = "ibm-granite-8b-charis-explanation" #You can give it your own name
 
 	#defining variables necessary for instantiation
 	llama_tokenizer = AutoTokenizer.from_pretrained(base_model_name, trust_remote_code=True, use_auth_token=True)
@@ -573,16 +572,16 @@ if __name__== "__main__":
 	llm_explanation_interpreter = LLM_ExplanationInterpretor(llama_tokenizer, base_model_name, refined_model_name)
 	
 
-	llm_explanation_interpreter.run('train')
+	#llm_explanation_interpreter.run('train')
 	#llm_explanation_interpreter.run('test', infer_mode='train')
 	#to run inference on test
 	#llm_explanation_interpreter.run('test')
 
-	#if the compute metrics is called outside of test / train - then call get_datasets
+	##if the compute metrics is called outside of test / train - then call get_datasets
  
-	# if llm_explanation_interpreter.test_dataset == None or llm_explanation_interpreter.train_dataset == None:
-	# 	#maybe the train doesn't have to be domain-specific
-	# 	llm_explanation_interpreter.get_datasets('Diabetes')
+	if llm_explanation_interpreter.test_dataset == None or llm_explanation_interpreter.train_dataset == None:
+		#maybe the train doesn't have to be domain-specific
+		llm_explanation_interpreter.get_datasets('Diabetes')
 
-	# llm_explanation_interpreter.compute_metrics('Diabetes', mode='test')
+	llm_explanation_interpreter.compute_metrics('Diabetes', mode='train')
 
