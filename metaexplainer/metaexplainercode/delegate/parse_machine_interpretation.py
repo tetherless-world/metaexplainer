@@ -132,7 +132,7 @@ def parse_machine_interpretation(record, column_names):
 
     for feature_group in parantheses_groups:
         feature_groups = extract_feature_value_pairs(feature_group.strip(), column_names)
-        mi_without_action_features.replace(feature_group, '')
+        mi_without_action_features = mi_without_action_features.replace(feature_group, '')
         feature_groups_all.append(feature_groups)
 
     replaced_actions = []
@@ -140,7 +140,7 @@ def parse_machine_interpretation(record, column_names):
 
     for action_i in range(len(actions)):
         action = actions[action_i]
-        mi_without_action_features.replace(action, '')
+        mi_without_action_features = mi_without_action_features.replace(action, '')
         
         (if_label, replacement_label) = metaexplainer_utils.check_if_label(action, column_names)
 

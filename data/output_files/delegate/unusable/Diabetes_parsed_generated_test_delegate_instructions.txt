@@ -1,61 +1,22 @@
-Question : Why emphasize the Diabetes Pedigree Function of 0.25 in predicting Diabetes for a 45-year-old female with a BMI of 26, rather than the same Diabetes Pedigree Function in a 70-year-old male with a BMI of 18?
-Machine interpretation : Emphasize(DiabetesPedigreeFunction, 0.25, Female, 45, BMI = 26) over Emphasize(DiabetesPedigreeFunction, 0.25, Male, 70, BMI = 18)
-Action : Emphasize
-Feature groups : {'Female': '45', 'BMI': '26'}
-Feature groups : {'Male': '70', 'BMI': '18'}
+Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 50-year-old male with a BMI of 20 and a Diabetes Pedigree Function of 0.1?
+Machine interpretation : \xe2\x88\x83x (Age(x, 50) \xe2\x88\xa7 Sex(Male) \xe2\x88\xa7 BMI(x, 20) \xe2\x88\xa7 DPF(x, 0.1) \xe2\x88\xa7 DiabetesPrediction(x, Low))
+Action : DiabetesPrediction
+Feature groups : {'Age': '50'}
+Feature groups : {'Male': ''}
+Feature groups : {'BMI': '20'}
+Feature groups : {'DiabetesPedigreeFunction': '0.1'}
+Feature groups : {'x': '', 'Low': ''}
 Explanation type : Reason Explanation
 ---------
-Question : What factors led the model to predict that a 60-year-old male with a BMI of 28 and a Diabetes Pedigree Function of 0.1 does not have Diabetes?
-Machine interpretation : Predict(Diabetes) and not Diabetes (age = 60, sex = Male, BMI = 28, Diabetes Pedigree Function = 0.1)
-Action : Diabetes
-Action : Predict
-Feature groups : {'Diabetes': ''}
-Feature groups : {'age': '60', 'sex': 'Male', 'BMI': '28', 'Diabetes Pedigree Function': '0.1'}
-Explanation type : Why the model made that prediction.
----------
-Question : What role does the interaction between sex and BMI values play in determining the accuracy of Diabetes predictions?
-Machine interpretation : Interaction(Sex, BMI)
-Action : Interaction
-Feature groups : {'Sex': '', 'BMI': ''}
-Explanation type : Feature Interaction Explanation
+Question : What are the typical Diabetes Pedigree Function values seen in cases where the prediction outcome is uncertain?
+Machine interpretation : 
+Feature groups : {'Outcome': ''}
+Explanation type : 
 ---------
 Question : How has the age feature been encoded to facilitate its utilization in the ML model for Diabetes prediction?
-Machine interpretation : Feature_encoding(Age)
-Action : Feature_encoding
+Machine interpretation : Feature_Age_Encoding
 Feature groups : {'Age': ''}
-Explanation type : Feature Explanation
----------
-Question : How would the Diabetes prediction change if the patient had a Diabetes Pedigree Function of 0.3 instead of 0.1?
-Machine interpretation : If DiabetesPedigreeFunction(patient, 0.3) and DiabetesPedigreeFunction(patient, 0.1), how would the Diabetes prediction change?
-Feature groups : {'DiabetesPedigreeFunction': '0.3'}
-Feature groups : {'DiabetesPedigreeFunction': '0.1'}
-Explanation type : Counterfactual
----------
-Question : Why consider a high BMI of 28 as a significant factor for predicting Diabetes in a 60-year-old male with a Diabetes Pedigree Function of 0.2, rather than focusing on a low BMI of 20 in a 30-year-old female with a Diabetes Pedigree Function of 0.1?
-Machine interpretation : Predict(BMI = 28, Diabetes = high, Age = 60, Sex = Male, DPF = 0.2) over Predict(BMI = 20, Diabetes = low, Age = 30, Sex = Female, DPF = 0.1)
-Action : Predict
-Feature groups : {'BMI': '28', 'Diabetes': 'high', 'Age': '60', 'Sex': 'Male', 'DPF': '0.2'}
-Feature groups : {'BMI': '20', 'Diabetes': 'low', 'Age': '30', 'Sex': 'Female', 'DPF': '0.1'}
-Explanation type : Reason Explanation
----------
-Question : How do the predictions for Diabetes differ between males and females with a BMI of 26 and a Diabetes Pedigree Function of 0.3?
-Machine interpretation : Predict(Diabetes, Female, BMI = 26, DPFunc = 0.3)
-Action : Predict
-Feature groups : {'Diabetes': '', 'Female': '', 'BMI': '26', 'DPFunc': '0.3'}
-Explanation type : Difference Explanation
----------
-Question : What are the common features among patients with a low likelihood of Diabetes despite having a high BMI?
-Machine interpretation : What are the typical characteristics of patients with low Diabetes prediction outcomes despite having high BMI values?
-Feature groups : {'BMI': ''}
-Explanation type : Feature Explanation
----------
-Question : How has the BMI distribution been utilized to improve the accuracy of the Diabetes prediction model?
-Machine interpretation : Feature_importance(BMI) and Model_accuracy(BMI)
-Action : Model_accuracy
-Action : Feature_importance
-Feature groups : {'BMI': ''}
-Feature groups : {'BMI': ''}
-Explanation type : Explanation of how a feature is used in a machine learning model.
+Explanation type : How Explanation
 ---------
 Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 40-year-old female with a BMI of 25 and a Diabetes Pedigree Function of 0.3?
 Machine interpretation : Prompted(Suggestion(Diabetes, 40, Female, 25, BMI, 0.3, Diabetes Pedigree Function))
@@ -63,18 +24,43 @@ Action : Suggestion
 Feature groups : {'Diabetes': '40', 'Female': '25', 'Diabetes Pedigree Function': ''}
 Explanation type : Reason Explanation
 ---------
-Question : What broader information about the current situation prompted the suggestion of a low likelihood of Diabetes for a 50-year-old male with a BMI of 18 and a Diabetes Pedigree Function of 0.1?
-Machine interpretation : Prompted(Suggestion(Low Likelihood(Diabetes, 50, Male, BMI = 18, Diabetes Pedigree Function = 0.1)))
-Action : Likelihood
+Question : What broader information about the current situation prompted the suggestion of a high likelihood of Diabetes for a 45-year-old female with a BMI of 28 and a Diabetes Pedigree Function of 0.3?
+Machine interpretation : Prompted(Suggestion(Likelihood(Diabetes, 45, BMI(BMI_28, Diabetes Pedigree Function(DPF_0.3)))))
 Action : Prompted
+Action : Function
 Action : Suggestion
-Feature groups : {'Diabetes': '50', 'Male': '', 'BMI': '18', 'Diabetes Pedigree Function': '0.1'}
+Action : Likelihood
+Feature groups : {'DPF_0.3': ''}
 Explanation type : Reason Explanation
 ---------
-Question : How do the predictions for Diabetes vary between males and females with a BMI of 30 and a Diabetes Pedigree Function of 0.1?
-Machine interpretation : Predict(Diabetes, BMI = 30, Sex = Female, DPF = 0.1) and Predict(Diabetes, BMI = 30, Sex = Male, DPF = 0.1)
+Question : Why consider a high BMI of 28 as a significant factor for predicting Diabetes in a 60-year-old male with a Diabetes Pedigree Function of 0.2, rather than focusing on a low BMI of 20 in a 30-year-old female with a Diabetes Pedigree Function of 0.1?
+Machine interpretation : Predict(BMI = 28, Age = 60, Sex = Male, DPF = 0.2) over Predict(BMI = 20, Age = 30, Sex = Female, DPF = 0.1)
 Action : Predict
-Feature groups : {'Diabetes': '', 'BMI': '30', 'Sex': 'Female', 'DPF': '0.1'}
-Feature groups : {'Diabetes': '', 'BMI': '30', 'Sex': 'Male', 'DPF': '0.1'}
-Explanation type : Sensitivity Analysis Explanation
+Feature groups : {'BMI': '28', 'Age': '60', 'Sex': 'Male', 'DPF': '0.2'}
+Feature groups : {'BMI': '20', 'Age': '30', 'Sex': 'Female', 'DPF': '0.1'}
+Explanation type : Reason Explanation
+---------
+Question : What factors led the model to predict that a 55-year-old female with a BMI of 19 and a Diabetes Pedigree Function of 0.15 does not have Diabetes?
+Machine interpretation : Predict(Diabetes) and not Diabetes (Age = 55, Sex = Female, BMI = 19, Diabetes Pedigree Function = 0.15)
+Action : Diabetes
+Action : Predict
+Feature groups : {'Diabetes': ''}
+Feature groups : {'Age': '55', 'Sex': 'Female', 'BMI': '19', 'Diabetes Pedigree Function': '0.15'}
+Feature groups : {'() and not  (Age': '55', 'Sex': 'Female', 'BMI': '19', 'Pedigree Function': '0.15)'}
+Explanation type : Reason Explanation
+---------
+Question : Are there specific combinations of age and Diabetes Pedigree Function values that lead to more accurate Diabetes predictions?
+Machine interpretation : Combinations(Age, Diabetes Pedigree Function) -> Accuracy (Diabetes Prediction)
+Action : Combinations
+Action : Accuracy
+Feature groups : {'Age': '', 'Diabetes Pedigree Function': ''}
+Feature groups : {'Diabetes Prediction': ''}
+Explanation type : Scenario Based Explanation
+---------
+Question : Why use the patient's sex as a determining factor for Diabetes prediction over their age?
+Machine interpretation : Why Use(Sex) > Why Use(Age)
+Action : Use
+Feature groups : {'Sex': ''}
+Feature groups : {'Age': ''}
+Explanation type : Justification Explanation
 ---------
