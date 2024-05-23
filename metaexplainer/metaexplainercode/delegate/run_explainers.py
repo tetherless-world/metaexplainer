@@ -16,6 +16,38 @@ from aix360.algorithms.shap import KernelExplainer
 # the following import is required for access to shap plotting functions and datasets
 import shap
 
+from aix360.algorithms.protodash import ProtodashExplainer
+
+def run_protodash(X_train, X_test):
+	'''
+	Protodash helps find representative cases in the data 
+	'''
+	# convert pandas dataframe to numpy
+	data = X_train.to_numpy()
+
+	#sort the rows by sequence numbers in 1st column 
+	idx = np.argsort(data[:, 0])  
+	data = data[idx, :]
+
+	# replace nan's (missing values) with 0's
+	original = data
+	original[np.isnan(original)] = 0
+
+	# delete 1st column (sequence numbers)
+	original = original[:, 1:]
+
+	protodash_explainer = ProtodashExplainer()
+	(W, S, _) = protodash_explainer.explain(original, original, m=10)
+
+	inc_prototypes = X_train.iloc[S, :].copy()
+	
+	# Compute normalized importance weights for prototypes
+	inc_prototypes["Weights of Prototypes"] = np.around(W/np.sum(W), 2) 
+	print(inc_prototypes)
+
+	print('Running protodash ')
+
+
 def run_dice():
 	#use https://interpret.ml/DiCE/
 	pass
@@ -94,4 +126,5 @@ if __name__=='__main__':
 
 	if domain_name == 'Diabetes':
 		(trained_model, x_train, x_test, y_train, y_test) = run_on_diabetes(codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv')
-		run_shap(trained_model, x_train, x_test, single_instance=False)
+		#run_shap(trained_model, x_train, x_test, single_instance=False)
+		run_protodash(x_train, x_test)
