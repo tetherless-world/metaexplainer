@@ -109,13 +109,10 @@ def parse_machine_interpretation(record, column_names):
     actions = re.findall(r'([\w]+)\s?\(', machine_interpretation)
     parantheses_groups = re.findall(r'\(([^()]+)\)', machine_interpretation)
 
-    printer = False
+    #keep removing vals from the actions and parantheses groups and then add any missing values to it
+    mi_without_action_features = machine_interpretation
 
-    # if record['Question'] == 'If the patient had a BMI of 30 instead of 25, would the likelihood of having Diabetes increase significantly?':
-    #     print(record['Question'])
-    #     print('A', actions)
-    #     print('PG', parantheses_groups)
-    #     printer = False
+    printer = False
 
     len_actions = len(actions)
     len_groups = len(parantheses_groups)
@@ -135,6 +132,7 @@ def parse_machine_interpretation(record, column_names):
 
     for feature_group in parantheses_groups:
         feature_groups = extract_feature_value_pairs(feature_group.strip(), column_names)
+        mi_without_action_features.replace(feature_group, '')
         feature_groups_all.append(feature_groups)
 
     replaced_actions = []
@@ -142,6 +140,8 @@ def parse_machine_interpretation(record, column_names):
 
     for action_i in range(len(actions)):
         action = actions[action_i]
+        mi_without_action_features.replace(action, '')
+        
         (if_label, replacement_label) = metaexplainer_utils.check_if_label(action, column_names)
 
         if printer:
@@ -155,6 +155,10 @@ def parse_machine_interpretation(record, column_names):
             else:
                 skipped[action] = replacement_label
 
+    if '=' in mi_without_action_features:
+        remaining_feature_groups = extract_feature_value_pairs(mi_without_action_features.strip(), column_names)
+        feature_groups_all.append(remaining_feature_groups)
+    
     if len(skipped) > 0:
         skipped_i = 0
 
@@ -258,7 +262,7 @@ if __name__=='__main__':
     domain_name = 'Diabetes'
     
 
-    mode = 'fine-tuned' # 'fine-tuned' / 'generated'
+    mode = 'generated' # 'fine-tuned' / 'generated'
 
     #only makes sense if the mode is generated and not fine-tuned 
 
