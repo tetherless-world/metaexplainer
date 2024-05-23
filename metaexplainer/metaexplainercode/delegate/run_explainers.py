@@ -17,6 +17,7 @@ from aix360.algorithms.shap import KernelExplainer
 import shap
 
 from aix360.algorithms.protodash import ProtodashExplainer
+import dice_ml
 
 def run_protodash(X_train, X_test):
 	'''
@@ -40,7 +41,7 @@ def run_protodash(X_train, X_test):
 	(W, S, _) = protodash_explainer.explain(original, original, m=10)
 
 	inc_prototypes = X_train.iloc[S, :].copy()
-	
+
 	# Compute normalized importance weights for prototypes
 	inc_prototypes["Weights of Prototypes"] = np.around(W/np.sum(W), 2) 
 	print(inc_prototypes)
@@ -48,9 +49,31 @@ def run_protodash(X_train, X_test):
 	print('Running protodash ')
 
 
-def run_dice():
-	#use https://interpret.ml/DiCE/
-	pass
+def run_dice(model, dataset, x_train, x_test, mode='genetic'):
+	'''
+	Generate counterfactuals 
+	Can pass conditions here too 
+	mode can be genetic / random
+	'''
+	dataset = dataset.loc[:, ~dataset.columns.str.contains('^Unnamed')]
+	dataset = dataset.drop(['Sex'], axis=1) 
+
+	backend = 'sklearn'
+	m = dice_ml.Model(model=model, backend=backend)
+	#can automate this somehow - so that even pipeline can use it
+	d = dice_ml.Data(dataframe= dataset, 
+				  continuous_features=['Pregnancies','Glucose','BloodPressure','SkinThickness','Insulin','BMI','DiabetesPedigreeFunction','Age'], 
+				  outcome_name='Outcome')
+
+	#you can specify ranges in counterfactuals - which is also nice! - https://github.com/interpretml/DiCE/blob/main/docs/source/notebooks/DiCE_model_agnostic_CFs.ipynb
+	#set some instances for sampling
+
+	query_instances = x_train[4:6]
+
+	exp_genetic = dice_ml.Dice(d, m, method='genetic')
+	dice_exp_genetic = exp_genetic.generate_counterfactuals(query_instances, total_CFs=4, desired_class="opposite", verbose=True)
+	dice_exp_genetic.visualize_as_dataframe(show_only_changes=True)
+
 
 def generate_fnames_shap(shap_values, cols):
 	vals= np.abs(shap_values.values).mean(0)
@@ -87,6 +110,11 @@ def run_on_diabetes(diabetes_path):
 	Here the trainer is run for diabetes
 	'''
 	pima_diabetes = pd.read_csv(diabetes_path, index_col=0)
+	pima_diabetes = pima_diabetes.loc[:, ~pima_diabetes.columns.str.contains('^Unnamed')]
+
+	#need to define transforms here for categorical and numeric columns
+	pima_diabetes = pima_diabetes.drop(['Sex'], axis=1) 
+
 	transformedDF = transform_data(pima_diabetes)
 
 	models = get_models()
@@ -125,6 +153,11 @@ if __name__=='__main__':
 	domain_name = 'Diabetes'
 
 	if domain_name == 'Diabetes':
+		dataset = pd.read_csv(codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv')
+		print('Columns of loaded dataset ', dataset.columns)
+
 		(trained_model, x_train, x_test, y_train, y_test) = run_on_diabetes(codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv')
 		#run_shap(trained_model, x_train, x_test, single_instance=False)
 		run_protodash(x_train, x_test)
+
+		run_dice(trained_model, dataset, x_train, x_test)

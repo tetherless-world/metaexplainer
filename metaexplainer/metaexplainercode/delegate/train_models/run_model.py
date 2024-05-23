@@ -26,9 +26,7 @@ def transform_data(df):
 	generate a normalized dataframe for training
 	'''
 	q  = QuantileTransformer()
-	#for quick fix drop sex - will need to do this soon - https://scikit-learn.org/stable/auto_examples/compose/plot_column_transformer_mixed_types.html
-	df = df.drop(['Sex'], axis=1) 
-	print(df.columns)
+	
 	X = q.fit_transform(df)
 	transformedDF = q.transform(X)
 	transformedDF = pd.DataFrame(X)
