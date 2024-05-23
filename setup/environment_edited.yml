@@ -37,6 +37,8 @@ dependencies:
     - pubmed_lookup
     - eutils
     - nltk
+    - xport
+    - cvxpy
     - transformers
     - sklearn
     - torch
