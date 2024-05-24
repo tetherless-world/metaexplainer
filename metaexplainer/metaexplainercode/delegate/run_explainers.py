@@ -75,10 +75,11 @@ def run_dice(model, dataset, x_train, y_train, x_test, y_test, mode='genetic'):
 
 	print('# where outcome = 1 ',len(dataset[dataset['Outcome'] == 1.0]), '# where outcome = 0 ',len(dataset[dataset['Outcome'] == 0.0]))
 	selection_range = (120, 123)
-	query_instances = x_train[selection_range[0]: selection_range[1]]
-	y_queries = y_train[selection_range[0]: selection_range[1]]
+
+	query_instances = dataset.drop(columns="Outcome")[selection_range[0]: selection_range[1]]
+	#y_queries = y_train[selection_range[0]: selection_range[1]]
 	print('Query', query_instances)
-	print('Outcomes ', y_queries)
+	#print('Outcomes ', y_queries)
 
 	exp_genetic = dice_ml.Dice(d, m, method='genetic')
 	dice_exp_genetic = exp_genetic.generate_counterfactuals(query_instances, total_CFs=2, desired_class="opposite", verbose=True)
