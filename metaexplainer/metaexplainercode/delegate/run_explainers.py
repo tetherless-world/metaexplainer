@@ -54,7 +54,7 @@ def run_brcg():
 	'''
 	pass
 
-def run_dice(model, dataset, x_train, x_test, mode='genetic'):
+def run_dice(model, dataset, x_train, y_train, x_test, y_test, mode='genetic'):
 	'''
 	Generate counterfactuals 
 	Can pass conditions here too 
@@ -73,10 +73,15 @@ def run_dice(model, dataset, x_train, x_test, mode='genetic'):
 	#you can specify ranges in counterfactuals - which is also nice! - https://github.com/interpretml/DiCE/blob/main/docs/source/notebooks/DiCE_model_agnostic_CFs.ipynb
 	#set some instances for sampling
 
-	query_instances = x_train[4:6]
+	print('# where outcome = 1 ',len(dataset[dataset['Outcome'] == 1.0]), '# where outcome = 0 ',len(dataset[dataset['Outcome'] == 0.0]))
+	selection_range = (120, 123)
+	query_instances = x_train[selection_range[0]: selection_range[1]]
+	y_queries = y_train[selection_range[0]: selection_range[1]]
+	print('Query', query_instances)
+	print('Outcomes ', y_queries)
 
 	exp_genetic = dice_ml.Dice(d, m, method='genetic')
-	dice_exp_genetic = exp_genetic.generate_counterfactuals(query_instances, total_CFs=4, desired_class="opposite", verbose=True)
+	dice_exp_genetic = exp_genetic.generate_counterfactuals(query_instances, total_CFs=2, desired_class="opposite", verbose=True)
 	dice_exp_genetic.visualize_as_dataframe(show_only_changes=True)
 
 
@@ -165,4 +170,4 @@ if __name__=='__main__':
 		#run_shap(trained_model, x_train, x_test, single_instance=False)
 		run_protodash(dataset, x_train, x_test)
 
-		run_dice(trained_model, dataset, x_train, x_test)
+		run_dice(trained_model, dataset, x_train, y_train, x_test, y_test)
