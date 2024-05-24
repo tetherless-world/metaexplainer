@@ -24,6 +24,12 @@ sys.path.append('../')
 from metaexplainercode import codeconstants
 
 
+def find_list_difference(l1, l2):
+	'''
+	When order doesn't matter convert l1 and l2 to sets and then return difference
+	'''
+	return list(set(l1) - set(l2))
+
 def find_cosine_similarity(s1, s2):
 	'''
 	return score for sklearn's cosine similarity

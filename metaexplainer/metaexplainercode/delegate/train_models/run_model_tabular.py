@@ -18,20 +18,64 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import GridSearchCV, cross_val_score, StratifiedKFold, learning_curve, train_test_split
 from sklearn.metrics import classification_report
 
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+
 import sys
 sys.path.append('../')
 
-def transform_data(df):
+from metaexplainercode import metaexplainer_utils
+
+
+def is_cat(column_dtype):
+	'''
+	In this approach string columns also get 1-hot encoded - but that is ok
+	'''
+	categorical_dtypes = ['object', 'category', 'bool']
+
+	if column_dtype in categorical_dtypes:
+		return True
+	else:
+		return False   
+
+def load_dataset(dataset_path):
+	dataset = pd.read_csv(dataset_path)
+	dataset = dataset.loc[:, ~dataset.columns.str.contains('^Unnamed')]
+	return dataset
+
+def transform_data(df, columns_to_ignore, outcome_columns):
 	'''
 	generate a normalized dataframe for training
 	'''
-	q  = QuantileTransformer()
+	column_list = df.columns
+	column_list = metaexplainer_utils.find_list_difference(column_list, columns_to_ignore)
+	column_list = metaexplainer_utils.find_list_difference(column_list, outcome_columns)
+
+	categorical_cols = []
+
+	for col in column_list:
+		if is_cat(str(df[col].dtype)):
+			categorical_cols.append(col)
 	
-	X = q.fit_transform(df)
-	transformedDF = q.transform(X)
-	transformedDF = pd.DataFrame(X)
-	transformedDF.columns = df.columns
-	return transformedDF
+	numerical =  metaexplainer_utils.find_list_difference(column_list, categorical_cols)
+
+	# We create the preprocessing pipelines for both numeric and categorical data.
+	numeric_transformer = Pipeline(steps=[
+		('scaler', StandardScaler())])
+
+	categorical_transformer = Pipeline(steps=[
+		('onehot', OneHotEncoder(handle_unknown='ignore'))])
+
+	transformations = ColumnTransformer(
+    transformers=[
+        ('num', numeric_transformer, numerical),
+        ('cat', categorical_transformer, categorical_cols)])
+	
+	print('Numerical columns ', numerical)
+	print('Categorical columns ', categorical_cols)
+	
+	return transformations
 
 def get_models():
 	'''
@@ -62,14 +106,14 @@ def get_model(model_no):
 		return models
 
 #Separate train dataset and test dataset
-def generate_train_test_split(transformedDF, test_size):
-	features = transformedDF.drop(["Outcome"], axis=1)
-	labels = transformedDF["Outcome"]
-	x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.30, random_state=7)
+def generate_train_test_split(transformedDF, outcome_column, test_size):
+	features = transformedDF.drop([outcome_column], axis=1)
+	labels = transformedDF[outcome_column]
+	x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=test_size, random_state=7)
 	return x_train, x_test, y_train, y_test
 
 
-def evaluate_model(models, x_train, y_train):
+def evaluate_model(models, transformations, x_train, y_train):
 	"""
 	Takes a list of models and returns chart of cross validation scores using mean accuracy
 	"""
@@ -80,7 +124,8 @@ def evaluate_model(models, x_train, y_train):
 	result = []
 	for mod_num in models.keys():
 		model = models[mod_num]
-		model_cv = cross_val_score(estimator = model[1], X = x_train, y = y_train, scoring = "accuracy", 
+		pipeline = Pipeline([('transformer', transformations), ('estimator', model[1])])
+		model_cv = cross_val_score(pipeline, X = x_train, y = y_train, scoring = "accuracy", 
 									  cv = kfold, n_jobs=4)
 		result.append([model_cv, mod_num])
 
@@ -106,12 +151,14 @@ def evaluate_model(models, x_train, y_train):
 	return result_df
 
 
-def fit_and_predict_model(mod_num, model, x_train, y_train, x_test, y_test):
+def fit_and_predict_model(mod_num, transformations, model, x_train, y_train, x_test, y_test):
 	'''
 	Function to train a model, test it and report F1, precision and recall on the test predictions
 	'''
-	model[1].fit(x_train, y_train)
-	y_pred_model = model[1].predict(x_test)
+	pipeline = Pipeline([('transformer', transformations), ('estimator', model[1])])
+	pipeline.fit(x_train, y_train)
+
+	y_pred_model = pipeline.predict(x_test)
 	#print('Model : ' + model[0])
 	class_report = classification_report(y_test, y_pred_model, output_dict=True)
 	#converting report to dataframe
@@ -170,19 +217,22 @@ def get_model_output(models_output, pick_max, pick_other_node_model):
 
 
 if __name__ == '__main__':
-	pima_diabetes = pd.read_csv(codeconstants.DATA_FOLDER + '/diabetes/diabetes_val_corrected.csv', index_col=0)
-	transformedDF = transform_data(pima_diabetes)
+	pima_diabetes = load_dataset(codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv')
 
 	models = get_models()
 
-	x_train, x_test, y_train, y_test = generate_train_test_split(transformedDF, 0.30)
-	evaluate_model(models, x_train, y_train)
+	x_train, x_test, y_train, y_test = generate_train_test_split(pima_diabetes, 'Outcome', 0.30)
+	
+	transformations = transform_data(pima_diabetes, [], ['Outcome'])
+
+	evaluate_model(models, transformations, x_train, y_train)
+	
 	model_output = {}
 
 	for mod_num in models.keys():
 		model = models[mod_num]
 
-		(model, mod_classification_report) = fit_and_predict_model(mod_num, model, x_train, y_train, x_test, y_test)
+		(model, mod_classification_report) = fit_and_predict_model(mod_num, transformations, model, x_train, y_train, x_test, y_test)
 
 		#this is where you get the model 
 
