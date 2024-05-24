@@ -39,6 +39,7 @@ dependencies:
     - nltk
     - xport
     - cvxpy
+    - dice-ml
     - transformers
     - sklearn
     - torch

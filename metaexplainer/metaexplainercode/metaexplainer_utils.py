@@ -5,8 +5,6 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import f1_score
 import Levenshtein
 
-import inflect
-
 
 #visualization
 import matplotlib.pyplot as plt
