@@ -19,7 +19,7 @@ import shap
 from aix360.algorithms.protodash import ProtodashExplainer
 import dice_ml
 
-def run_protodash(X_train, X_test):
+def run_protodash(dataset, X_train, X_test):
 	'''
 	Protodash helps find representative cases in the data 
 	'''
@@ -40,7 +40,7 @@ def run_protodash(X_train, X_test):
 	protodash_explainer = ProtodashExplainer()
 	(W, S, _) = protodash_explainer.explain(original, original, m=10)
 
-	inc_prototypes = X_train.iloc[S, :].copy()
+	inc_prototypes = dataset.iloc[S, :].copy()
 
 	# Compute normalized importance weights for prototypes
 	inc_prototypes["Weights of Prototypes"] = np.around(W/np.sum(W), 2) 
@@ -48,6 +48,11 @@ def run_protodash(X_train, X_test):
 
 	print('Running protodash ')
 
+def run_brcg():
+	'''
+	Derive rules for prediction 
+	'''
+	pass
 
 def run_dice(model, dataset, x_train, x_test, mode='genetic'):
 	'''
@@ -158,6 +163,6 @@ if __name__=='__main__':
 
 		(trained_model, x_train, x_test, y_train, y_test) = run_on_diabetes(codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv')
 		#run_shap(trained_model, x_train, x_test, single_instance=False)
-		run_protodash(x_train, x_test)
+		run_protodash(dataset, x_train, x_test)
 
 		run_dice(trained_model, dataset, x_train, x_test)
