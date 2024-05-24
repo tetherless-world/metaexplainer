@@ -11,5 +11,17 @@ def retrieve_sample_decompose_passes(mode='fine-tuned'):
     '''
     pass
 
+def get_corresponding_explainer():
+    '''
+    This could be just reading from delegate output folder 
+    '''
+
+def run_explainer(feature_groups, actions, explainer_method):
+    '''
+    Call corresponding explainer with feature group filters and actions 
+    '''
+
 if __name__=='__main__':
-    pass
+    parse = retrieve_sample_decompose_passes()
+    explainer_method = get_corresponding_explainer()
+    method_results = run_explainer(parse['feature_groups'], parse['actions'], explainer_method)
