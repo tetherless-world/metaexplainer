@@ -182,8 +182,8 @@ def clean_class_report(class_report, num_x_train, num_x_test, mod_num, mod_name)
 							'test precision': round(class_report[class_report['dimensions'] == 'weighted avg']['precision'].item(), 2),
 							'test recall': round(class_report[class_report['dimensions'] == 'weighted avg']['recall'].item(), 2),							
 							'test f1': round(class_report[class_report['dimensions'] == 'weighted avg']['f1-score'].item(), 2),
-							'test sensitivity (recall - yes diabetes)': round(class_report[class_report['dimensions'] == '1.0']['recall'].item(), 2),
-							'test speficity (recall - no diabetes)': round(class_report[class_report['dimensions'] == '0.0']['recall'].item(), 2)
+							'test sensitivity (recall - yes diabetes)': round(class_report[class_report['dimensions'] == '1']['recall'].item(), 2),
+							'test speficity (recall - no diabetes)': round(class_report[class_report['dimensions'] == '0']['recall'].item(), 2)
 							}
 
 	return class_report_edited
