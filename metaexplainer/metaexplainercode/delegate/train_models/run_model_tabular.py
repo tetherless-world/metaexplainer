@@ -41,7 +41,7 @@ def is_cat(column_dtype):
 
 def load_dataset(dataset_path):
 	dataset = pd.read_csv(dataset_path)
-	dataset = dataset.loc[:, ~dataset.columns.str.contains('^Unnamed')]
+	dataset = metaexplainer_utils.drop_unnamed_cols(dataset)
 	return dataset
 
 def transform_data(df, columns_to_ignore, outcome_columns):

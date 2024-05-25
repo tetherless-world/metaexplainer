@@ -6,7 +6,7 @@ sys.path.append('../')
 from metaexplainercode import codeconstants
 
 from metaexplainercode import metaexplainer_utils
-from train_models.run_model import *
+from metaexplainercode.delegate.train_models.run_model_tabular import *
 
 import matplotlib as plt
 
@@ -19,12 +19,14 @@ import shap
 from aix360.algorithms.protodash import ProtodashExplainer
 import dice_ml
 
-def run_protodash(dataset, X_train, X_test):
+def run_protodash(dataset, transformations, X_train, X_test):
 	'''
 	Protodash helps find representative cases in the data 
 	'''
 	# convert pandas dataframe to numpy
-	data = X_train.to_numpy()
+	X_train = transformations.transform(X_train)
+
+	data = X_train
 
 	#sort the rows by sequence numbers in 1st column 
 	idx = np.argsort(data[:, 0])  
@@ -41,12 +43,14 @@ def run_protodash(dataset, X_train, X_test):
 	(W, S, _) = protodash_explainer.explain(original, original, m=10)
 
 	inc_prototypes = dataset.iloc[S, :].copy()
+	inc_prototypes = metaexplainer_utils.drop_unnamed_cols(inc_prototypes)
 
 	# Compute normalized importance weights for prototypes
 	inc_prototypes["Weights of Prototypes"] = np.around(W/np.sum(W), 2) 
+	print('Running protodash ')
 	print(inc_prototypes)
 
-	print('Running protodash ')
+	
 
 def run_brcg():
 	'''
@@ -74,15 +78,20 @@ def run_dice(model, dataset, x_train, y_train, x_test, y_test, mode='genetic'):
 	#set some instances for sampling
 
 	print('# where outcome = 1 ',len(dataset[dataset['Outcome'] == 1.0]), '# where outcome = 0 ',len(dataset[dataset['Outcome'] == 0.0]))
-	selection_range = (120, 123)
+	selection_range = (140, 143)
 
-	query_instances = dataset.drop(columns="Outcome")[selection_range[0]: selection_range[1]]
-	#y_queries = y_train[selection_range[0]: selection_range[1]]
+	#query_instances = dataset.drop(columns="Outcome")[selection_range[0]: selection_range[1]]
+	query_instances = x_train[selection_range[0]: selection_range[1]]
+	y_queries = y_train[selection_range[0]: selection_range[1]]
 	print('Query', query_instances)
-	#print('Outcomes ', y_queries)
+	print('Outcomes ', y_queries)
 
-	exp_genetic = dice_ml.Dice(d, m, method='genetic')
-	dice_exp_genetic = exp_genetic.generate_counterfactuals(query_instances, total_CFs=2, desired_class="opposite", verbose=True)
+	exp_genetic = dice_ml.Dice(d, m, method='random')
+	dice_exp_genetic = exp_genetic.generate_counterfactuals(query_instances, 
+														 total_CFs=2, 
+														 desired_class="opposite",
+														 random_seed=9, 
+														 verbose=True)
 	dice_exp_genetic.visualize_as_dataframe(show_only_changes=True)
 
 
@@ -121,23 +130,21 @@ def run_on_diabetes(diabetes_path):
 	Here the trainer is run for diabetes
 	'''
 	pima_diabetes = pd.read_csv(diabetes_path, index_col=0)
-	pima_diabetes = pima_diabetes.loc[:, ~pima_diabetes.columns.str.contains('^Unnamed')]
 
-	#need to define transforms here for categorical and numeric columns
-	pima_diabetes = pima_diabetes.drop(['Sex'], axis=1) 
+	x_train, x_test, y_train, y_test = generate_train_test_split(pima_diabetes, 'Outcome', 0.30)
 
-	transformedDF = transform_data(pima_diabetes)
+	transformations = transform_data(pima_diabetes, [], ['Outcome'])
 
 	models = get_models()
 
-	x_train, x_test, y_train, y_test = generate_train_test_split(transformedDF, 0.30)
-	evaluate_model(models, x_train, y_train)
+	
+	evaluate_model(models, transformations, x_train, y_train)
 	model_output = {}
 
 	for mod_num in models.keys():
 		model = models[mod_num]
 
-		(model, mod_classification_report) = fit_and_predict_model(mod_num, model, x_train, y_train, x_test, y_test)
+		(model, mod_classification_report) = fit_and_predict_model(mod_num, transformations, model, x_train, y_train, x_test, y_test)
 
 		#this is where you get the model 
 
@@ -147,7 +154,7 @@ def run_on_diabetes(diabetes_path):
 	print('Testing proba ', model_output_print[0].predict_proba)
 	print(model_output_print[1])
 
-	return (model_output_print[0], x_train, x_test, y_train, y_test)
+	return (model_output_print[0], transformations, x_train, x_test, y_train, y_test)
 
 if __name__=='__main__':
 	'''
@@ -167,8 +174,10 @@ if __name__=='__main__':
 		dataset = pd.read_csv(codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv')
 		print('Columns of loaded dataset ', dataset.columns)
 
-		(trained_model, x_train, x_test, y_train, y_test) = run_on_diabetes(codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv')
+		(trained_model, transformations, x_train, x_test, y_train, y_test) = run_on_diabetes(codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv')
+		
 		#run_shap(trained_model, x_train, x_test, single_instance=False)
-		run_protodash(dataset, x_train, x_test)
+		
+		run_protodash(dataset, transformations, x_train, x_test)
 
-		run_dice(trained_model, dataset, x_train, y_train, x_test, y_test)
+		#run_dice(trained_model, dataset, x_train, y_train, x_test, y_test)

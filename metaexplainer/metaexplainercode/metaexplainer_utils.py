@@ -30,6 +30,13 @@ def find_list_difference(l1, l2):
 	'''
 	return list(set(l1) - set(l2))
 
+def drop_unnamed_cols(df):
+	'''
+	Return a dataframe without unnamed cols
+	'''
+	df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+	return df
+
 def find_cosine_similarity(s1, s2):
 	'''
 	return score for sklearn's cosine similarity
