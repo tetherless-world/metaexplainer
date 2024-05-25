@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import LabelEncoder
 
 import sys
 sys.path.append('../')
@@ -64,9 +65,13 @@ def run_dice(model, dataset, transformations, x_train, y_train, x_test, y_test, 
 	Can pass conditions here too 
 	mode can be genetic / random
 	'''	
-	
+	#dataset = dataset.drop('Sex', axis=1)
+
 	backend = 'sklearn'
 	m = dice_ml.Model(model=model, backend=backend)
+	m.transformer.func = 'ohe-min-max'
+	#m.transformer = transformations
+
 	#can automate this somehow - so that even pipeline can use it
 	d = dice_ml.Data(dataframe= dataset, 
 				  continuous_features=['Pregnancies','Glucose','BloodPressure','SkinThickness','Insulin','BMI','DiabetesPedigreeFunction','Age'],
@@ -81,16 +86,24 @@ def run_dice(model, dataset, transformations, x_train, y_train, x_test, y_test, 
 
 	#query_instances = dataset.drop(columns="Outcome")[selection_range[0]: selection_range[1]]
 	query_instances = x_train[selection_range[0]: selection_range[1]]
+	
+	print('Query \n', query_instances)
+
+	# LE = LabelEncoder()
+	# query_instances['Sex'] = LE.fit_transform(query_instances['Sex'])
+
 	y_queries = y_train[selection_range[0]: selection_range[1]]
-	print('Query', query_instances)
-	print('Outcomes ', y_queries)
+	
+	print('Outcomes \n', y_queries)
 
 	exp_genetic = dice_ml.Dice(d, m, method='random')
 	dice_exp_genetic = exp_genetic.generate_counterfactuals(query_instances, 
 														 total_CFs=2, 
 														 desired_class="opposite",
 														 random_seed=9, 
-														 verbose=True)
+														 features_to_vary= [col.replace('num__', '') for col in metaexplainer_utils.find_list_difference(transformations.get_feature_names_out(), ['cat__Sex_Female'])],
+														 verbose=False)
+	
 	dice_exp_genetic.visualize_as_dataframe(show_only_changes=True)
 
 
