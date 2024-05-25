@@ -58,20 +58,19 @@ def run_brcg():
 	'''
 	pass
 
-def run_dice(model, dataset, x_train, y_train, x_test, y_test, mode='genetic'):
+def run_dice(model, dataset, transformations, x_train, y_train, x_test, y_test, mode='genetic'):
 	'''
 	Generate counterfactuals 
 	Can pass conditions here too 
 	mode can be genetic / random
-	'''
-	dataset = dataset.loc[:, ~dataset.columns.str.contains('^Unnamed')]
-	dataset = dataset.drop(['Sex'], axis=1) 
-
+	'''	
+	
 	backend = 'sklearn'
 	m = dice_ml.Model(model=model, backend=backend)
 	#can automate this somehow - so that even pipeline can use it
 	d = dice_ml.Data(dataframe= dataset, 
-				  continuous_features=['Pregnancies','Glucose','BloodPressure','SkinThickness','Insulin','BMI','DiabetesPedigreeFunction','Age'], 
+				  continuous_features=['Pregnancies','Glucose','BloodPressure','SkinThickness','Insulin','BMI','DiabetesPedigreeFunction','Age'],
+				  categorical_features=['Sex'],
 				  outcome_name='Outcome')
 
 	#you can specify ranges in counterfactuals - which is also nice! - https://github.com/interpretml/DiCE/blob/main/docs/source/notebooks/DiCE_model_agnostic_CFs.ipynb
@@ -102,24 +101,25 @@ def generate_fnames_shap(shap_values, cols):
 	feature_importance.sort_values(by=['feature_importance_vals'], key=lambda col: col.map(lambda x: x[1]), ascending=False, inplace=True)
 	return feature_importance
 
-def run_shap(model, X_train, X_test, single_instance=True):
+def run_shap(model, transformations, X_train, X_test, single_instance=True):
 	'''
 	Based on: 
 	https://aix360.readthedocs.io/en/latest/lbbe.html#shap-explainers
 	https://shap.readthedocs.io/en/latest/generated/shap.KernelExplainer.html
 	'''
-	shapexplainer = KernelExplainer(model.predict_proba, X_test, feature_names=X_test.columns) 
+	X_test = transformations.transform(X_test)
+	shapexplainer = KernelExplainer(model.predict_proba, X_test, feature_names=transformations.get_feature_names_out()) 
 
 	if single_instance:
 		print(X_test.iloc[0,:])
 		shap_values = shapexplainer.explain_instance(X_test.iloc[0,:])
 		print(shap_values)
 	else:
-		print(model.classes_, 'Column names', X_test.columns)
+		#print(model.classes_, 'Column names', X_test.columns)
 		sampled_dist = shap.sample(X_test,10)
 		shap_values = shapexplainer.explainer(sampled_dist)
 		
-		feature_importances = generate_fnames_shap(shap_values, X_test.columns)
+		feature_importances = generate_fnames_shap(shap_values, transformations.get_feature_names_out())
 		print(feature_importances)
 		
 		#shap.plots.bar(shap_values, class_names=model.classes_)
@@ -129,7 +129,7 @@ def run_on_diabetes(diabetes_path):
 	'''
 	Here the trainer is run for diabetes
 	'''
-	pima_diabetes = pd.read_csv(diabetes_path, index_col=0)
+	pima_diabetes = load_dataset(diabetes_path)
 
 	x_train, x_test, y_train, y_test = generate_train_test_split(pima_diabetes, 'Outcome', 0.30)
 
@@ -171,13 +171,13 @@ if __name__=='__main__':
 	domain_name = 'Diabetes'
 
 	if domain_name == 'Diabetes':
-		dataset = pd.read_csv(codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv')
-		print('Columns of loaded dataset ', dataset.columns)
+		diabetes_path = codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv'
+		dataset = load_dataset(diabetes_path)
 
-		(trained_model, transformations, x_train, x_test, y_train, y_test) = run_on_diabetes(codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv')
+		(trained_model, transformations, x_train, x_test, y_train, y_test) = run_on_diabetes(diabetes_path)
 		
-		#run_shap(trained_model, x_train, x_test, single_instance=False)
+		run_shap(trained_model, transformations, x_train, x_test, single_instance=False)
 		
 		run_protodash(dataset, transformations, x_train, x_test)
 
-		#run_dice(trained_model, dataset, x_train, y_train, x_test, y_test)
+		run_dice(trained_model, dataset, transformations, x_train, y_train, x_test, y_test)
