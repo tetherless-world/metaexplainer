@@ -18,6 +18,7 @@ import pandas as pd
 
 import torch
 import collections 
+from pathlib import Path
 
 import sys
 sys.path.append('../')
@@ -96,6 +97,10 @@ def get_multi_word_phrase_from_capitalized_string(capitalized_word):
 	inflect_engine = inflect.engine()
 	subbed_string = re.sub('([A-Z])', r' \1', capitalized_word).strip()
 	return subbed_string
+
+def create_folder(path):
+	Path(path).mkdir(parents=True, exist_ok=True)
+
 
 def generate_acronyms_possibilities(list_of_conts):
 	list_edited = {ele.replace(' ', '').lower():ele for ele in list_of_conts}

@@ -54,11 +54,24 @@ def get_model(domain_name):
 	
 	print('Stats on entire dataset for best model ', best_model[0])	
 
-	print('Testing proba ', best_model[1].predict_proba)
 	#getting best output here - objective is to retrain
 	#print(model_output_print[1])
 	(model_to_save, mod_classification_report_save) = fit_and_predict_model(mod_num, transformations, best_model, X, Y, x_test, y_test, save_model=True)
 	print(mod_classification_report_save)
+	best_model_name = mod_classification_report_save['model']['model']
+
+	#create model folders and for domain
+	metaexplainer_utils.create_folder(codeconstants.DELEGATE_SAVED_MODELS_FOLDER)
+	metaexplainer_utils.create_folder(codeconstants.DELEGATE_SAVED_MODELS_FOLDER + domain_name)
+
+	model_save_path = codeconstants.DELEGATE_SAVED_MODELS_FOLDER + domain_name + '/' + best_model_name + '.pkl'
+	transform_save_path = codeconstants.DELEGATE_SAVED_MODELS_FOLDER + domain_name + '/transformations.pkl'
+
+	if not os.path.isfile(model_save_path):
+		joblib.dump(model_to_save, model_save_path)
+		joblib.dump(transformations, transform_save_path)
+
+	print('Saved model', best_model_name,' and transformations.')
 
 	return (best_model[0], transformations, x_train, x_test, y_train, y_test)
 
