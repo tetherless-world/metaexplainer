@@ -94,7 +94,6 @@ def get_multi_word_phrase_from_capitalized_string(capitalized_word):
 	Generate a multi-word phrase from capitalized words
 	E.g., DairyFreeMilk -> Dairy Free Milk
 	'''
-	inflect_engine = inflect.engine()
 	subbed_string = re.sub('([A-Z])', r' \1', capitalized_word).strip()
 	return subbed_string
 
