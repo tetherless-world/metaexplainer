@@ -20,12 +20,14 @@ import shap
 from aix360.algorithms.protodash import ProtodashExplainer
 import dice_ml
 
-def run_protodash(dataset, transformations, X_train, X_test):
+from metaexplainercode.delegate.run_delegate import get_domain_model
+
+def run_protodash(dataset, transformations, X):
 	'''
 	Protodash helps find representative cases in the data 
 	'''
 	# convert pandas dataframe to numpy
-	X_train = transformations.transform(X_train)
+	X_train = transformations.transform(X)
 
 	data = X_train
 
@@ -59,7 +61,7 @@ def run_brcg():
 	'''
 	pass
 
-def run_dice(model, dataset, transformations, x_train, y_train, x_test, y_test, mode='genetic'):
+def run_dice(model, dataset, transformations, X, Y, mode='genetic'):
 	'''
 	Generate counterfactuals 
 	Can pass conditions here too 
@@ -85,14 +87,14 @@ def run_dice(model, dataset, transformations, x_train, y_train, x_test, y_test, 
 	selection_range = (140, 143)
 
 	#query_instances = dataset.drop(columns="Outcome")[selection_range[0]: selection_range[1]]
-	query_instances = x_train[selection_range[0]: selection_range[1]]
+	query_instances = X[selection_range[0]: selection_range[1]]
 	
 	print('Query \n', query_instances)
 
 	# LE = LabelEncoder()
 	# query_instances['Sex'] = LE.fit_transform(query_instances['Sex'])
 
-	y_queries = y_train[selection_range[0]: selection_range[1]]
+	y_queries = Y[selection_range[0]: selection_range[1]]
 	
 	print('Outcomes \n', y_queries)
 
@@ -114,13 +116,13 @@ def generate_fnames_shap(shap_values, cols):
 	feature_importance.sort_values(by=['feature_importance_vals'], key=lambda col: col.map(lambda x: x[1]), ascending=False, inplace=True)
 	return feature_importance
 
-def run_shap(model, transformations, X_train, X_test, single_instance=True):
+def run_shap(model, transformations, X, single_instance=True):
 	'''
 	Based on: 
 	https://aix360.readthedocs.io/en/latest/lbbe.html#shap-explainers
 	https://shap.readthedocs.io/en/latest/generated/shap.KernelExplainer.html
 	'''
-	X_test = transformations.transform(X_test)
+	X_test = transformations.transform(X)
 	shapexplainer = KernelExplainer(model.predict_proba, X_test, feature_names=transformations.get_feature_names_out()) 
 
 	if single_instance:
@@ -138,37 +140,6 @@ def run_shap(model, transformations, X_train, X_test, single_instance=True):
 		#shap.plots.bar(shap_values, class_names=model.classes_)
 		#shap.summary_plot(shap_values, sampled_dist, class_names=model.classes_)
 
-def run_on_diabetes(diabetes_path):
-	'''
-	Here the trainer is run for diabetes
-	'''
-	pima_diabetes = load_dataset(diabetes_path)
-
-	x_train, x_test, y_train, y_test = generate_train_test_split(pima_diabetes, 'Outcome', 0.30)
-
-	transformations = transform_data(pima_diabetes, [], ['Outcome'])
-
-	models = get_models()
-
-	
-	evaluate_model(models, transformations, x_train, y_train)
-	model_output = {}
-
-	for mod_num in models.keys():
-		model = models[mod_num]
-
-		(model, mod_classification_report) = fit_and_predict_model(mod_num, transformations, model, x_train, y_train, x_test, y_test)
-
-		#this is where you get the model 
-
-		model_output[mod_num] = (model, mod_classification_report)
-
-	model_output_print = get_model_output(model_output, True, 0)
-	print('Testing proba ', model_output_print[0].predict_proba)
-	print(model_output_print[1])
-
-	return (model_output_print[0], transformations, x_train, x_test, y_train, y_test)
-
 if __name__=='__main__':
 	'''
 	This stage would take as input user question, reframed question and identify explainers relevant for the explanation type
@@ -182,15 +153,14 @@ if __name__=='__main__':
 	'''
 
 	domain_name = 'Diabetes'
+	dataset = metaexplainer_utils.load_dataset(domain_name)
+	(X, Y) = generate_X_Y(dataset, 'Outcome')
 
-	if domain_name == 'Diabetes':
-		diabetes_path = codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv'
-		dataset = load_dataset(diabetes_path)
+	
+	(trained_model, transformations, results) = get_domain_model(domain_name)
 
-		(trained_model, transformations, x_train, x_test, y_train, y_test) = run_on_diabetes(diabetes_path)
+	run_shap(trained_model, transformations, X, single_instance=False)
 		
-		run_shap(trained_model, transformations, x_train, x_test, single_instance=False)
-		
-		run_protodash(dataset, transformations, x_train, x_test)
+	run_protodash(dataset, transformations, X)
 
-		run_dice(trained_model, dataset, transformations, x_train, y_train, x_test, y_test)
+	run_dice(trained_model, dataset, transformations, X, Y)
