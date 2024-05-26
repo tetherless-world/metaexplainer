@@ -72,6 +72,13 @@ def load_selected_explanation_types():
 	loaded_explanations = [x.strip() for x in open(codeconstants.EXPLANATIONS_LOADED_FROM_EO, 'r').readlines()]
 	return loaded_explanations
 
+def load_dataset(domain_name):
+	'''
+	Dataset location is DATA_FOLDER + '/Domain_name' 
+	'''
+	dataset = pd.read_csv(codeconstants.DATA_FOLDER + '/' + domain_name + '/' + domain_name.lower() + '_val_corrected.csv')
+	dataset = drop_unnamed_cols(dataset)
+	return dataset
 
 def load_column_names(domain_name):
 	'''

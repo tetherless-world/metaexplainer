@@ -1,7 +1,3 @@
-import sys
-sys.path.append('../')
-from metaexplainercode import codeconstants
-
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import seaborn as sns # for data visualization
@@ -39,10 +35,6 @@ def is_cat(column_dtype):
 	else:
 		return False   
 
-def load_dataset(dataset_path):
-	dataset = pd.read_csv(dataset_path)
-	dataset = metaexplainer_utils.drop_unnamed_cols(dataset)
-	return dataset
 
 def transform_data(df, columns_to_ignore, outcome_columns):
 	'''
@@ -105,10 +97,14 @@ def get_model(model_no):
 		#invalid model_no and then in any case the max will be picked in report crunching
 		return models
 
+def generate_X_Y(df, outcome_column):
+	features = df.drop([outcome_column], axis=1)
+	labels = df[outcome_column]
+	return (features, labels)
+
 #Separate train dataset and test dataset
 def generate_train_test_split(transformedDF, outcome_column, test_size):
-	features = transformedDF.drop([outcome_column], axis=1)
-	labels = transformedDF[outcome_column]
+	(features, labels) = generate_X_Y(transformedDF, outcome_column)
 	x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=test_size, random_state=7)
 	return x_train, x_test, y_train, y_test
 
@@ -151,16 +147,21 @@ def evaluate_model(models, transformations, x_train, y_train):
 	return result_df
 
 
-def fit_and_predict_model(mod_num, transformations, model, x_train, y_train, x_test, y_test):
+def fit_and_predict_model(mod_num, transformations, model, x_train, y_train, x_test, y_test, save_model=False):
 	'''
 	Function to train a model, test it and report F1, precision and recall on the test predictions
 	'''
 	pipeline = Pipeline([('transformer', transformations), ('estimator', model[1])])
-	pipeline.fit(x_train, y_train)
 
-	y_pred_model = pipeline.predict(x_test)
-	#print('Model : ' + model[0])
-	class_report = classification_report(y_test, y_pred_model, output_dict=True)
+	if not save_model:
+		pipeline.fit(x_train, y_train)
+		y_pred_model = pipeline.predict(x_test)
+		class_report = classification_report(y_test, y_pred_model, output_dict=True)
+	else:
+		pipeline.fit(x_train, y_train)
+		y_pred_model = pipeline.predict(x_train)
+		class_report = classification_report(y_train, y_pred_model, output_dict=True)
+
 	#converting report to dataframe
 	class_report = pd.DataFrame(class_report).T
 	class_report = class_report.set_axis(class_report.columns, axis=1).rename_axis('dimensions',axis=0)
@@ -189,7 +190,7 @@ def clean_class_report(class_report, num_x_train, num_x_test, mod_num, mod_name)
 	return class_report_edited
 
 
-def get_model_output(models_output, pick_max, pick_other_node_model):
+def get_best_model(models_output, pick_other_node_model):
 	'''
 	
 	models_output contains the name of the model not the number 
@@ -210,14 +211,14 @@ def get_model_output(models_output, pick_max, pick_other_node_model):
 				max_f1 = class_report_model['test f1']
 				
 		if max_model != 0:
-			return models_output[max_model]
+			return (models_output[max_model][1], models_output[max_model][0])
 		else:
-			return models_output[1]
+			return (models_output[1][1], models_output[1][0])
 	
 
 
 if __name__ == '__main__':
-	pima_diabetes = load_dataset(codeconstants.DATA_FOLDER + '/Diabetes/diabetes_val_corrected.csv')
+	pima_diabetes = metaexplainer_utils.load_dataset('Diabetes')
 
 	models = get_models()
 
@@ -239,8 +240,8 @@ if __name__ == '__main__':
 		model_output[mod_num] = (model, mod_classification_report)
 
 	#print(model_output)
-	model_output_print = get_model_output(model_output, True, 0)
-	print('Testing proba ', model_output_print[0].predict_proba)
-	print(model_output_print[1])
+	model_output_print = get_best_model(model_output, 0)
+	print('Testing proba ', model_output_print[1].predict_proba)
+	print(model_output_print[0])
 
 
