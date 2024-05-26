@@ -10,6 +10,7 @@ EXPLANATIONS_LOADED_FROM_EO = os.path.abspath(os.path.join(os.path.dirname(__fil
 
 OUTPUT_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/output_files/'))
 DELEGATE_FOLDER = OUTPUT_FOLDER + '/delegate/'
+DELEGATE_SAVED_MODELS_FOLDER = DELEGATE_FOLDER + 'domain_models/'
 DECOMPOSE_QUESTIONS_FOLDER = OUTPUT_FOLDER + '/decompose_questions/'
 
 

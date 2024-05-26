@@ -52,13 +52,13 @@ def get_model(domain_name):
 
 	best_model = get_best_model(model_output, 0)
 	
-	print('Stats on entire dataset for best model ', best_model[0])	
+	print('Stats on test dataset for best model ', best_model[0])	
 
 	#getting best output here - objective is to retrain
 	#print(model_output_print[1])
 	(model_to_save, mod_classification_report_save) = fit_and_predict_model(mod_num, transformations, best_model, X, Y, x_test, y_test, save_model=True)
-	print(mod_classification_report_save)
-	best_model_name = mod_classification_report_save['model']['model']
+	print('Stats on entire dataset for the same best model ',mod_classification_report_save)
+	best_model_name = mod_classification_report_save['model']
 
 	#create model folders and for domain
 	metaexplainer_utils.create_folder(codeconstants.DELEGATE_SAVED_MODELS_FOLDER)

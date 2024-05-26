@@ -152,6 +152,7 @@ def fit_and_predict_model(mod_num, transformations, model, x_train, y_train, x_t
 	Function to train a model, test it and report F1, precision and recall on the test predictions
 	'''
 	pipeline = Pipeline([('transformer', transformations), ('estimator', model[1])])
+	model_name = model[0]
 
 	if not save_model:
 		pipeline.fit(x_train, y_train)
@@ -160,15 +161,14 @@ def fit_and_predict_model(mod_num, transformations, model, x_train, y_train, x_t
 	else:
 		pipeline.fit(x_train, y_train)
 		y_pred_model = pipeline.predict(x_train)
+		model_name = model[0]['model']
 		class_report = classification_report(y_train, y_pred_model, output_dict=True)
-
-	#converting report to dataframe
+	
 	class_report = pd.DataFrame(class_report).T
 	class_report = class_report.set_axis(class_report.columns, axis=1).rename_axis('dimensions',axis=0)
 	class_report.reset_index(inplace=True)
-	#printing and returning report
-	#print(class_report)
-	clean_class_report_edited = clean_class_report(class_report, len(x_train), len(x_test), mod_num, model[0])
+	
+	clean_class_report_edited = clean_class_report(class_report, len(x_train), len(x_test), mod_num, model_name)
 	return (model[1], clean_class_report_edited)
 
 def clean_class_report(class_report, num_x_train, num_x_test, mod_num, mod_name):
