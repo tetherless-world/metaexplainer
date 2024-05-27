@@ -91,7 +91,7 @@ def read_delegate_parsed_instruction_file(file_name):
 			if first_half == 'Feature groups':
 				second_half = eval(second_half)
 			
-			if first_half == 'Question' or (first_half == 'Machine interpretation'):
+			if first_half == 'Question' or (first_half == 'Machine interpretation') or (first_half == 'Explanation type'):
 				record[split_line[0].strip()] = second_half
 			elif first_half in record.keys():
 				record[first_half].append(second_half)

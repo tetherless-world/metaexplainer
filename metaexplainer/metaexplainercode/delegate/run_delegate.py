@@ -30,7 +30,19 @@ def retrieve_sample_decompose_passes(domain_name, mode='fine-tuned'):
 
 	parses = metaexplainer_utils.read_delegate_parsed_instruction_file(parse_file)
 
-	print(parses[0])
+	sample_record = parses[random.randrange(0, len(parses))]
+
+	print(sample_record)
+
+	explanation_methods = pd.read_csv(codeconstants.DELEGATE_FOLDER + '/explanation_type_methods.csv')
+
+	explanation_instance_for_record = explanation_methods[explanation_methods['Explanation Type'] == sample_record['Explanation type']]['Instances']
+
+	
+	print(explanation_instance_for_record)
+
+	#need to extract and call run explainers based on feature selectors
+	
 
 def get_domain_model(domain_name):
 	'''
@@ -110,6 +122,6 @@ if __name__=='__main__':
 	get_domain_model(domain_name)
 
 	parse = retrieve_sample_decompose_passes(domain_name)
-	
+
 	# explainer_method = get_corresponding_explainer()
 	# method_results = run_explainer(parse['feature_groups'], parse['actions'], explainer_method)
