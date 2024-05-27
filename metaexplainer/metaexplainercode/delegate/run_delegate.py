@@ -20,11 +20,17 @@ from metaexplainercode import codeconstants
 from metaexplainercode import metaexplainer_utils
 from metaexplainercode.delegate.train_models.run_model_tabular import *
 
-def retrieve_sample_decompose_passes(mode='fine-tuned'):
+import random
+
+def retrieve_sample_decompose_passes(domain_name, mode='fine-tuned'):
 	'''
 	Read from delegate output folder, if not running the method in real-time
 	'''
-	pass
+	parse_file = codeconstants.DELEGATE_FOLDER + domain_name + '_parsed_' + mode + '_delegate_instructions.txt'
+
+	parses = metaexplainer_utils.read_delegate_parsed_instruction_file(parse_file)
+
+	print(parses[0])
 
 def get_domain_model(domain_name):
 	'''
@@ -103,6 +109,7 @@ if __name__=='__main__':
 	domain_name = 'Diabetes'
 	get_domain_model(domain_name)
 
-	# parse = retrieve_sample_decompose_passes()
+	parse = retrieve_sample_decompose_passes(domain_name)
+	
 	# explainer_method = get_corresponding_explainer()
 	# method_results = run_explainer(parse['feature_groups'], parse['actions'], explainer_method)

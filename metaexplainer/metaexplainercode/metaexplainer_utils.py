@@ -69,6 +69,38 @@ def read_list_from_file(file_name):
 	lines = f.read().splitlines()
 	return lines
 
+def read_delegate_parsed_instruction_file(file_name):
+	'''
+	read delegate instructions - which is dictionary separated by ---------
+	'''
+	f = open(file_name, 'r', encoding='utf-8')
+	lines = f.read().splitlines()
+
+	parses = []
+	record = {}
+
+	for line in lines:
+		if line == '---------':
+			parses.append(record)
+			record = {}
+		else:
+			split_line = line.split(' : ')
+			first_half = split_line[0].strip()
+			second_half = split_line[1].strip()
+
+			if first_half == 'Feature groups':
+				second_half = eval(second_half)
+			
+			if first_half == 'Question' or (first_half == 'Machine interpretation'):
+				record[split_line[0].strip()] = second_half
+			elif first_half in record.keys():
+				record[first_half].append(second_half)
+			else:
+				record[first_half] = [second_half]
+	
+	return parses
+
+
 def load_selected_explanation_types():
 	loaded_explanations = [x.strip() for x in open(codeconstants.EXPLANATIONS_LOADED_FROM_EO, 'r').readlines()]
 	return loaded_explanations
