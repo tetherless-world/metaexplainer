@@ -29,6 +29,7 @@ def filter_records(dataset, feature_groups, actions):
 	'''
 	
 	column_names = dataset.columns
+	subsets = []
 
 	for feature_group in feature_groups:
 		subset_dataset = dataset
@@ -43,7 +44,9 @@ def filter_records(dataset, feature_groups, actions):
 				#print('Applying ', feature, 'fitler for vals ', feature_val)
 				subset_dataset = subset_dataset.iloc[(subset_dataset[feature]- float(feature_val)).abs().argsort()[:10]]
 
-		print('Feature group ', feature_group, 'subset \n ', subset_dataset)
+		subsets.append(subset_dataset)
+	
+	return subsets
 
 
 

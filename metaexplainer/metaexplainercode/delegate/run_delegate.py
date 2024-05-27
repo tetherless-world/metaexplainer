@@ -40,13 +40,17 @@ def retrieve_sample_decompose_passes(dataset, domain_name, mode='fine-tuned'):
 	explanation_methods = pd.read_csv(codeconstants.DELEGATE_FOLDER + '/explanation_type_methods.csv')
 
 	explanation_instance_for_record = explanation_methods[explanation_methods['Explanation Type'] == sample_record['Explanation type']]['Instances']
+	action_list = []
+	feature_groups = sample_record['Feature groups']
 
-	if not 'Action' in sample_record:
-		run_explainers.filter_records(dataset, sample_record['Feature groups'], '')
-	else:
-		run_explainers.filter_records(dataset, sample_record['Feature groups'], sample_record['Action'])
+	if 'Action' in sample_record:
+		action_list = sample_record['Action']
 
+	subsets = run_explainers.filter_records(dataset, feature_groups, action_list)
 	print(explanation_instance_for_record)
+
+	for subset_i in range(len(subsets)):
+		print('Filtered subsets for feature group ', feature_groups[subset_i], 'is \n', subsets[subset_i])
 
 	#need to extract and call run explainers based on feature selectors
 	
