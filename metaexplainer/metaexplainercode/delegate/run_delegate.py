@@ -31,8 +31,9 @@ def retrieve_sample_decompose_passes(dataset, domain_name, mode='fine-tuned'):
 	parse_file = codeconstants.DELEGATE_FOLDER + domain_name + '_parsed_' + mode + '_delegate_instructions.txt'
 
 	parses = metaexplainer_utils.read_delegate_parsed_instruction_file(parse_file)
+	parses_df = pd.DataFrame(parses)
 
-	sample_record = parses[random.randrange(0, len(parses))]
+	sample_record = parses_df.iloc[random.randrange(0, len(parses))]
 
 	print(sample_record)
 
@@ -40,8 +41,11 @@ def retrieve_sample_decompose_passes(dataset, domain_name, mode='fine-tuned'):
 
 	explanation_instance_for_record = explanation_methods[explanation_methods['Explanation Type'] == sample_record['Explanation type']]['Instances']
 
-	feature_groups = sample_record['Feature groups']
-	run_explainers.filter_records(dataset, sample_record['Feature groups'], sample_record['Action'])
+	if not 'Action' in sample_record:
+		run_explainers.filter_records(dataset, sample_record['Feature groups'], '')
+	else:
+		run_explainers.filter_records(dataset, sample_record['Feature groups'], sample_record['Action'])
+
 	print(explanation_instance_for_record)
 
 	#need to extract and call run explainers based on feature selectors
