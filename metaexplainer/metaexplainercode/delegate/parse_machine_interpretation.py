@@ -13,7 +13,7 @@ from metaexplainercode import metaexplainer_utils
 Parse machine-interpretations and delegate to the specific explanation type - model classes and also to the particular functions
 '''
 
-def read_interpretations_from_file(domain_name, mode='fine-tune', data_split='test'):
+def read_interpretations_from_file(domain_name, mode='fine-tune'):
     '''
     The interpretations from GPT directly are stored in output_files/decompose/<domain_name>/finetune_questions.csv
     We will mainly need to parse the Explanation type and Machine interpretation columns
@@ -21,7 +21,9 @@ def read_interpretations_from_file(domain_name, mode='fine-tune', data_split='te
     interpretations_records = pd.read_csv(codeconstants.DECOMPOSE_QUESTIONS_FOLDER + '/' + domain_name + '/finetune_questions.csv')
 
     if mode == 'generated':
-        interpretations_records = pd.DataFrame(metaexplainer_utils.process_decompose_llm_result('llama-3-8b-charis-explanation', 'Diabetes',data_split, output_mode='list'))
+        train_records = pd.DataFrame(metaexplainer_utils.process_decompose_llm_result('llama-3-8b-charis-explanation', 'Diabetes','train', output_mode='list'))
+        test_records = pd.DataFrame(metaexplainer_utils.process_decompose_llm_result('llama-3-8b-charis-explanation', 'Diabetes','test', output_mode='list'))
+        interpretations_records = pd.concat([train_records, test_records])
 
 
     #the sample record will be removed once there is a way to either read from output file or fine-tuned data
@@ -242,7 +244,7 @@ def report_usability(record):
 
     return True
 
-def generate_output_file_name(domain_name, mode, data_split, records_type):
+def generate_output_file_name(domain_name, mode, records_type):
     write_folder = codeconstants.DELEGATE_FOLDER 
     output_file_name = ''
 
@@ -254,7 +256,7 @@ def generate_output_file_name(domain_name, mode, data_split, records_type):
     output_file_name = write_folder + '/' + domain_name + '_parsed_' + mode + '_delegate_instructions.txt'
 
     if mode == 'generated':
-        output_file_name = write_folder + '/' + domain_name + '_parsed_' + mode + '_' + data_split + '_delegate_instructions.txt'
+        output_file_name = write_folder + '/' + domain_name + '_parsed_' + mode + '_delegate_instructions.txt'
     
     return output_file_name
 
@@ -266,13 +268,11 @@ if __name__=='__main__':
 
     #only makes sense if the mode is generated and not fine-tuned 
 
-    data_split = 'test'
-
-    interpretations_records = read_interpretations_from_file(domain_name, mode=mode, data_split=data_split)
+    interpretations_records = read_interpretations_from_file(domain_name, mode=mode)
     column_names = metaexplainer_utils.load_column_names(domain_name)
     
     print(column_names)
-    print('Generating delegate parses for ', mode, ' data from ', data_split, 'split')
+    print('Generating delegate parses for ', mode, ' data')
 
     delegate_folder = codeconstants.DELEGATE_FOLDER 
 
@@ -299,12 +299,12 @@ if __name__=='__main__':
         else:
             unusable_output_txt += record_output_txt
     
-    usable_output_file_name = generate_output_file_name(domain_name, mode, data_split, 'usable')        
+    usable_output_file_name = generate_output_file_name(domain_name, mode, 'usable')        
 
     with open(usable_output_file_name, 'w') as f:
         f.write(usable_output_txt)
     
-    unusable_output_file_name = generate_output_file_name(domain_name, mode, data_split, 'unusable')        
+    unusable_output_file_name = generate_output_file_name(domain_name, mode, 'unusable')        
 
     with open(unusable_output_file_name, 'w') as f:
         f.write(unusable_output_txt)
