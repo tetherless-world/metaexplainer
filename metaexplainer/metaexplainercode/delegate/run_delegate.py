@@ -21,6 +21,7 @@ from metaexplainercode import metaexplainer_utils
 from metaexplainercode.delegate.train_models.run_model_tabular import *
 
 from metaexplainercode.delegate.run_explainers import filter_records
+from metaexplainercode.delegate.run_explainers import TabularExplainers
 
 import random
 
@@ -38,16 +39,18 @@ def retrieve_sample_decompose_passes(dataset, domain_name, mode='fine-tuned'):
 	print(sample_record)
 
 	explanation_methods = pd.read_csv(codeconstants.DELEGATE_FOLDER + '/explanation_type_methods.csv')
-
+	implemented_methods = [attr for attr in dir(TabularExplainers) if not attr.startswith('__')]
 	explanation_instance_for_record = explanation_methods[explanation_methods['Explanation Type'] == sample_record['Explanation type']]['Instances']
+	matched_method = [im_method for im_method in implemented_methods for instance_method in explanation_instance_for_record if instance_method.lower() in im_method]
+
 	action_list = []
 	feature_groups = sample_record['Feature groups']
 
 	if 'Action' in sample_record:
 		action_list = sample_record['Action']
 
-	subsets = run_explainers.filter_records(dataset, feature_groups, action_list)
-	print(explanation_instance_for_record)
+	subsets = filter_records(dataset, feature_groups, action_list)
+	print(explanation_instance_for_record, 'Match found ', matched_method)
 
 	for subset_i in range(len(subsets)):
 		print('Filtered subsets for feature group ', feature_groups[subset_i], 'is \n', subsets[subset_i])
