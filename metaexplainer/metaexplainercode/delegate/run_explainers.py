@@ -10,6 +10,8 @@ from metaexplainercode import metaexplainer_utils
 from metaexplainercode.delegate.train_models.run_model_tabular import *
 
 import matplotlib as plt
+import joblib 
+import pickle
 
 # Importing shap KernelExplainer (aix360 style)
 from aix360.algorithms.shap import KernelExplainer
@@ -20,8 +22,67 @@ import shap
 from aix360.algorithms.protodash import ProtodashExplainer
 import dice_ml
 
-from metaexplainercode.delegate.run_delegate import get_domain_model
 from metaexplainercode.delegate.parse_machine_interpretation import replace_feature_string_with_col_names
+
+def get_domain_model(domain_name):
+	'''
+	Train model if not present 
+	'''
+	domain_dataset = metaexplainer_utils.load_dataset(domain_name)
+	
+	model_save_path = codeconstants.DELEGATE_SAVED_MODELS_FOLDER + domain_name + '/model.pkl'
+
+	if not os.path.isfile(model_save_path):
+		(X, Y) = generate_X_Y(domain_dataset, 'Outcome')
+		x_train, x_test, y_train, y_test = generate_train_test_split(domain_dataset, 'Outcome', 0.30)
+
+		transformations = transform_data(domain_dataset, [], ['Outcome'])
+
+		models = get_models()
+
+		
+		evaluate_model(models, transformations, x_train, y_train)
+		model_output = {}
+
+		for mod_num in models.keys():
+			model = models[mod_num]
+
+			(model, mod_classification_report) = fit_and_predict_model(mod_num, transformations, model, x_train, y_train, x_test, y_test)
+
+			#this is where you get the model 
+
+			model_output[mod_num] = (model, mod_classification_report)
+
+		best_model = get_best_model(model_output, 0)
+		
+		print('Stats on test dataset for best model ', best_model[0])	
+
+		#getting best output here - objective is to retrain
+		#print(model_output_print[1])
+		(model_to_save, mod_classification_report_save) = fit_and_predict_model(mod_num, transformations, best_model, X, Y, x_test, y_test, save_model=True)
+		print('Stats on entire dataset for the same best model ',mod_classification_report_save)
+		best_model_name = mod_classification_report_save['model']
+
+		#create model folders and for domain
+		metaexplainer_utils.create_folder(codeconstants.DELEGATE_SAVED_MODELS_FOLDER)
+		metaexplainer_utils.create_folder(codeconstants.DELEGATE_SAVED_MODELS_FOLDER + domain_name)
+
+		
+		transform_save_path = codeconstants.DELEGATE_SAVED_MODELS_FOLDER + domain_name + '/transformations.pkl'
+		results = mod_classification_report_save
+		
+		joblib.dump(model_to_save, model_save_path)
+		pickle.dump(mod_classification_report_save, open(codeconstants.DELEGATE_SAVED_MODELS_FOLDER + domain_name + '/results.pkl', "wb"))
+		joblib.dump(transformations, transform_save_path)
+		print('Saved model', best_model_name,' and transformations.')
+	else:
+		model_to_save = joblib.load(model_save_path)
+		transformations = joblib.load(codeconstants.DELEGATE_SAVED_MODELS_FOLDER + domain_name + '/transformations.pkl')
+		results = pickle.load(open(codeconstants.DELEGATE_SAVED_MODELS_FOLDER + domain_name + '/results.pkl', 'rb'))
+		print('Retrieved model and results.')
+
+
+	return (model_to_save, transformations, results)
 
 def filter_records(dataset, feature_groups, actions):
 	'''
@@ -48,125 +109,134 @@ def filter_records(dataset, feature_groups, actions):
 	
 	return subsets
 
-
-
-def run_protodash(dataset, transformations, X):
+class TabularExplainers():
 	'''
-	Protodash helps find representative cases in the data 
+	A wrapper class to encapsulate all the explainer methods so that they can be easily retrieved for each explanation method
 	'''
-	# convert pandas dataframe to numpy
-	X_train = transformations.transform(X)
+	def __init__(self, domain_name) -> None:
+		self.domain_name = domain_name
 
-	data = X_train
+		(self.model, self.transformations, self.results) = get_domain_model(domain_name)
+		self.dataset = metaexplainer_utils.load_dataset(domain_name)
+		(self.X, self.Y) = generate_X_Y(self.dataset, 'Outcome')
 
-	#sort the rows by sequence numbers in 1st column 
-	idx = np.argsort(data[:, 0])  
-	data = data[idx, :]
+	def run_protodash(self):
+		'''
+		Protodash helps find representative cases in the data 
+		'''
+		# convert pandas dataframe to numpy
+		X_train = self.transformations.transform(self.X)
 
-	# replace nan's (missing values) with 0's
-	original = data
-	original[np.isnan(original)] = 0
+		data = X_train
 
-	# delete 1st column (sequence numbers)
-	original = original[:, 1:]
+		#sort the rows by sequence numbers in 1st column 
+		idx = np.argsort(data[:, 0])  
+		data = data[idx, :]
 
-	protodash_explainer = ProtodashExplainer()
-	(W, S, _) = protodash_explainer.explain(original, original, m=10)
+		# replace nan's (missing values) with 0's
+		original = data
+		original[np.isnan(original)] = 0
 
-	inc_prototypes = dataset.iloc[S, :].copy()
-	inc_prototypes = metaexplainer_utils.drop_unnamed_cols(inc_prototypes)
+		# delete 1st column (sequence numbers)
+		original = original[:, 1:]
 
-	# Compute normalized importance weights for prototypes
-	inc_prototypes["Weights of Prototypes"] = np.around(W/np.sum(W), 2) 
-	print('Running protodash ')
-	print(inc_prototypes)
+		protodash_explainer = ProtodashExplainer()
+		(W, S, _) = protodash_explainer.explain(original, original, m=10)
 
-	
+		inc_prototypes = self.dataset.iloc[S, :].copy()
+		inc_prototypes = metaexplainer_utils.drop_unnamed_cols(inc_prototypes)
 
-def run_brcg():
-	'''
-	Derive rules for prediction 
-	'''
-	pass
+		# Compute normalized importance weights for prototypes
+		inc_prototypes["Weights of Prototypes"] = np.around(W/np.sum(W), 2) 
+		print('Running protodash ')
+		print(inc_prototypes)
 
-def run_dice(model, dataset, transformations, X, Y, mode='genetic'):
-	'''
-	Generate counterfactuals 
-	Can pass conditions here too 
-	mode can be genetic / random
-	'''	
-	#dataset = dataset.drop('Sex', axis=1)
-
-	backend = 'sklearn'
-	m = dice_ml.Model(model=model, backend=backend)
-	m.transformer.func = 'ohe-min-max'
-	#m.transformer = transformations
-
-	#can automate this somehow - so that even pipeline can use it
-	d = dice_ml.Data(dataframe= dataset, 
-				  continuous_features=['Pregnancies','Glucose','BloodPressure','SkinThickness','Insulin','BMI','DiabetesPedigreeFunction','Age'],
-				  categorical_features=['Sex'],
-				  outcome_name='Outcome')
-
-	#you can specify ranges in counterfactuals - which is also nice! - https://github.com/interpretml/DiCE/blob/main/docs/source/notebooks/DiCE_model_agnostic_CFs.ipynb
-	#set some instances for sampling
-
-	print('# where outcome = 1 ',len(dataset[dataset['Outcome'] == 1.0]), '# where outcome = 0 ',len(dataset[dataset['Outcome'] == 0.0]))
-	selection_range = (140, 143)
-
-	#query_instances = dataset.drop(columns="Outcome")[selection_range[0]: selection_range[1]]
-	query_instances = X[selection_range[0]: selection_range[1]]
-	
-	print('Query \n', query_instances)
-
-	# LE = LabelEncoder()
-	# query_instances['Sex'] = LE.fit_transform(query_instances['Sex'])
-
-	y_queries = Y[selection_range[0]: selection_range[1]]
-	
-	print('Outcomes \n', y_queries)
-
-	exp_genetic = dice_ml.Dice(d, m, method='random')
-	dice_exp_genetic = exp_genetic.generate_counterfactuals(query_instances, 
-														 total_CFs=2, 
-														 desired_class="opposite",
-														 random_seed=9, 
-														 features_to_vary= [col.replace('num__', '') for col in metaexplainer_utils.find_list_difference(transformations.get_feature_names_out(), ['cat__Sex_Female'])],
-														 verbose=False)
-	
-	dice_exp_genetic.visualize_as_dataframe(show_only_changes=True)
-
-
-def generate_fnames_shap(shap_values, cols):
-	vals= np.abs(shap_values.values).mean(0)
-	feature_importance = pd.DataFrame(list(zip(cols,vals)),columns=['col_name','feature_importance_vals'])
-	#print(feature_importance.head())
-	feature_importance.sort_values(by=['feature_importance_vals'], key=lambda col: col.map(lambda x: x[1]), ascending=False, inplace=True)
-	return feature_importance
-
-def run_shap(model, transformations, X, single_instance=True):
-	'''
-	Based on: 
-	https://aix360.readthedocs.io/en/latest/lbbe.html#shap-explainers
-	https://shap.readthedocs.io/en/latest/generated/shap.KernelExplainer.html
-	'''
-	X_test = transformations.transform(X)
-	shapexplainer = KernelExplainer(model.predict_proba, X_test, feature_names=transformations.get_feature_names_out()) 
-
-	if single_instance:
-		print(X_test.iloc[0,:])
-		shap_values = shapexplainer.explain_instance(X_test.iloc[0,:])
-		print(shap_values)
-	else:
-		#print(model.classes_, 'Column names', X_test.columns)
-		sampled_dist = shap.sample(X_test,10)
-		shap_values = shapexplainer.explainer(sampled_dist)
 		
-		feature_importances = generate_fnames_shap(shap_values, transformations.get_feature_names_out())
-		print(feature_importances)
+
+	def run_brcg(self):
+		'''
+		Derive rules for prediction 
+		'''
+		pass
+
+	def run_dice(self, mode='genetic'):
+		'''
+		Generate counterfactuals 
+		Can pass conditions here too 
+		mode can be genetic / random
+		'''	
+		#dataset = dataset.drop('Sex', axis=1)
+
+		backend = 'sklearn'
+		m = dice_ml.Model(model=self.model, backend=backend)
+		m.transformer.func = 'ohe-min-max'
+		#m.transformer = transformations
+
+		#can automate this somehow - so that even pipeline can use it
+		d = dice_ml.Data(dataframe= self.dataset, 
+					continuous_features=['Pregnancies','Glucose','BloodPressure','SkinThickness','Insulin','BMI','DiabetesPedigreeFunction','Age'],
+					categorical_features=['Sex'],
+					outcome_name='Outcome')
+
+		#you can specify ranges in counterfactuals - which is also nice! - https://github.com/interpretml/DiCE/blob/main/docs/source/notebooks/DiCE_model_agnostic_CFs.ipynb
+		#set some instances for sampling
+
+		print('# where outcome = 1 ',len(self.dataset[self.dataset['Outcome'] == 1.0]), '# where outcome = 0 ',len(self.dataset[self.dataset['Outcome'] == 0.0]))
+		selection_range = (140, 143)
+
+		#query_instances = dataset.drop(columns="Outcome")[selection_range[0]: selection_range[1]]
+		query_instances = self.X[selection_range[0]: selection_range[1]]
 		
-		#shap.plots.bar(shap_values, class_names=model.classes_)
-		#shap.summary_plot(shap_values, sampled_dist, class_names=model.classes_)
+		print('Query \n', query_instances)
+
+		# LE = LabelEncoder()
+		# query_instances['Sex'] = LE.fit_transform(query_instances['Sex'])
+
+		y_queries = self.Y[selection_range[0]: selection_range[1]]
+		
+		print('Outcomes \n', y_queries)
+
+		exp_genetic = dice_ml.Dice(d, m, method='random')
+		dice_exp_genetic = exp_genetic.generate_counterfactuals(query_instances, 
+															total_CFs=2, 
+															desired_class="opposite",
+															random_seed=9,
+															#ignoring the categorical features 
+															features_to_vary= [col.replace('num__', '') for col in metaexplainer_utils.find_list_difference(self.transformations.get_feature_names_out(), ['cat__Sex_Female'])],
+															verbose=False)
+		
+		dice_exp_genetic.visualize_as_dataframe(show_only_changes=True)
+
+	def run_shap(self, single_instance=True):
+		'''
+		Based on: 
+		https://aix360.readthedocs.io/en/latest/lbbe.html#shap-explainers
+		https://shap.readthedocs.io/en/latest/generated/shap.KernelExplainer.html
+		'''
+		X_test = self.transformations.transform(self.X)
+		shapexplainer = KernelExplainer(self.model.predict_proba, X_test, feature_names=self.transformations.get_feature_names_out()) 
+
+		def generate_fnames_shap(shap_values, cols):
+			vals= np.abs(shap_values.values).mean(0)
+			feature_importance = pd.DataFrame(list(zip(cols,vals)),columns=['col_name','feature_importance_vals'])
+			#print(feature_importance.head())
+			feature_importance.sort_values(by=['feature_importance_vals'], key=lambda col: col.map(lambda x: x[1]), ascending=False, inplace=True)
+			return feature_importance
+
+		if single_instance:
+			print(X_test.iloc[0,:])
+			shap_values = shapexplainer.explain_instance(X_test.iloc[0,:])
+			print(shap_values)
+		else:
+			#print(model.classes_, 'Column names', X_test.columns)
+			sampled_dist = shap.sample(X_test,10)
+			shap_values = shapexplainer.explainer(sampled_dist)
+			
+			feature_importances = generate_fnames_shap(shap_values, self.transformations.get_feature_names_out())
+			print(feature_importances)
+			
+			#shap.plots.bar(shap_values, class_names=model.classes_)
+			#shap.summary_plot(shap_values, sampled_dist, class_names=model.classes_)
 
 if __name__=='__main__':
 	'''
@@ -181,14 +251,10 @@ if __name__=='__main__':
 	'''
 
 	domain_name = 'Diabetes'
-	dataset = metaexplainer_utils.load_dataset(domain_name)
-	(X, Y) = generate_X_Y(dataset, 'Outcome')
-
 	
-	(trained_model, transformations, results) = get_domain_model(domain_name)
-
-	run_shap(trained_model, transformations, X, single_instance=False)
+	tabular_explainer = TabularExplainers(domain_name)
+	tabular_explainer.run_shap(single_instance=False)
 		
-	run_protodash(dataset, transformations, X)
+	tabular_explainer.run_protodash()
 
-	run_dice(trained_model, dataset, transformations, X, Y)
+	tabular_explainer.run_dice()
