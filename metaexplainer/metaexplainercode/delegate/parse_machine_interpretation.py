@@ -113,7 +113,7 @@ def replace_feature_string_with_col_names(feature_string, column_names):
         if len(matched_col) > 0:
             return expanded_cols[matched_col[0]]
         else:
-            matched_col = list(filter(lambda x: x.lower() in feature_string.lower(), acronym_cols.keys()))
+            matched_col = list(filter(lambda x: feature_string.lower() in x.lower(), acronym_cols.keys()))
 
             if len(matched_col) > 0:
                return acronym_cols[matched_col[0]]
