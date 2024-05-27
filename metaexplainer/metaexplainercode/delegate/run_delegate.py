@@ -20,9 +20,11 @@ from metaexplainercode import codeconstants
 from metaexplainercode import metaexplainer_utils
 from metaexplainercode.delegate.train_models.run_model_tabular import *
 
+from metaexplainercode.delegate import run_explainers
+
 import random
 
-def retrieve_sample_decompose_passes(domain_name, mode='fine-tuned'):
+def retrieve_sample_decompose_passes(dataset, domain_name, mode='fine-tuned'):
 	'''
 	Read from delegate output folder, if not running the method in real-time
 	'''
@@ -38,7 +40,8 @@ def retrieve_sample_decompose_passes(domain_name, mode='fine-tuned'):
 
 	explanation_instance_for_record = explanation_methods[explanation_methods['Explanation Type'] == sample_record['Explanation type']]['Instances']
 
-	
+	feature_groups = sample_record['Feature groups']
+	run_explainers.filter_records(dataset, sample_record['Feature groups'], sample_record['Action'])
 	print(explanation_instance_for_record)
 
 	#need to extract and call run explainers based on feature selectors
@@ -119,9 +122,10 @@ def run_explainer(feature_groups, actions, explainer_method):
 
 if __name__=='__main__':
 	domain_name = 'Diabetes'
+	domain_dataset = metaexplainer_utils.load_dataset(domain_name)
 	get_domain_model(domain_name)
 
-	parse = retrieve_sample_decompose_passes(domain_name)
+	parse = retrieve_sample_decompose_passes(domain_dataset, domain_name)
 
 	# explainer_method = get_corresponding_explainer()
 	# method_results = run_explainer(parse['feature_groups'], parse['actions'], explainer_method)

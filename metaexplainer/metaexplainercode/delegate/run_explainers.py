@@ -22,6 +22,12 @@ import dice_ml
 
 from metaexplainercode.delegate.run_delegate import get_domain_model
 
+def filter_records(dataset, feature_groups, actions):
+	'''
+	Filter records based on feature groups before passing it to the explainers
+	'''
+	pass
+
 def run_protodash(dataset, transformations, X):
 	'''
 	Protodash helps find representative cases in the data 
