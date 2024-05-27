@@ -292,7 +292,7 @@ if __name__=='__main__':
     domain_name = 'Diabetes'
     
 
-    mode = 'generated' # 'fine-tuned' / 'generated'
+    mode = 'fine-tuned' # 'fine-tuned' / 'generated'
 
     #only makes sense if the mode is generated and not fine-tuned 
 
