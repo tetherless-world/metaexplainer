@@ -99,6 +99,28 @@ def get_explanation_type(record):
     
     return explan_type
 
+def replace_feature_string_with_col_names(feature_string, column_names):
+    (edited_cols, expanded_cols, acronym_cols) = metaexplainer_utils.generate_acronyms_possibilities(column_names)    
+    matched_key = ''
+
+    matched_col = list(filter(lambda x: x.lower() in feature_string.lower(), edited_cols.keys()))
+    
+    if len(matched_col) > 0:
+        return edited_cols[matched_col[0]]
+    else:
+        matched_col = list(filter(lambda x: x.lower() in feature_string.lower(), expanded_cols.keys()))
+
+        if len(matched_col) > 0:
+            return expanded_cols[matched_col[0]]
+        else:
+            matched_col = list(filter(lambda x: x.lower() in feature_string.lower(), acronym_cols.keys()))
+
+            if len(matched_col) > 0:
+               return acronym_cols[matched_col[0]]
+    
+    return matched_key
+
+
 def parse_machine_interpretation(record, column_names):
     '''
     The goal is to return:
@@ -157,6 +179,7 @@ def parse_machine_interpretation(record, column_names):
             else:
                 skipped[action] = replacement_label
 
+    #if there are more features extract them!
     if '=' in mi_without_action_features:
         remaining_feature_groups = extract_feature_value_pairs(mi_without_action_features.strip(), column_names)
         feature_groups_all.append(remaining_feature_groups)
@@ -170,10 +193,26 @@ def parse_machine_interpretation(record, column_names):
 
     actions = list(set(actions) - set(replaced_actions))
 
+    #clean up feature group keys 
+    feature_groups_all_edited = []
+
+
+    for feature_groups in feature_groups_all:
+        feature_groups_edited = {}
+        for feature in feature_groups.keys():
+            renamed_col = replace_feature_string_with_col_names(feature, column_names)
+
+            if renamed_col != '':
+                feature_groups_edited[renamed_col] = feature_groups[feature]
+            else:
+                feature_groups_edited[feature]  = feature_groups[feature]
+        feature_groups_all_edited.append(feature_groups_edited)
+    
+    feature_groups_all = feature_groups_all_edited
+
+
     record_mi = record['Machine interpretation']
     record_question = record['Question']
-
-    (edited_cols, expanded_cols, acronym_cols) = metaexplainer_utils.generate_acronyms_possibilities(column_names)
 
     #if there are no recognized feature groups, then extract them from the machine interpretation / question
     if len(feature_groups_all) == 0:
@@ -184,21 +223,10 @@ def parse_machine_interpretation(record, column_names):
 
         if search_string != '':
             #record_mi might contain label!
+            matched_col = replace_feature_string_with_col_names(search_string, column_names)
 
-            matched_col = list(filter(lambda x: x.lower() in search_string.lower(), edited_cols.keys()))
-
-            if len(matched_col) > 0:
-                feature_groups_all.append({edited_cols[matched_col[0]]: ''})
-            else:
-                matched_col = list(filter(lambda x: x.lower() in search_string.lower(), expanded_cols.keys()))
-
-                if len(matched_col) > 0:
-                    feature_groups_all.append({expanded_cols[matched_col[0]]: ''})
-                else:
-                    matched_col = list(filter(lambda x: x.lower() in search_string.lower(), acronym_cols.keys()))
-
-                    if len(matched_col) > 0:
-                        feature_groups_all.append({acronym_cols[matched_col[0]]: ''})
+            if matched_col != '':
+                feature_groups_all.append({matched_col: ''})
 
 
     #print('Length of action and paranthesis groups are ', len(actions), len(parantheses_groups))
