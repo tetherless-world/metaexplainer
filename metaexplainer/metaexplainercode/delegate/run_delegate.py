@@ -55,7 +55,7 @@ def retrieve_sample_decompose_passes(dataset, domain_name, mode='fine-tuned'):
 	for subset_i in range(len(subsets)):
 		print('Filtered subsets for feature group ', feature_groups[subset_i], 'is \n', subsets[subset_i])
 
-	
+	return (subsets, action_list, matched_method)
 
 	#need to extract and call run explainers based on feature selectors
 
@@ -66,9 +66,10 @@ def get_corresponding_explainer():
 	'''
 	pass
 
-def run_explainer(feature_groups, actions, explainer_method):
+def run_explainer(feature_subsets, actions, explainer_method):
 	'''
 	Call corresponding explainer with feature group filters and actions 
+	Need to implement this 
 	'''
 	pass
 
@@ -76,7 +77,7 @@ if __name__=='__main__':
 	domain_name = 'Diabetes'
 	domain_dataset = metaexplainer_utils.load_dataset(domain_name)
 
-	parse = retrieve_sample_decompose_passes(domain_dataset, domain_name)
+	(subsets, action_list, explainer_method) = retrieve_sample_decompose_passes(domain_dataset, domain_name)
 
 	# explainer_method = get_corresponding_explainer()
-	# method_results = run_explainer(parse['feature_groups'], parse['actions'], explainer_method)
+	method_results = run_explainer(subsets, action_list, explainer_method)
