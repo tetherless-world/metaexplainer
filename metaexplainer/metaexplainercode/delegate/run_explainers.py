@@ -27,21 +27,23 @@ def filter_records(dataset, feature_groups, actions):
 	'''
 	Filter records based on feature groups before passing it to the explainers
 	'''
-	subset_dataset = dataset
+	
 	column_names = dataset.columns
 
 	for feature_group in feature_groups:
+		subset_dataset = dataset
+
 		for feature in feature_group.keys():
 			feature_val = feature_group[feature]
-
+			
 			if not feature in column_names:
-				feature = replace_feature_string_with_col_names(feature, column_names)
+				feature = replace_feature_string_with_col_names(feature, column_names).strip()
 
-			if feature_val != '' and metaexplainer_utils.is_valid_number(feature_val):
-				print('Applying ', feature, 'fitler for vals ', feature_val)
-				subset_dataset = dataset.iloc[(dataset[feature]- float(feature_val)).abs().argsort()[:2]]
+			if feature != '' and feature_val != '' and metaexplainer_utils.is_valid_number(feature_val):
+				#print('Applying ', feature, 'fitler for vals ', feature_val)
+				subset_dataset = subset_dataset.iloc[(subset_dataset[feature]- float(feature_val)).abs().argsort()[:10]]
 
-				print(subset_dataset.head())
+		print('Feature group ', feature_group, 'subset \n ', subset_dataset)
 
 
 
