@@ -120,12 +120,16 @@ class TabularExplainers():
 		self.dataset = metaexplainer_utils.load_dataset(domain_name)
 		(self.X, self.Y) = generate_X_Y(self.dataset, 'Outcome')
 
-	def run_protodash(self):
+	def run_protodash(self, passed_dataset=None):
 		'''
 		Protodash helps find representative cases in the data 
 		'''
 		# convert pandas dataframe to numpy
-		X_train = self.transformations.transform(self.X)
+		if not passed_dataset is None:
+			X_train = self.transformations.transform(self.X)
+		else:
+			(X, y) = generate_X_Y(passed_dataset, 'Outcome')
+			X_train = self.transformations.transform(X)
 
 		data = X_train
 
@@ -159,7 +163,7 @@ class TabularExplainers():
 		'''
 		pass
 
-	def run_dice(self, mode='genetic'):
+	def run_dice(self, passed_dataset=None, mode='genetic'):
 		'''
 		Generate counterfactuals 
 		Can pass conditions here too 
@@ -182,17 +186,22 @@ class TabularExplainers():
 		#set some instances for sampling
 
 		print('# where outcome = 1 ',len(self.dataset[self.dataset['Outcome'] == 1.0]), '# where outcome = 0 ',len(self.dataset[self.dataset['Outcome'] == 0.0]))
-		selection_range = (140, 143)
+		
 
 		#query_instances = dataset.drop(columns="Outcome")[selection_range[0]: selection_range[1]]
-		query_instances = self.X[selection_range[0]: selection_range[1]]
+		if not passed_dataset is None:
+			selection_range = (140, 143)
+			query_instances = self.X[selection_range[0]: selection_range[1]]
+			y_queries = self.Y[selection_range[0]: selection_range[1]]
+		else:
+			(query_instances, y_queries) = generate_X_Y(passed_dataset, 'Outcome')
 		
 		print('Query \n', query_instances)
 
 		# LE = LabelEncoder()
 		# query_instances['Sex'] = LE.fit_transform(query_instances['Sex'])
 
-		y_queries = self.Y[selection_range[0]: selection_range[1]]
+		
 		
 		print('Outcomes \n', y_queries)
 
@@ -207,13 +216,17 @@ class TabularExplainers():
 		
 		dice_exp_genetic.visualize_as_dataframe(show_only_changes=True)
 
-	def run_shap(self, single_instance=True):
+	def run_shap(self, passed_dataset=None, single_instance=False):
 		'''
 		Based on: 
 		https://aix360.readthedocs.io/en/latest/lbbe.html#shap-explainers
 		https://shap.readthedocs.io/en/latest/generated/shap.KernelExplainer.html
 		'''
-		X_test = self.transformations.transform(self.X)
+		if not passed_dataset is None:
+			X_test = self.transformations.transform(self.X)
+		else:
+			(X_test, y_test) = generate_X_Y(passed_dataset, 'Outcome')
+
 		shapexplainer = KernelExplainer(self.model.predict_proba, X_test, feature_names=self.transformations.get_feature_names_out()) 
 
 		def generate_fnames_shap(shap_values, cols):

@@ -66,12 +66,19 @@ def get_corresponding_explainer():
 	'''
 	pass
 
-def run_explainer(feature_subsets, actions, explainer_method):
+def run_explainer(domain_name, feature_subsets, actions, explainer_method):
 	'''
 	Call corresponding explainer with feature group filters and actions 
 	Need to implement this 
 	'''
-	pass
+	tabular_explainer = TabularExplainers(domain_name)
+
+	if explainer_method != []:
+		explainer = explainer_method[0]
+
+		for feature_subset in feature_subsets:
+			getattr(tabular_explainer, explainer)(passed_dataset=feature_subset)
+
 
 if __name__=='__main__':
 	domain_name = 'Diabetes'
@@ -80,4 +87,4 @@ if __name__=='__main__':
 	(subsets, action_list, explainer_method) = retrieve_sample_decompose_passes(domain_dataset, domain_name)
 
 	# explainer_method = get_corresponding_explainer()
-	method_results = run_explainer(subsets, action_list, explainer_method)
+	method_results = run_explainer(domain_name, subsets, action_list, explainer_method)
