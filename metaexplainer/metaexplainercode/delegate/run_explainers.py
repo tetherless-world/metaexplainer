@@ -15,6 +15,7 @@ import pickle
 
 # Importing shap KernelExplainer (aix360 style)
 from aix360.algorithms.shap import KernelExplainer
+from rulexai.explainer import Explainer
 
 # the following import is required for access to shap plotting functions and datasets
 import shap
@@ -157,11 +158,29 @@ class TabularExplainers():
 
 		
 
-	def run_brcg(self):
+	def run_brcg(self, passed_dataset=None):
 		'''
-		Derive rules for prediction 
+		Derive rules for prediction - https://github.com/adaa-polsl/RuleXAI
 		'''
-		pass
+		y_train = self.Y
+
+		if passed_dataset is None:
+			X_train = self.X
+		else:
+			(X_train, y_train) = generate_X_Y(passed_dataset, 'Outcome')
+		
+		X_train = self.transformations.transform(X_train)
+		
+		predictions = self.model.predict(X_train)
+			# prepare model predictions to be fed to RuleXAI, remember to change numerical predictions to labels (in this example it is simply converting predictions to a string)
+		model_predictions = pd.DataFrame(predictions.astype(str), columns=[y_train.name], index = y_train.index)
+
+		# use Explainer to explain model output
+		explainer =  Explainer(X = X_train, model_predictions = model_predictions, type = "classification")
+		explainer.explain(X_org=self.X)
+
+		print(explainer.condition_importances_)
+		
 
 	def run_dice(self, passed_dataset=None, mode='genetic'):
 		'''
@@ -189,7 +208,7 @@ class TabularExplainers():
 		
 
 		#query_instances = dataset.drop(columns="Outcome")[selection_range[0]: selection_range[1]]
-		if not passed_dataset is None:
+		if passed_dataset is None:
 			selection_range = (140, 143)
 			query_instances = self.X[selection_range[0]: selection_range[1]]
 			y_queries = self.Y[selection_range[0]: selection_range[1]]
@@ -197,11 +216,6 @@ class TabularExplainers():
 			(query_instances, y_queries) = generate_X_Y(passed_dataset, 'Outcome')
 		
 		print('Query \n', query_instances)
-
-		# LE = LabelEncoder()
-		# query_instances['Sex'] = LE.fit_transform(query_instances['Sex'])
-
-		
 		
 		print('Outcomes \n', y_queries)
 
@@ -222,7 +236,7 @@ class TabularExplainers():
 		https://aix360.readthedocs.io/en/latest/lbbe.html#shap-explainers
 		https://shap.readthedocs.io/en/latest/generated/shap.KernelExplainer.html
 		'''
-		if not passed_dataset is None:
+		if passed_dataset is None:
 			X_test = self.transformations.transform(self.X)
 		else:
 			(X_test, y_test) = generate_X_Y(passed_dataset, 'Outcome')
@@ -266,8 +280,11 @@ if __name__=='__main__':
 	domain_name = 'Diabetes'
 	
 	tabular_explainer = TabularExplainers(domain_name)
-	tabular_explainer.run_shap(single_instance=False)
-		
-	tabular_explainer.run_protodash()
 
-	tabular_explainer.run_dice()
+	#tabular_explainer.run_shap()
+		
+	#tabular_explainer.run_protodash()
+
+	#tabular_explainer.run_dice()
+
+	tabular_explainer.run_brcg()

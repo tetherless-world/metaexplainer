@@ -84,7 +84,7 @@ if __name__=='__main__':
 	domain_name = 'Diabetes'
 	domain_dataset = metaexplainer_utils.load_dataset(domain_name)
 
-	(subsets, action_list, explainer_method) = retrieve_sample_decompose_passes(domain_dataset, domain_name)
+	(subsets, action_list, explainer_method) = retrieve_sample_decompose_passes(domain_dataset, domain_name, mode='generated')
 
 	# explainer_method = get_corresponding_explainer()
 	method_results = run_explainer(domain_name, subsets, action_list, explainer_method)
