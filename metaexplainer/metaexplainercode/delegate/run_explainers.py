@@ -178,6 +178,8 @@ class TabularExplainers():
 		# use Explainer to explain model output
 		explainer =  Explainer(X = X_train, model_predictions = model_predictions, type = "classification")
 		explainer.explain(X_org=self.X)
+		rules = explainer.get_rules()
+		print(rules)
 
 		print(explainer.condition_importances_)
 		
@@ -237,10 +239,12 @@ class TabularExplainers():
 		https://shap.readthedocs.io/en/latest/generated/shap.KernelExplainer.html
 		'''
 		if passed_dataset is None:
-			X_test = self.transformations.transform(self.X)
+			X_test = self.X
 		else:
 			(X_test, y_test) = generate_X_Y(passed_dataset, 'Outcome')
 
+		X_test = self.transformations.transform(X_test)
+		
 		shapexplainer = KernelExplainer(self.model.predict_proba, X_test, feature_names=self.transformations.get_feature_names_out()) 
 
 		def generate_fnames_shap(shap_values, cols):
