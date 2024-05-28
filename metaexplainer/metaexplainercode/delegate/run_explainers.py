@@ -183,7 +183,7 @@ class TabularExplainers():
 		explainer.explain(X_org=X_train_raw)
 		rules = explainer.get_rules()
 		rules_df = pd.DataFrame({'Rules': rules})
-		print(rules)
+		print(rules_df)
 
 		return rules_df
 		
@@ -247,11 +247,10 @@ class TabularExplainers():
 															verbose=False)
 		
 		#dice_exp.visualize_as_dataframe(show_only_changes=True)
-		counterfactuals = dice_exp.cf_examples_list
-		queries = [counterfactual.test_instance_df for counterfactual in counterfactuals]
-		changed_vals = [counterfactual.final_cfs_df for counterfactual in counterfactuals]
-		result_counterfactual = {'Queries': queries, 'Counterfactuals': changed_vals}
-
+		counterfactuals_objs = dice_exp.cf_examples_list
+		queries = [counterfactual.test_instance_df for counterfactual in counterfactuals_objs]
+		counterfactuals = [counterfactual.final_cfs_df for counterfactual in counterfactuals_objs]
+		
 		def find_changes(orig_df, counterfactual_df):
 			changed_df = {}
 
@@ -262,12 +261,15 @@ class TabularExplainers():
 					if column == 'Outcome':
 						changed_df[column] = counterfactual_df.iloc[0][column]
 					else:
-						changed_df[column] = counterfactual_df.iloc[0][column] - orig_df.iloc[0][column] 
+						changed_df[column] = round(counterfactual_df.iloc[0][column] - orig_df.iloc[0][column], 2)
 			
 			return pd.DataFrame([changed_df])
 
-		result_counterfactual['Changed'] = [find_changes(result_counterfactual['Queries'][orig_index], result_counterfactual['Counterfactuals'][orig_index]) for orig_index in range(0, len(result_counterfactual['Queries']))]
-		
+		result_counterfactual = {}
+		result_counterfactual['Changed'] = pd.concat([find_changes(queries[orig_index], counterfactuals['Counterfactuals'][orig_index]) for orig_index in range(0, len(counterfactuals))])
+		result_counterfactual['Queries'] = pd.concat(queries)
+		result_counterfactual['Counterfactuals'] = pd.concat(counterfactuals)
+
 		for res_i in range(0, len(result_counterfactual['Changed'])):
 			print('Orig \n', result_counterfactual['Queries'][res_i])
 			print('Changed \n',result_counterfactual['Changed'][res_i] )

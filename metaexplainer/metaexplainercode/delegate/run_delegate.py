@@ -12,6 +12,7 @@ from sklearn.preprocessing import LabelEncoder
 import pickle
 
 import joblib
+import time 
 
 import sys
 sys.path.append('../')
@@ -73,10 +74,35 @@ def run_explainer(domain_name, feature_subsets, actions, explainer_method, expla
 		for feature_subset in feature_subsets:
 			results.append(getattr(tabular_explainer, explainer)(passed_dataset=feature_subset))
 	
-	return (results, explainer, explanation_type)
+	return results
 
-def save_results(results, explainer, explanation_type):
+def save_results(feature_subsets, results, explainer, explanation_type):
 	metaexplainer_utils.create_folder(codeconstants.DELEGATE_RESULTS_FOLDER)
+
+	if len(explainer) and len(results) > 0:
+		explanation_substring = explanation_type.replace(' ', '') + '_' + explainer[0]
+		result_folder = codeconstants.DELEGATE_RESULTS_FOLDER + '/' + explanation_substring + '_' + str(int(time.time()))
+		metaexplainer_utils.create_folder(result_folder)
+
+		res_ctr = 0
+
+		for result in results:
+			result_folder_curr = result_folder + '/' + str(res_ctr)
+
+			metaexplainer_utils.create_folder(result_folder_curr)
+
+			if explanation_type == 'Counterfactual Explanation':
+				result['Changed'].to_csv(result_folder_curr + '/' + explanation_substring + '_Results.csv')
+				result['Queries'].to_csv(result_folder_curr + '/' + explanation_substring + '_Original.csv')
+			else:
+				result.to_csv(result_folder_curr + '/' + explanation_substring + '_Results.csv')
+		
+			feature_subsets[res_ctr].to_csv(result_folder_curr + '/' + explanation_substring + '_Subset.csv')
+
+		print('Created result folder ', result_folder, ' and added files for ', len(feature_subsets), ' with results from explainer ', explainer, ' for explanation ', explanation_type)
+	else:
+		print('Skipped for ', explanation_type)
+		
 
 if __name__=='__main__':
 	domain_name = 'Diabetes'
@@ -86,4 +112,6 @@ if __name__=='__main__':
 
 	# explainer_method = get_corresponding_explainer()
 	method_results = run_explainer(domain_name, subsets, action_list, explainer_method, explanation_type)
+
+	save_results(subsets, method_results, explainer_method, explanation_type)
 
