@@ -55,36 +55,35 @@ def retrieve_sample_decompose_passes(dataset, domain_name, mode='fine-tuned'):
 	for subset_i in range(len(subsets)):
 		print('Filtered subsets for feature group ', feature_groups[subset_i], 'is \n', subsets[subset_i])
 
-	return (subsets, action_list, matched_method)
+	return (subsets, action_list, matched_method, sample_record['Explanation type'])
 
 	#need to extract and call run explainers based on feature selectors
 
-
-def get_corresponding_explainer():
-	'''
-	This could be just reading from delegate output folder 
-	'''
-	pass
-
-def run_explainer(domain_name, feature_subsets, actions, explainer_method):
+def run_explainer(domain_name, feature_subsets, actions, explainer_method, explanation_type):
 	'''
 	Call corresponding explainer with feature group filters and actions 
 	Need to implement this 
 	'''
 	tabular_explainer = TabularExplainers(domain_name)
+	results = []
 
 	if explainer_method != []:
 		explainer = explainer_method[0]
 
 		for feature_subset in feature_subsets:
-			getattr(tabular_explainer, explainer)(passed_dataset=feature_subset)
+			results.append(getattr(tabular_explainer, explainer)(passed_dataset=feature_subset))
+	
+	return (results, explainer, explanation_type)
 
+def save_results(results, explainer, explanation_type):
+	metaexplainer_utils.create_folder(codeconstants.DELEGATE_RESULTS_FOLDER)
 
 if __name__=='__main__':
 	domain_name = 'Diabetes'
 	domain_dataset = metaexplainer_utils.load_dataset(domain_name)
 
-	(subsets, action_list, explainer_method) = retrieve_sample_decompose_passes(domain_dataset, domain_name, mode='generated')
+	(subsets, action_list, explainer_method, explanation_type) = retrieve_sample_decompose_passes(domain_dataset, domain_name, mode='generated')
 
 	# explainer_method = get_corresponding_explainer()
-	method_results = run_explainer(domain_name, subsets, action_list, explainer_method)
+	method_results = run_explainer(domain_name, subsets, action_list, explainer_method, explanation_type)
+

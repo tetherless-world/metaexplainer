@@ -31,6 +31,17 @@ def find_list_difference(l1, l2):
 	'''
 	return list(set(l1) - set(l2))
 
+def is_cat(column_dtype):
+	'''
+	In this approach string columns also get 1-hot encoded - but that is ok
+	'''
+	categorical_dtypes = ['object', 'category', 'bool']
+
+	if column_dtype in categorical_dtypes:
+		return True
+	else:
+		return False   
+
 def drop_unnamed_cols(df):
 	'''
 	Return a dataframe without unnamed cols

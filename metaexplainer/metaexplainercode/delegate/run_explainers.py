@@ -127,7 +127,7 @@ class TabularExplainers():
 		Protodash helps find representative cases in the data 
 		'''
 		# convert pandas dataframe to numpy
-		if not passed_dataset is None:
+		if passed_dataset is None:
 			X_train = self.transformations.transform(self.X)
 		else:
 			(X, y) = generate_X_Y(passed_dataset, 'Outcome')
@@ -155,7 +155,8 @@ class TabularExplainers():
 		# Compute normalized importance weights for prototypes
 		inc_prototypes["Weights of Prototypes"] = np.around(W/np.sum(W), 2) 
 		print('Running protodash ')
-		print(inc_prototypes)
+		print(inc_prototypes, type(inc_prototypes))
+		return inc_prototypes
 
 		
 
@@ -181,9 +182,10 @@ class TabularExplainers():
 		explainer =  Explainer(X = X_train, model_predictions = model_predictions, type = "classification")
 		explainer.explain(X_org=X_train_raw)
 		rules = explainer.get_rules()
+		rules_df = pd.DataFrame({'Rules': rules})
 		print(rules)
 
-		print(explainer.condition_importances_)
+		return rules_df
 		
 
 	def run_dice(self, passed_dataset=None, mode='genetic'):
@@ -235,22 +237,43 @@ class TabularExplainers():
 			else:
 				(query_instances, y_queries) = (X, y)
 
-			
-		
-		print('Query \n', query_instances)
-		
-		print('Outcomes \n', y_queries)
-
-		exp_genetic = dice_ml.Dice(d, m, method='random')
-		dice_exp_genetic = exp_genetic.generate_counterfactuals(query_instances, 
-															total_CFs=2, 
+		exp = dice_ml.Dice(d, m, method='random')
+		dice_exp = exp.generate_counterfactuals(query_instances, 
+															total_CFs=1, 
 															desired_class="opposite",
 															random_seed=9,
 															#ignoring the categorical features 
 															features_to_vary= [col.replace('num__', '') for col in metaexplainer_utils.find_list_difference(self.transformations.get_feature_names_out(), ['cat__Sex_Female'])],
 															verbose=False)
 		
-		dice_exp_genetic.visualize_as_dataframe(show_only_changes=True)
+		#dice_exp.visualize_as_dataframe(show_only_changes=True)
+		counterfactuals = dice_exp.cf_examples_list
+		queries = [counterfactual.test_instance_df for counterfactual in counterfactuals]
+		changed_vals = [counterfactual.final_cfs_df for counterfactual in counterfactuals]
+		result_counterfactual = {'Queries': queries, 'Counterfactuals': changed_vals}
+
+		def find_changes(orig_df, counterfactual_df):
+			changed_df = {}
+
+			for column in orig_df.columns:
+				if metaexplainer_utils.is_cat(str(orig_df[column].dtype)):
+					changed_df[column] = counterfactual_df.iloc[0][column]
+				else:
+					if column == 'Outcome':
+						changed_df[column] = counterfactual_df.iloc[0][column]
+					else:
+						changed_df[column] = counterfactual_df.iloc[0][column] - orig_df.iloc[0][column] 
+			
+			return pd.DataFrame([changed_df])
+
+		result_counterfactual['Changed'] = [find_changes(result_counterfactual['Queries'][orig_index], result_counterfactual['Counterfactuals'][orig_index]) for orig_index in range(0, len(result_counterfactual['Queries']))]
+		
+		for res_i in range(0, len(result_counterfactual['Changed'])):
+			print('Orig \n', result_counterfactual['Queries'][res_i])
+			print('Changed \n',result_counterfactual['Changed'][res_i] )
+			print('-----')
+
+		return result_counterfactual
 
 	def run_shap(self, passed_dataset=None, single_instance=False):
 		'''
@@ -278,13 +301,15 @@ class TabularExplainers():
 			print(X_test.iloc[0,:])
 			shap_values = shapexplainer.explain_instance(X_test.iloc[0,:])
 			print(shap_values)
+			return shap_values
 		else:
 			#print(model.classes_, 'Column names', X_test.columns)
 			sampled_dist = shap.sample(X_test,10)
 			shap_values = shapexplainer.explainer(sampled_dist)
 			
 			feature_importances = generate_fnames_shap(shap_values, self.transformations.get_feature_names_out())
-			print(feature_importances)
+			print(feature_importances, type(feature_importances))
+			return feature_importances
 			
 			#shap.plots.bar(shap_values, class_names=model.classes_)
 			#shap.summary_plot(shap_values, sampled_dist, class_names=model.classes_)
@@ -305,10 +330,10 @@ if __name__=='__main__':
 	
 	tabular_explainer = TabularExplainers(domain_name)
 
-	#tabular_explainer.run_shap()
+	# tabular_explainer.run_shap()
 		
-	#tabular_explainer.run_protodash()
+	# tabular_explainer.run_protodash()
 
 	tabular_explainer.run_dice()
 
-	#tabular_explainer.run_brcg()
+	#tabular_explainer.run_rulexai()

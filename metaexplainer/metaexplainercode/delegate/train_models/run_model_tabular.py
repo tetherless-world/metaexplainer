@@ -24,18 +24,6 @@ sys.path.append('../')
 from metaexplainercode import metaexplainer_utils
 
 
-def is_cat(column_dtype):
-	'''
-	In this approach string columns also get 1-hot encoded - but that is ok
-	'''
-	categorical_dtypes = ['object', 'category', 'bool']
-
-	if column_dtype in categorical_dtypes:
-		return True
-	else:
-		return False   
-
-
 def transform_data(df, columns_to_ignore, outcome_columns):
 	'''
 	generate a normalized dataframe for training
@@ -47,7 +35,7 @@ def transform_data(df, columns_to_ignore, outcome_columns):
 	categorical_cols = []
 
 	for col in column_list:
-		if is_cat(str(df[col].dtype)):
+		if metaexplainer_utils.is_cat(str(df[col].dtype)):
 			categorical_cols.append(col)
 	
 	numerical =  metaexplainer_utils.find_list_difference(column_list, categorical_cols)

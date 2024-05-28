@@ -22,6 +22,7 @@ if __name__=='__main__':
 		"population": [2930000, 13960000, 3645000],
 	})
 	query_engine = PandasQueryEngine(df=df, verbose=True, synthesize_response=True)
+	#need to replace this query with EO templates - check how to add the templates
 	response = query_engine.query(
 		"What is the city with the highest population? Give both the city and population",
 	)
