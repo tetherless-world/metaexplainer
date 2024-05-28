@@ -12,6 +12,7 @@ from metaexplainercode.delegate.train_models.run_model_tabular import *
 import matplotlib as plt
 import joblib 
 import pickle
+import random
 
 # Importing shap KernelExplainer (aix360 style)
 from aix360.algorithms.shap import KernelExplainer
@@ -158,7 +159,7 @@ class TabularExplainers():
 
 		
 
-	def run_brcg(self, passed_dataset=None):
+	def run_rulexai(self, passed_dataset=None):
 		'''
 		Derive rules for prediction - https://github.com/adaa-polsl/RuleXAI
 		'''
@@ -169,6 +170,7 @@ class TabularExplainers():
 		else:
 			(X_train, y_train) = generate_X_Y(passed_dataset, 'Outcome')
 		
+		X_train_raw = X_train
 		X_train = self.transformations.transform(X_train)
 		
 		predictions = self.model.predict(X_train)
@@ -177,7 +179,7 @@ class TabularExplainers():
 
 		# use Explainer to explain model output
 		explainer =  Explainer(X = X_train, model_predictions = model_predictions, type = "classification")
-		explainer.explain(X_org=self.X)
+		explainer.explain(X_org=X_train_raw)
 		rules = explainer.get_rules()
 		print(rules)
 
@@ -208,14 +210,32 @@ class TabularExplainers():
 
 		print('# where outcome = 1 ',len(self.dataset[self.dataset['Outcome'] == 1.0]), '# where outcome = 0 ',len(self.dataset[self.dataset['Outcome'] == 0.0]))
 		
+		def random_sample_from_dataset(X, y):
+			selection_range = np.array(random.sample(range(len(X)), 5))
 
-		#query_instances = dataset.drop(columns="Outcome")[selection_range[0]: selection_range[1]]
-		if passed_dataset is None:
-			selection_range = (140, 143)
-			query_instances = self.X[selection_range[0]: selection_range[1]]
-			y_queries = self.Y[selection_range[0]: selection_range[1]]
+			query_instances = X.loc[selection_range]
+			y_queries = y.loc[selection_range]
+
+			return (query_instances, y_queries)
+
+		(query_instances, y_queries) = ([], [])
+		#Always limit the instances you need to find counterfactuals for
+		if (passed_dataset is None):
+			#sample from dataset
+			(query_instances, y_queries) = random_sample_from_dataset(self.X, self.Y)
+		elif (len(passed_dataset) == len(self.dataset)):
+			#again sample from dataset
+			(query_instances, y_queries) =random_sample_from_dataset(self.X, self.Y)
 		else:
-			(query_instances, y_queries) = generate_X_Y(passed_dataset, 'Outcome')
+			#use passed dataset and choose 5 randomly
+			(X, y) = generate_X_Y(passed_dataset, 'Outcome')
+
+			if len(X) > 10:
+				(query_instances, y_queries) = random_sample_from_dataset(X, y)
+			else:
+				(query_instances, y_queries) = (X, y)
+
+			
 		
 		print('Query \n', query_instances)
 		
@@ -244,7 +264,7 @@ class TabularExplainers():
 			(X_test, y_test) = generate_X_Y(passed_dataset, 'Outcome')
 
 		X_test = self.transformations.transform(X_test)
-		
+
 		shapexplainer = KernelExplainer(self.model.predict_proba, X_test, feature_names=self.transformations.get_feature_names_out()) 
 
 		def generate_fnames_shap(shap_values, cols):
@@ -289,6 +309,6 @@ if __name__=='__main__':
 		
 	#tabular_explainer.run_protodash()
 
-	#tabular_explainer.run_dice()
+	tabular_explainer.run_dice()
 
-	tabular_explainer.run_brcg()
+	#tabular_explainer.run_brcg()
