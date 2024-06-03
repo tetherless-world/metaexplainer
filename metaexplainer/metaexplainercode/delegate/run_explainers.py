@@ -28,65 +28,6 @@ import dice_ml
 
 from metaexplainercode.delegate.parse_machine_interpretation import replace_feature_string_with_col_names
 
-def get_domain_model(domain_name):
-	'''
-	Train model if not present 
-	'''
-	domain_dataset = metaexplainer_utils.load_dataset(domain_name)
-	
-	model_save_path = codeconstants.DELEGATE_SAVED_MODELS_FOLDER + domain_name + '/model.pkl'
-
-	if not os.path.isfile(model_save_path):
-		(X, Y) = generate_X_Y(domain_dataset, 'Outcome')
-		x_train, x_test, y_train, y_test = generate_train_test_split(domain_dataset, 'Outcome', 0.30)
-
-		transformations = transform_data(domain_dataset, [], ['Outcome'])
-
-		models = get_models()
-
-		
-		evaluate_model(models, transformations, x_train, y_train)
-		model_output = {}
-
-		for mod_num in models.keys():
-			model = models[mod_num]
-
-			(model, mod_classification_report) = fit_and_predict_model(mod_num, transformations, model, x_train, y_train, x_test, y_test)
-
-			#this is where you get the model 
-
-			model_output[mod_num] = (model, mod_classification_report)
-
-		best_model = get_best_model(model_output, 0)
-		
-		print('Stats on test dataset for best model ', best_model[0])	
-
-		#getting best output here - objective is to retrain
-		#print(model_output_print[1])
-		(model_to_save, mod_classification_report_save) = fit_and_predict_model(mod_num, transformations, best_model, X, Y, x_test, y_test, save_model=True)
-		print('Stats on entire dataset for the same best model ',mod_classification_report_save)
-		best_model_name = mod_classification_report_save['model']
-
-		#create model folders and for domain
-		metaexplainer_utils.create_folder(codeconstants.DELEGATE_SAVED_MODELS_FOLDER)
-		metaexplainer_utils.create_folder(codeconstants.DELEGATE_SAVED_MODELS_FOLDER + domain_name)
-
-		
-		transform_save_path = codeconstants.DELEGATE_SAVED_MODELS_FOLDER + domain_name + '/transformations.pkl'
-		results = mod_classification_report_save
-		
-		joblib.dump(model_to_save, model_save_path)
-		pickle.dump(mod_classification_report_save, open(codeconstants.DELEGATE_SAVED_MODELS_FOLDER + domain_name + '/results.pkl', "wb"))
-		joblib.dump(transformations, transform_save_path)
-		print('Saved model', best_model_name,' and transformations.')
-	else:
-		model_to_save = joblib.load(model_save_path)
-		transformations = joblib.load(codeconstants.DELEGATE_SAVED_MODELS_FOLDER + domain_name + '/transformations.pkl')
-		results = pickle.load(open(codeconstants.DELEGATE_SAVED_MODELS_FOLDER + domain_name + '/results.pkl', 'rb'))
-		print('Retrieved model and results.')
-
-
-	return (model_to_save, transformations, results)
 
 def filter_records(dataset, feature_groups, actions):
 	'''
@@ -117,51 +58,14 @@ class TabularExplainers():
 	'''
 	A wrapper class to encapsulate all the explainer methods so that they can be easily retrieved for each explanation method
 	'''
-	def __init__(self, domain_name) -> None:
-		self.domain_name = domain_name
+	def __init__(self, model, transformations, results, dataset) -> None:
+		#self.domain_name = domain_name
+		self.model = model
+		self.transformations = transformations
+		self.results = results 
 
-		(self.model, self.transformations, self.results) = get_domain_model(domain_name)
-		self.dataset = metaexplainer_utils.load_dataset(domain_name)
+		self.dataset = dataset
 		(self.X, self.Y) = generate_X_Y(self.dataset, 'Outcome')
-
-	def evaluate_monotonicity(self, explainer, passed_dataset=None):
-		'''
-		Generate a measure of monotonicity based on the explainer output
-		'''
-		ncases = [i for i in range(0, 10)]
-
-		if passed_dataset is None:
-			X_test = self.transformations.transform(self.X)
-		else:
-			(X, y) = generate_X_Y(passed_dataset, 'Outcome')
-			X_test = self.transformations.transform(X)
-
-		if (not (passed_dataset == None)) and len(passed_dataset) > 10:
-			#choose random cases 
-			ncases = 10
-		
-			
-		fait = np.zeros(len(ncases))
-
-		for i in ncases:
-			predicted_class = self.model.predict(X_test[i].reshape(1,-1))[0]
-			exp = explainer.explain_instance(X_test[i])
-			#extracting weights for features 
-			le = exp[..., predicted_class]
-			#print(le)
-			
-			x = X_test[i]
-			coefs = np.zeros(x.shape[0])
-			
-			for v in range(0, len(le)):
-				coefs[v] = le[v]
-
-			base = np.zeros(x.shape[0])
-
-			fait[i] = faithfulness_metric(self.model, X_test[i], coefs, base)
-
-		print("Faithfulness metric mean: ",np.mean(fait))
-		print("Faithfulness metric std. dev.:", np.std(fait))
 
 	def run_protodash(self, passed_dataset=None):
 		'''
@@ -370,12 +274,14 @@ if __name__=='__main__':
 	'''
 
 	domain_name = 'Diabetes'
+
+	#Won't work unless tried from run_delegate
 	
 	tabular_explainer = TabularExplainers(domain_name)
 
 	(results, shap_exp) = tabular_explainer.run_shap(single_instance=False)
 
-	tabular_explainer.evaluate_monotonicity(shap_exp) 
+	
 	# tabular_explainer.run_protodash()
 
 	#tabular_explainer.run_dice()
