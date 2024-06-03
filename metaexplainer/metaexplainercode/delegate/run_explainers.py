@@ -18,6 +18,8 @@ import random
 from aix360.algorithms.shap import KernelExplainer
 from rulexai.explainer import Explainer
 
+from aix360.metrics import faithfulness_metric, monotonicity_metric
+
 # the following import is required for access to shap plotting functions and datasets
 import shap
 
@@ -122,6 +124,45 @@ class TabularExplainers():
 		self.dataset = metaexplainer_utils.load_dataset(domain_name)
 		(self.X, self.Y) = generate_X_Y(self.dataset, 'Outcome')
 
+	def evaluate_monotonicity(self, explainer, passed_dataset=None):
+		'''
+		Generate a measure of monotonicity based on the explainer output
+		'''
+		ncases = [i for i in range(0, 10)]
+
+		if passed_dataset is None:
+			X_test = self.transformations.transform(self.X)
+		else:
+			(X, y) = generate_X_Y(passed_dataset, 'Outcome')
+			X_test = self.transformations.transform(X)
+
+		if (not (passed_dataset == None)) and len(passed_dataset) > 10:
+			#choose random cases 
+			ncases = 10
+		
+			
+		fait = np.zeros(len(ncases))
+
+		for i in ncases:
+			predicted_class = self.model.predict(X_test[i].reshape(1,-1))[0]
+			exp = explainer.explain_instance(X_test[i])
+			#extracting weights for features 
+			le = exp[..., predicted_class]
+			#print(le)
+			
+			x = X_test[i]
+			coefs = np.zeros(x.shape[0])
+			
+			for v in range(0, len(le)):
+				coefs[v] = le[v]
+
+			base = np.zeros(x.shape[0])
+
+			fait[i] = faithfulness_metric(self.model, X_test[i], coefs, base)
+
+		print("Faithfulness metric mean: ",np.mean(fait))
+		print("Faithfulness metric std. dev.:", np.std(fait))
+
 	def run_protodash(self, passed_dataset=None):
 		'''
 		Protodash helps find representative cases in the data 
@@ -156,7 +197,7 @@ class TabularExplainers():
 		inc_prototypes["Weights of Prototypes"] = np.around(W/np.sum(W), 2) 
 		print('Running protodash ')
 		print(inc_prototypes, type(inc_prototypes))
-		return inc_prototypes
+		return (inc_prototypes, protodash_explainer)
 
 		
 
@@ -185,7 +226,7 @@ class TabularExplainers():
 		rules_df = pd.DataFrame({'Rules': rules})
 		print(rules_df)
 
-		return rules_df
+		return (rules_df, explainer)
 		
 
 	def run_dice(self, passed_dataset=None, mode='genetic'):
@@ -275,7 +316,7 @@ class TabularExplainers():
 			print('Changed \n',result_counterfactual['Changed'][res_i] )
 			print('-----')
 
-		return result_counterfactual
+		return (result_counterfactual, dice_exp)
 
 	def run_shap(self, passed_dataset=None, single_instance=False):
 		'''
@@ -300,10 +341,10 @@ class TabularExplainers():
 			return feature_importance
 
 		if single_instance:
-			print(X_test.iloc[0,:])
-			shap_values = shapexplainer.explain_instance(X_test.iloc[0,:])
+			print(self.dataset.iloc[0,:])
+			shap_values = shapexplainer.explain_instance(X_test[0])
 			print(shap_values)
-			return shap_values
+			return (shap_values, shapexplainer)
 		else:
 			#print(model.classes_, 'Column names', X_test.columns)
 			sampled_dist = shap.sample(X_test,10)
@@ -311,11 +352,11 @@ class TabularExplainers():
 			
 			feature_importances = generate_fnames_shap(shap_values, self.transformations.get_feature_names_out())
 			print(feature_importances, type(feature_importances))
-			return feature_importances
+			return (feature_importances, shapexplainer)
 			
 			#shap.plots.bar(shap_values, class_names=model.classes_)
 			#shap.summary_plot(shap_values, sampled_dist, class_names=model.classes_)
-
+	
 if __name__=='__main__':
 	'''
 	This stage would take as input user question, reframed question and identify explainers relevant for the explanation type
@@ -332,10 +373,11 @@ if __name__=='__main__':
 	
 	tabular_explainer = TabularExplainers(domain_name)
 
-	# tabular_explainer.run_shap()
-		
+	(results, shap_exp) = tabular_explainer.run_shap(single_instance=False)
+
+	tabular_explainer.evaluate_monotonicity(shap_exp) 
 	# tabular_explainer.run_protodash()
 
-	tabular_explainer.run_dice()
+	#tabular_explainer.run_dice()
 
 	#tabular_explainer.run_rulexai()
