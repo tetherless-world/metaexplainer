@@ -28,6 +28,9 @@ class EvaluateExplainer():
 		self.model = model
 		self.dataset = dataset
 		(self.X, self.Y) = generate_X_Y(self.dataset, 'Outcome')
+
+	def return_evaluation_metric(explainer_method):
+		pass
 		
 	
 	def evaluate_monotonicity(self, explainer, passed_dataset=None):

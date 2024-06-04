@@ -1,0 +1,15 @@
+prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+prefix owl:<http://www.w3.org/2002/07/owl#> 
+prefix ep:<http://linkedu.eu/dedalo/explanationPattern.owl#> 
+prefix eo:<https://purl.org/heals/eo#> 
+prefix sio:<http://semanticscience.org/resource/> 
+prefix prov:<http://www.w3.org/ns/prov#> 
+select DISTINCT ?taskObject where {
+	?class (rdfs:subClassOf|owl:equivalentClass)/owl:onProperty ep:isBasedOn .
+	?class (rdfs:subClassOf|owl:equivalentClass)/owl:someValuesFrom ?object .
+	?object owl:intersectionOf ?collections .
+	?collections rdf:rest*/rdf:first ?comps .
+	?comps rdf:type owl:Restriction .
+	?comps owl:onProperty sio:SIO_000232 .
+	?comps owl:someValuesFrom ?taskObject .
+}

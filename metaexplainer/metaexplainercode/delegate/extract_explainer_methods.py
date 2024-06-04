@@ -12,30 +12,19 @@ import sys
 sys.path.append('../')
 from metaexplainercode import codeconstants
 
+from jinja2 import Template
+
 from metaexplainercode import metaexplainer_utils
 from metaexplainercode import ontology_utils
 
 def run_query_on_explanation_graph(explanation_type_label, ont_model):
 	explanation = ontology_utils.get_class_term(ont_model, explanation_type_label, -1)
+	#since you aready have class term you don't need to pass the label
 	#print('Explanation object ', explanation)
 
 	#base it off of" https://stackoverflow.com/questions/16829351/is-there-a-hello-world-example-for-sparql-with-rdflib
-	explanation_method_query = "prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#> " \
-	"prefix owl:<http://www.w3.org/2002/07/owl#> "\
-	"prefix ep: <http://linkedu.eu/dedalo/explanationPattern.owl#> " \
-	"prefix eo: <https://purl.org/heals/eo#> " \
-	"prefix sio: <http://semanticscience.org/resource/> " \
-	"prefix prov: <http://www.w3.org/ns/prov#> " \
-	"select DISTINCT ?taskObject where {" \
-	"?class (rdfs:subClassOf|owl:equivalentClass)/owl:onProperty ep:isBasedOn ." \
-	"?class (rdfs:subClassOf|owl:equivalentClass)/owl:someValuesFrom ?object ." \
-	"?object owl:intersectionOf ?collections ." \
-	"?collections rdf:rest*/rdf:first ?comps ." \
-	"?comps rdf:type owl:Restriction ." \
-	"?comps owl:onProperty sio:SIO_000232 ." \
-	"?comps owl:someValuesFrom ?taskObject ." \
-	"?class rdfs:label \"" + explanation_type_label + "\" . }" 
-
+	explanation_method_query = Template(open(codeconstants.QUERIES_FOLDER + '/fetch_explainers.html', 'r').read()).render(explanation_type_label=explanation_type_label)
+	#print('Debugging', explanation_method_query)
 	explanation_graph = explanation.rdflib_graph
 	method_results = explanation_graph.query(explanation_method_query)
 	#print('Debugging ', list(method_results))
