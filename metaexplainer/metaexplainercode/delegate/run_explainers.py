@@ -181,7 +181,7 @@ class TabularExplainers():
 			else:
 				(query_instances, y_queries) = (X, y)
 		
-		print('Debug ', query_instances, y_queries)
+		#print('Debug ', query_instances, '\n', y_queries)
 
 		exp = dice_ml.Dice(d, m, method='random')
 		dice_exp = exp.generate_counterfactuals(query_instances, 
@@ -196,6 +196,7 @@ class TabularExplainers():
 		counterfactuals_objs = dice_exp.cf_examples_list
 		queries = [counterfactual.test_instance_df for counterfactual in counterfactuals_objs]
 		counterfactuals = [counterfactual.final_cfs_df for counterfactual in counterfactuals_objs]
+		#print('Debug', 'counterfactuals \n', counterfactuals[0])
 		
 		def find_changes(orig_df, counterfactual_df):
 			changed_df = {}
@@ -212,13 +213,13 @@ class TabularExplainers():
 			return pd.DataFrame([changed_df])
 
 		result_counterfactual = {}
-		result_counterfactual['Changed'] = pd.concat([find_changes(queries[orig_index], counterfactuals['Counterfactuals'][orig_index]) for orig_index in range(0, len(counterfactuals))])
+		result_counterfactual['Changed'] = pd.concat([find_changes(queries[orig_index], counterfactuals[orig_index]) for orig_index in range(0, len(counterfactuals))])
 		result_counterfactual['Queries'] = pd.concat(queries)
 		result_counterfactual['Counterfactuals'] = pd.concat(counterfactuals)
 
 		for res_i in range(0, len(result_counterfactual['Changed'])):
-			print('Orig \n', result_counterfactual['Queries'][res_i])
-			print('Changed \n',result_counterfactual['Changed'][res_i] )
+			print('\n Orig \n', result_counterfactual['Queries'].iloc[res_i])
+			print('\n Changed \n',result_counterfactual['Changed'].iloc[res_i] )
 			print('-----')
 
 		return (result_counterfactual, dice_exp)
