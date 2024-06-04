@@ -10,8 +10,7 @@ from metaexplainercode import metaexplainer_utils
 from metaexplainercode.delegate.train_models.run_model_tabular import *
 
 import matplotlib as plt
-import joblib 
-import pickle
+
 import random
 
 # Importing shap KernelExplainer (aix360 style)
@@ -133,7 +132,7 @@ class TabularExplainers():
 		return (rules_df, explainer)
 		
 
-	def run_dice(self, passed_dataset=None, mode='genetic'):
+	def run_dice(self, passed_dataset=None):
 		'''
 		Generate counterfactuals 
 		Can pass conditions here too 
@@ -181,6 +180,8 @@ class TabularExplainers():
 				(query_instances, y_queries) = random_sample_from_dataset(X, y)
 			else:
 				(query_instances, y_queries) = (X, y)
+		
+		print('Debug ', query_instances, y_queries)
 
 		exp = dice_ml.Dice(d, m, method='random')
 		dice_exp = exp.generate_counterfactuals(query_instances, 
@@ -266,24 +267,26 @@ if __name__=='__main__':
 	This stage would take as input user question, reframed question and identify explainers relevant for the explanation type
 	'''
 
-	'''
-	Trial - run SHAP on best model for PIMA Indians Diabetes dataset 
-	Need to have access to:
-	- Dataset splits
-	- Model 
-	'''
-
 	domain_name = 'Diabetes'
+	
+	domain_dataset = metaexplainer_utils.load_dataset(domain_name)
+	(training_model, transformations, method_results) = get_domain_model(domain_name)
+	mode = 'generated'
+
+	model_details = {'model': training_model,
+				  'transformations': transformations,
+				  'results': method_results}
+
 
 	#Won't work unless tried from run_delegate
 	
-	tabular_explainer = TabularExplainers(domain_name)
+	tabular_explainer = TabularExplainers(model_details['model'], model_details['transformations'], model_details['results'], domain_dataset)
 
-	(results, shap_exp) = tabular_explainer.run_shap(single_instance=False)
+	#(results, shap_exp) = tabular_explainer.run_shap(single_instance=False)
 
 	
 	# tabular_explainer.run_protodash()
 
-	#tabular_explainer.run_dice()
+	(results, dice_exp) = tabular_explainer.run_dice()
 
 	#tabular_explainer.run_rulexai()

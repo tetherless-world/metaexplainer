@@ -86,17 +86,18 @@ def get_domain_model(domain_name):
 
 	return (model_to_save, transformations, results)
 
-def retrieve_sample_decompose_passes(dataset, domain_name, mode='fine-tuned'):
-	'''
-	Read from delegate output folder, if not running the method in real-time
-	'''
+def load_parses(mode='fine-tuned'):
 	parse_file = codeconstants.DELEGATE_FOLDER + domain_name + '_parsed_' + mode + '_delegate_instructions.txt'
 
 	parses = metaexplainer_utils.read_delegate_parsed_instruction_file(parse_file)
 	parses_df = pd.DataFrame(parses)
 
-	sample_record = parses_df.iloc[random.randrange(0, len(parses))]
+	return parses_df
 
+def retrieve_sample_decompose_passes(sample_record, dataset):
+	'''
+	Read from delegate output folder, if not running the method in real-time
+	'''
 	print(sample_record)
 
 	explanation_methods = pd.read_csv(codeconstants.DELEGATE_FOLDER + '/explanation_type_methods.csv')
@@ -120,7 +121,7 @@ def retrieve_sample_decompose_passes(dataset, domain_name, mode='fine-tuned'):
 
 	#need to extract and call run explainers based on feature selectors
 
-def run_explainer(domain_dataset, model_details, feature_subsets, actions, explainer_method, explanation_type):
+def run_explainer(domain_dataset, model_details, feature_subsets, actions, explainer_method):
 	'''
 	Call corresponding explainer with feature group filters and actions 
 	Need to implement this 
@@ -139,13 +140,16 @@ def run_explainer(domain_dataset, model_details, feature_subsets, actions, expla
 	
 	return (results, explainer_objs)
 
-def save_results(feature_subsets, results, explainer, explanation_type):
+def save_results(sample_record, feature_subsets, results, explainer, explanation_type):
 	metaexplainer_utils.create_folder(codeconstants.DELEGATE_RESULTS_FOLDER)
 
 	if len(explainer) and len(results) > 0:
 		explanation_substring = explanation_type.replace(' ', '') + '_' + explainer[0]
 		result_folder = codeconstants.DELEGATE_RESULTS_FOLDER + '/' + explanation_substring + '_' + str(int(time.time()))
 		metaexplainer_utils.create_folder(result_folder)
+
+		#this will directly be used for prompt in synthesis
+		sample_record.T.to_csv(result_folder + '/record.csv')
 
 		res_ctr = 0
 
@@ -172,22 +176,25 @@ def evaluate_explainers(explainer_objs):
 	'''
 	pass
 
-		
-
 if __name__=='__main__':
 	domain_name = 'Diabetes'
 	domain_dataset = metaexplainer_utils.load_dataset(domain_name)
 	(training_model, transformations, method_results) = get_domain_model(domain_name)
+	mode = 'generated'
 
 	model_details = {'model': training_model,
 				  'transformations': transformations,
 				  'results': method_results}
+
+	decompose_parses = load_parses(mode=mode)
+
+	sample_record = decompose_parses.iloc[random.randrange(0, len(decompose_parses))]
 	
 	#need to make this run in a loop to run across all parses 
-	(subsets, action_list, explainer_method, explanation_type) = retrieve_sample_decompose_passes(domain_dataset, domain_name, mode='generated')
+	(subsets, action_list, explainer_method, explanation_type) = retrieve_sample_decompose_passes(sample_record, domain_dataset)
 
 	# explainer_method = get_corresponding_explainer()
-	(method_results, explainer_objs) = run_explainer(domain_dataset, model_details, subsets, action_list, explainer_method, explanation_type)
+	(method_results, explainer_objs) = run_explainer(domain_dataset, model_details, subsets, action_list, explainer_method)
 
-	save_results(subsets, method_results, explainer_method, explanation_type)
+	save_results(sample_record, subsets, method_results, explainer_method, explanation_type)
 
