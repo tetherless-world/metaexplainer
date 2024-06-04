@@ -1,10 +1,10 @@
-,Explanation Type,Methods,Instances
-0,Case Based Explanation,Exemplar Method,Protodash
-1,Contrastive Explanation,Contrastive Saliency Method,LIME
-2,Contrastive Explanation,Contrastive Saliency Method,SHAP
-3,Data Explanation,Exemplar Method,Protodash
-4,Rationale Explanation,Providing Rationale Method,GLRM
-5,Rationale Explanation,Providing Rationale Method,RuleXAI
-6,Rationale Explanation,Providing Rationale Method,BRCG
-7,Contextual Explanation,Restricted Neural Network Architecture,CEN
-8,Counterfactual Explanation,Counterfactual Saliency Method,DICE
+,Explanation Type,Methods,Modality,Instances
+0,Case Based Explanation,Exemplar Method,Representative Samples,Protodash
+1,Contrastive Explanation,Contrastive Saliency Method,Feature Importances,LIME
+2,Contrastive Explanation,Contrastive Saliency Method,Feature Importances,SHAP
+3,Data Explanation,Exemplar Method,Representative Samples,Protodash
+4,Rationale Explanation,Providing Rationale Method,Rules,RuleXAI
+5,Rationale Explanation,Providing Rationale Method,Rules,BRCG
+6,Rationale Explanation,Providing Rationale Method,Rules,GLRM
+7,Contextual Explanation,Restricted Neural Network Architecture,,CEN
+8,Counterfactual Explanation,Counterfactual Saliency Method,Representative Samples,DICE
