@@ -4,6 +4,7 @@ prefix ep:<http://linkedu.eu/dedalo/explanationPattern.owl#>
 prefix eo:<https://purl.org/heals/eo#> 
 prefix sio:<http://semanticscience.org/resource/> 
 prefix prov:<http://www.w3.org/ns/prov#> 
-select DISTINCT ?modality where {
+select DISTINCT ?modality ?metric where {
 	?class (rdfs:subClassOf|owl:equivalentClass)/owl:someValuesFrom ?modality .
+	
 }

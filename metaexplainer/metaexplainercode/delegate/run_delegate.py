@@ -24,6 +24,7 @@ from metaexplainercode.delegate.train_models.run_model_tabular import *
 
 from metaexplainercode.delegate.run_explainers import filter_records
 from metaexplainercode.delegate.run_explainers import TabularExplainers
+from metaexplainercode.delegate.evaluate_explainers import EvaluateExplainer
 
 import random
 
@@ -64,24 +65,57 @@ def retrieve_sample_decompose_passes(sample_record, dataset):
 
 	#need to extract and call run explainers based on feature selectors
 
-def run_explainer(domain_dataset, model_details, feature_subsets, actions, explainer_method):
+def get_metrics(explainer_method):
+	'''
+	Evaluate ouput of explainers by modality and metrics 
+	Need to get modality for explainer and then metric and then pass results or the explainer itself 
+	'''
+	explanation_methods = pd.read_csv(codeconstants.DELEGATE_FOLDER + '/explanation_type_methods.csv')
+	modality_metrics = pd.read_csv(codeconstants.DELEGATE_FOLDER + '/explanation_modality_metrics.csv')
+	metrics_modality = []
+
+	
+	for explainer in explainer_method:
+		explainer_instance = explainer.replace('run_', '').upper()
+
+		print(explainer_method)
+			
+		modality_explainer = list(set(explanation_methods[explanation_methods['Instances'].str.strip().str.match(explainer_instance.strip(),case=False)]['Modality']))[0]
+		#mapping between explainer and modality is typically 1:1
+		metrics_modality = list(modality_metrics[modality_metrics['Modality'].str.strip().str.match(modality_explainer.strip(),case=False)]['Metric'])
+		print(modality_explainer, metrics_modality)
+
+	return metrics_modality
+
+def run_and_evaluate_explainer(domain_dataset, model_details, feature_subsets, actions, explainer_method):
 	'''
 	Call corresponding explainer with feature group filters and actions 
 	Need to implement this 
 	'''
 	tabular_explainer = TabularExplainers(model_details['model'], model_details['transformations'], model_details['results'], domain_dataset)
+	evaluate_explainer = EvaluateExplainer(domain_dataset, model_details['model'], model_details['transformations'])
+	implemented_evaluations = [attr for attr in dir(EvaluateExplainer) if not attr.startswith('__')]
+
 	results = []
-	explainer_objs = []
+	evaluations = []
+
+	metrics = get_metrics(explainer_method)
 
 	if explainer_method != []:
 		explainer = explainer_method[0]
 
 		for feature_subset in feature_subsets:
 			(result, explainer_obj) = getattr(tabular_explainer, explainer)(passed_dataset=feature_subset)
-			explainer_objs.append(explainer_obj)
+
+			if len(metrics) > 0:
+				combined_metric = '_and_'.join(metrics)
+
+				if 'evaluate_' + combined_metric.lower() in implemented_evaluations:
+					print('Function found')
+
 			results.append(result)
-	
-	return (results, explainer_objs)
+
+	return results
 
 def save_results(sample_record, feature_subsets, results, explainer, explanation_type):
 	metaexplainer_utils.create_folder(codeconstants.DELEGATE_RESULTS_FOLDER)
@@ -113,24 +147,7 @@ def save_results(sample_record, feature_subsets, results, explainer, explanation
 	else:
 		print('Skipped for ', explanation_type)
 
-def evaluate_explainers(explainer_method, explainer_objs, results):
-	'''
-	Evaluate ouput of explainers by modality and metrics 
-	Need to get modality for explainer and then metric and then pass results or the explainer itself 
-	'''
-	explanation_methods = pd.read_csv(codeconstants.DELEGATE_FOLDER + '/explanation_type_methods.csv')
-	modality_metrics = pd.read_csv(codeconstants.DELEGATE_FOLDER + '/explanation_modality_metrics.csv')
 
-	if len(results) > 0:
-		for explainer in explainer_method:
-			explainer_instance = explainer.replace('run_', '').upper()
-
-			print(explainer_method)
-			
-			modality_explainer = list(set(explanation_methods[explanation_methods['Instances'].str.strip().str.match(explainer_instance.strip(),case=False)]['Modality']))[0]
-			#mapping between explainer and modality is typically 1:1
-			metrics_modality = list(modality_metrics[modality_metrics['Modality'].str.strip().str.match(modality_explainer.strip(),case=False)]['Metric'])
-			print(modality_explainer, metrics_modality)
 	#matched_metric = modality_metrics[modality_metrics['Modality'] == modality_explainer]['Metric']
 
 
@@ -153,9 +170,7 @@ if __name__=='__main__':
 	(subsets, action_list, explainer_method, explanation_type) = retrieve_sample_decompose_passes(sample_record, domain_dataset)
 
 	# explainer_method = get_corresponding_explainer()
-	(method_results, explainer_objs) = run_explainer(domain_dataset, model_details, subsets, action_list, explainer_method)
+	method_results = run_and_evaluate_explainer(domain_dataset, model_details, subsets, action_list, explainer_method)
 
 	save_results(sample_record, subsets, method_results, explainer_method, explanation_type)
-
-	evaluate_explainers(explainer_method, explainer_objs, method_results)
 

@@ -24,9 +24,10 @@ import dice_ml
 import random
 
 class EvaluateExplainer():
-	def __init__(self, dataset, model) -> None:
+	def __init__(self, dataset, model, transformations) -> None:
 		self.model = model
 		self.dataset = dataset
+		self.transformations = transformations
 		(self.X, self.Y) = generate_X_Y(self.dataset, 'Outcome')
 
 	def return_evaluation_metric(explainer_method):
@@ -34,15 +35,13 @@ class EvaluateExplainer():
 		
 	def evaluate_non_representativeness(self, explainer, passed_dataset=None):
 		pass
+	
 	def evaluate_diversity(self, explainer, samples):
-		pass
+		pass		
 
-	def evaluate_monotonicity(self, explainer, passed_dataset=None):
-		pass
-
-	def evaluate_faithfulness(self, explainer, passed_dataset=None):
+	def evaluate_monotonicity_and_faithfulness(self, explainer, passed_dataset=None):
 		'''
-		Generate a measure of monotonicity based on the explainer output
+		Generate faithfulness and monotonicity scores - both use the same methods; so don't run it again
 		'''
 		ncases = [i for i in range(0, 10)]
 
@@ -54,10 +53,11 @@ class EvaluateExplainer():
 
 		if (not (passed_dataset == None)) and len(passed_dataset) > 10:
 			#choose random cases 
-			ncases = 10
+			ncases = random.choices(range(0, len(passed_dataset)), 10)
 		
 			
 		fait = np.zeros(len(ncases))
+		mon = np.zeros(len(ncases))
 
 		for i in ncases:
 			predicted_class = self.model.predict(X_test[i].reshape(1,-1))[0]
@@ -74,7 +74,9 @@ class EvaluateExplainer():
 
 			base = np.zeros(x.shape[0])
 
+		
 			fait[i] = faithfulness_metric(self.model, X_test[i], coefs, base)
+			mon[i] = monotonicity_metric(self.model, X_test[i], coefs, base)
 
-		print("Faithfulness metric mean: ",np.mean(fait))
-		print("Faithfulness metric std. dev.:", np.std(fait))
+		return {'Faithfulness': np.mean(fait), 'Monotonicity': np.mean(mon)}
+		
