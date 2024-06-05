@@ -1,0 +1,5 @@
+,Modality,Metric
+0,Representative Samples,Non Representativeness
+1,Representative Samples,Diversity
+2,Feature Importances,Faithfulness
+3,Feature Importances,Monotonicity

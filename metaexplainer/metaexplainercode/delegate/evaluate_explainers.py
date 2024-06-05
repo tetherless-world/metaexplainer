@@ -32,8 +32,15 @@ class EvaluateExplainer():
 	def return_evaluation_metric(explainer_method):
 		pass
 		
-	
+	def evaluate_non_representativeness(self, explainer, passed_dataset=None):
+		pass
+	def evaluate_diversity(self, explainer, samples):
+		pass
+
 	def evaluate_monotonicity(self, explainer, passed_dataset=None):
+		pass
+
+	def evaluate_faithfulness(self, explainer, passed_dataset=None):
 		'''
 		Generate a measure of monotonicity based on the explainer output
 		'''
