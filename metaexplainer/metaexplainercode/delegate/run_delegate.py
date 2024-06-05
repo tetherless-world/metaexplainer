@@ -23,7 +23,6 @@ from metaexplainercode import ontology_utils
 from metaexplainercode.delegate.train_models.run_model_tabular import *
 
 from metaexplainercode.delegate.run_explainers import filter_records
-from metaexplainercode.delegate.extract_explainer_methods import run_modality_query_on_method_graph
 from metaexplainercode.delegate.run_explainers import TabularExplainers
 
 import random
@@ -114,17 +113,30 @@ def save_results(sample_record, feature_subsets, results, explainer, explanation
 	else:
 		print('Skipped for ', explanation_type)
 
-def evaluate_explainers(explainer_method, explainer_objs, eo_model):
+def evaluate_explainers(explainer_method, explainer_objs, results):
 	'''
-	Evaluate ouput of explainers for faithfulness and monontonocity: 
+	Evaluate ouput of explainers by modality and metrics 
+	Need to get modality for explainer and then metric and then pass results or the explainer itself 
 	'''
-	modality_explainer = run_modality_query_on_method_graph(explainer_method, eo_model)
-	print(modality_explainer)
+	explanation_methods = pd.read_csv(codeconstants.DELEGATE_FOLDER + '/explanation_type_methods.csv')
+	modality_metrics = pd.read_csv(codeconstants.DELEGATE_FOLDER + '/explanation_modality_metrics.csv')
+
+	if len(results) > 0:
+		for explainer in explainer_method:
+			explainer_instance = explainer.replace('run_', '').upper()
+
+			print(explainer_method)
+			
+			modality_explainer = list(set(explanation_methods[explanation_methods['Instances'].str.strip().str.match(explainer_instance.strip(),case=False)]['Modality']))[0]
+			#mapping between explainer and modality is typically 1:1
+			metrics_modality = list(modality_metrics[modality_metrics['Modality'].str.strip().str.match(modality_explainer.strip(),case=False)]['Metric'])
+			print(modality_explainer, metrics_modality)
+	#matched_metric = modality_metrics[modality_metrics['Modality'] == modality_explainer]['Metric']
+
 
 if __name__=='__main__':
 	domain_name = 'Diabetes'
 	domain_dataset = metaexplainer_utils.load_dataset(domain_name)
-	eo_model = ontology_utils.load_eo()
 
 	(training_model, transformations, method_results) = get_domain_model(domain_name)
 	mode = 'generated'
@@ -145,5 +157,5 @@ if __name__=='__main__':
 
 	save_results(sample_record, subsets, method_results, explainer_method, explanation_type)
 
-	evaluate_explainers(explainer_method, explainer_objs)
+	evaluate_explainers(explainer_method, explainer_objs, method_results)
 
