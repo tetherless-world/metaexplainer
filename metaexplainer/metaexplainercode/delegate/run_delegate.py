@@ -108,10 +108,23 @@ def run_and_evaluate_explainer(domain_dataset, model_details, feature_subsets, a
 			(result, explainer_obj) = getattr(tabular_explainer, explainer)(passed_dataset=feature_subset)
 
 			if len(metrics) > 0:
-				combined_metric = '_and_'.join(metrics)
+				samples = result
+				combined_metric =  'evaluate_' + '_and_'.join(metrics).lower()
 
-				if 'evaluate_' + combined_metric.lower() in implemented_evaluations:
-					print('Function found')
+				if type(result) == 'dict':
+					#It is a counterfactual
+					samples = result['Changed']
+
+				print('Debugging ', implemented_evaluations)
+
+				if combined_metric in implemented_evaluations:
+					print('Evaluation function found', combined_metric)
+					evaluations.append(getattr(evaluate_explainer, combined_metric)(explainer_obj, passed_dataset=feature_subset, results=samples))
+				else:
+					for metric in metrics:
+						modified_metric = 'evaluate_' + metric.lower().replace(' ', '_')
+						if modified_metric in implemented_evaluations:
+							evaluations.append(getattr(evaluate_explainer, modified_metric)(explainer_obj, passed_dataset=feature_subset, results=samples))
 
 			results.append(result)
 

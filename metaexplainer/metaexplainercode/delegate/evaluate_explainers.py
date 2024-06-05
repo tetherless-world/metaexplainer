@@ -21,6 +21,8 @@ import shap
 from aix360.algorithms.protodash import ProtodashExplainer
 import dice_ml
 
+from scipy.spatial.distance import pdist, squareform
+
 import random
 
 class EvaluateExplainer():
@@ -29,17 +31,23 @@ class EvaluateExplainer():
 		self.dataset = dataset
 		self.transformations = transformations
 		(self.X, self.Y) = generate_X_Y(self.dataset, 'Outcome')
-
-	def return_evaluation_metric(explainer_method):
-		pass
-		
-	def evaluate_non_representativeness(self, explainer, passed_dataset=None):
-		pass
 	
-	def evaluate_diversity(self, explainer, samples):
-		pass		
+	def evaluate_diversity(self, explainer, passed_dataset=None,results=None):
+		n_e = len(results)
+		cols = results.columns
+		non_cat_columns = [col for col in cols if not metaexplainer_utils.is_cat(results[col].dtype)]
+		numeric_subset = results[non_cat_columns]
 
-	def evaluate_monotonicity_and_faithfulness(self, explainer, passed_dataset=None):
+		distances = pdist(numeric_subset.values, metric='euclidean')
+		dist_matrix = squareform(distances)
+		#print(dist_matrix, '\n', len(dist_matrix))
+
+		sum_diversity = sum([(sum(distance_between_row)/(2*n_e)) for distance_between_row in dist_matrix])
+		print('Diversity ', sum_diversity)
+
+		return {'Diversity': sum_diversity}
+		
+	def evaluate_monotonicity_and_faithfulness(self, explainer,passed_dataset=None,results=None):
 		'''
 		Generate faithfulness and monotonicity scores - both use the same methods; so don't run it again
 		'''
