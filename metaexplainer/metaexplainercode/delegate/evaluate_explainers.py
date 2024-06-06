@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 
+import re
+
 import sys
 sys.path.append('../')
 from metaexplainercode import codeconstants
@@ -32,19 +34,71 @@ class EvaluateExplainer():
 		self.transformations = transformations
 		(self.X, self.Y) = generate_X_Y(self.dataset, 'Outcome')
 
-	def evaluate_average_rule_length(self, explainer, passed_dataset=None,results=None):
+	
+
+	def evaluate_average_rule_length_and_fidelity(self, explainer, passed_dataset=None,results=None):
 		rules = list(results['Rules'])
 		len_rules = len(rules)
 		rule_lens = []
 
+		if len_rules == 0:
+			return [{'Metric': 'Average rule length', 'Value': 0}, {'Metric': 'Fidelity', 'Value': 0}]
+
+		def extract_lower_upper_bounds(input_str):
+			# Regular expression to extract features and their range restrictions
+			pattern = r"(\w+) = (<[^,]+), ([^>]+)\)"
+
+			# Find all matches
+			matches = re.findall(pattern, input_str)
+
+			# Extracted features and their ranges
+			features_and_ranges = []
+
+			for match in matches:
+				feature, lower_bound, upper_bound = match
+				features_and_ranges.append({
+					'feature': feature,
+					'lower_bound': lower_bound.strip('<'),
+					'upper_bound': upper_bound.strip(')')
+				})
+			
+			return features_and_ranges
+	
+		def check_restrictions(row, restrictions):
+			# Function to evaluate if a row matches the restrictions
+
+			for restriction in restrictions:
+				feature = restriction['feature']
+				lower_bound = restriction['lower_bound']
+				upper_bound = restriction['upper_bound']
+				value = row[feature]
+				if not (float(lower_bound) < value < float(upper_bound)):
+					return False
+			return True
+
+		fidelity = 0
+
 		for rule in rules:
 			antecedent_cond = rule.split('THEN')
-			antecedents = antecedent_cond[0]
 			label = antecedent_cond[1].split(' = ')[1].replace('{', '').replace('}', '')
-			#print('Debugging', 'pre', antecedents, 'label', label)
+
 			rule_lens.append(rule.count('AND') + 1)
+			
+			#feature restriction checker
+			features_and_ranges = extract_lower_upper_bounds(antecedent_cond[0])
+			print(features_and_ranges)
+			passed_dataset['matches_restrictions'] = passed_dataset.apply(check_restrictions, axis=1, restrictions=features_and_ranges)
+			matched_rows = passed_dataset[passed_dataset['matches_restrictions'] == True]
+
+			if len(matched_rows) > 0:
+				print(matched_rows)
+				y_pred = self.model.predict(self.transformations.transform(generate_X_Y(matched_rows.drop(['matches_restrictions'], axis=1), 'Outcome')[0]))
+				len_agree = [1 for pred in y_pred if pred == label]
+				fidelity += sum(len_agree)/len(passed_dataset)
+
+			#print('Debugging', 'pre', antecedents, 'label', label)
 		
-		return [{'Metric': 'Average rule length', 'Value': sum(rule_lens)/len_rules}]
+		return [{'Metric': 'Average rule length', 'Value': sum(rule_lens)/len_rules}, {'Metric': 'Fidelity', 'Value': fidelity}]
 
 	
 	def evaluate_non_representativeness(self, explainer, passed_dataset=None,results=None):
