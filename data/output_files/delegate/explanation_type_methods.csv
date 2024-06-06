@@ -1,7 +1,7 @@
 ,Explanation Type,Methods,Modality,Instances
 0,Case Based Explanation,Exemplar Method,Representative Samples,Protodash
-1,Contrastive Explanation,Contrastive Saliency Method,Feature Importances,SHAP
-2,Contrastive Explanation,Contrastive Saliency Method,Feature Importances,LIME
+1,Contrastive Explanation,Contrastive Saliency Method,Feature Importances,LIME
+2,Contrastive Explanation,Contrastive Saliency Method,Feature Importances,SHAP
 3,Data Explanation,Exemplar Method,Representative Samples,Protodash
 4,Rationale Explanation,Providing Rationale Method,Rules,GLRM
 5,Rationale Explanation,Providing Rationale Method,Rules,BRCG
