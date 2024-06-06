@@ -31,6 +31,35 @@ class EvaluateExplainer():
 		self.dataset = dataset
 		self.transformations = transformations
 		(self.X, self.Y) = generate_X_Y(self.dataset, 'Outcome')
+
+	def evaluate_average_rule_length(self, explainer, passed_dataset=None,results=None):
+		rules = list(results['Rules'])
+		len_rules = len(rules)
+		rule_lens = []
+
+		for rule in rules:
+			antecedent_cond = rule.split('THEN')
+			antecedents = antecedent_cond[0]
+			label = antecedent_cond[1].split(' = ')[1].replace('{', '').replace('}', '')
+			#print('Debugging', 'pre', antecedents, 'label', label)
+			rule_lens.append(rule.count('AND') + 1)
+		
+		return [{'Metric': 'Average rule length', 'Value': sum(rule_lens)/len_rules}]
+
+	
+	def evaluate_non_representativeness(self, explainer, passed_dataset=None,results=None):
+		X, y = generate_X_Y(results, 'Outcome')
+		n_e = len(results)
+
+		transformations = transform_data(passed_dataset, [], ['Outcome']) 
+
+		pipeline = Pipeline([('transformer', transformations), ('estimator', self.model)])
+		losses = cross_val_score(pipeline, X = X, y = y, scoring = "neg_mean_squared_error", 
+									  cv = 2)
+		
+		losses = list(map(abs, losses))
+
+		return [{'Metric': 'Non representativeness', 'Value': (sum(losses))/(2*n_e)}]
 	
 	def evaluate_diversity(self, explainer, passed_dataset=None,results=None):
 		n_e = len(results)
@@ -45,7 +74,7 @@ class EvaluateExplainer():
 		sum_diversity = sum([(sum(distance_between_row)/(2*n_e)) for distance_between_row in dist_matrix])
 		print('Diversity ', sum_diversity)
 
-		return {'Diversity': sum_diversity}
+		return [{'Metric': 'Diversity', 'Value': sum_diversity}]
 		
 	def evaluate_monotonicity_and_faithfulness(self, explainer,passed_dataset=None,results=None):
 		'''
@@ -59,13 +88,14 @@ class EvaluateExplainer():
 			(X, y) = generate_X_Y(passed_dataset, 'Outcome')
 			X_test = self.transformations.transform(X)
 
-		if (not (passed_dataset == None)) and len(passed_dataset) > 10:
+		if (passed_dataset is not None) and len(passed_dataset) > 10:
 			#choose random cases 
-			ncases = random.choices(range(0, len(passed_dataset)), 10)
+			ncases = random.choices(range(0, len(passed_dataset)), k=10)
 		
 			
 		fait = np.zeros(len(ncases))
 		mon = np.zeros(len(ncases))
+		ctr = 0
 
 		for i in ncases:
 			predicted_class = self.model.predict(X_test[i].reshape(1,-1))[0]
@@ -83,8 +113,10 @@ class EvaluateExplainer():
 			base = np.zeros(x.shape[0])
 
 		
-			fait[i] = faithfulness_metric(self.model, X_test[i], coefs, base)
-			mon[i] = monotonicity_metric(self.model, X_test[i], coefs, base)
+			fait[ctr] = faithfulness_metric(self.model, X_test[i], coefs, base)
+			mon[ctr] = monotonicity_metric(self.model, X_test[i], coefs, base)
+			ctr+=1
 
-		return {'Faithfulness': np.mean(fait), 'Monotonicity': np.mean(mon)}
+		return [{'Metric': 'Faithfulness', 'Value': np.mean(fait)},
+		  {'Metric': 'Monotonicity', 'Value': np.mean(mon)}]
 		

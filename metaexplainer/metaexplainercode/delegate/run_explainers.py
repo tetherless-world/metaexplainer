@@ -36,20 +36,23 @@ def filter_records(dataset, feature_groups, actions):
 	column_names = dataset.columns
 	subsets = []
 
-	for feature_group in feature_groups:
-		subset_dataset = dataset
+	nan_value = float('nan')
 
-		for feature in feature_group.keys():
-			feature_val = feature_group[feature]
-			
-			if not feature in column_names:
-				feature = replace_feature_string_with_col_names(feature, column_names).strip()
+	if not (feature_groups == nan_value):
+		for feature_group in feature_groups:
+			subset_dataset = dataset
 
-			if feature != '' and feature_val != '' and metaexplainer_utils.is_valid_number(feature_val):
-				#print('Applying ', feature, 'fitler for vals ', feature_val)
-				subset_dataset = subset_dataset.iloc[(subset_dataset[feature]- float(feature_val)).abs().argsort()[:10]]
+			for feature in feature_group.keys():
+				feature_val = feature_group[feature]
+				
+				if not feature in column_names:
+					feature = replace_feature_string_with_col_names(feature, column_names).strip()
 
-		subsets.append(subset_dataset)
+				if feature != '' and feature_val != '' and feature in column_names and metaexplainer_utils.is_valid_number(feature_val):
+					#print('Applying ', feature, 'fitler for vals ', feature_val)
+					subset_dataset = subset_dataset.iloc[(subset_dataset[feature]- float(feature_val)).abs().argsort()[:10]]
+
+			subsets.append(subset_dataset)
 	
 	return subsets
 

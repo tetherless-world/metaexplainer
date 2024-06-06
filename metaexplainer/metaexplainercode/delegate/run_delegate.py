@@ -11,6 +11,7 @@ from sklearn.preprocessing import LabelEncoder
 
 
 import time 
+import itertools
 
 import sys
 sys.path.append('../')
@@ -106,31 +107,30 @@ def run_and_evaluate_explainer(domain_dataset, model_details, feature_subsets, a
 
 		for feature_subset in feature_subsets:
 			(result, explainer_obj) = getattr(tabular_explainer, explainer)(passed_dataset=feature_subset)
+			evaluation_feature = []
 
 			if len(metrics) > 0:
 				samples = result
-				combined_metric =  'evaluate_' + '_and_'.join(metrics).lower()
 
-				if type(result) == 'dict':
+				if type(result) == dict:
 					#It is a counterfactual
 					samples = result['Changed']
 
-				print('Debugging ', implemented_evaluations)
+				combinations_funcs = ['evaluate_' + '_and_'.join(list(comb)).lower().replace(' ','_') for i in range(1, len(metrics) + 1) 
+						  for comb in list(itertools.permutations(metrics, i))]
+				intersection_funcs = list(set(combinations_funcs).intersection(set(implemented_evaluations)))
+				print('Debugging ', combinations_funcs)
 
-				if combined_metric in implemented_evaluations:
-					print('Evaluation function found', combined_metric)
-					evaluations.append(getattr(evaluate_explainer, combined_metric)(explainer_obj, passed_dataset=feature_subset, results=samples))
-				else:
-					for metric in metrics:
-						modified_metric = 'evaluate_' + metric.lower().replace(' ', '_')
-						if modified_metric in implemented_evaluations:
-							evaluations.append(getattr(evaluate_explainer, modified_metric)(explainer_obj, passed_dataset=feature_subset, results=samples))
+				for eval_func in intersection_funcs:
+					evaluation_feature += getattr(evaluate_explainer, eval_func)(explainer_obj, passed_dataset=feature_subset, results=samples)
 
+			evaluations.append(evaluation_feature)
 			results.append(result)
+			#need to persist evaluations too
+	#print(evaluations)
+	return (results, evaluations)
 
-	return results
-
-def save_results(sample_record, feature_subsets, results, explainer, explanation_type):
+def save_results(sample_record, feature_subsets, results, evaluations, explainer, explanation_type):
 	metaexplainer_utils.create_folder(codeconstants.DELEGATE_RESULTS_FOLDER)
 
 	if len(explainer) and len(results) > 0:
@@ -142,19 +142,25 @@ def save_results(sample_record, feature_subsets, results, explainer, explanation
 		sample_record.T.to_csv(result_folder + '/record.csv')
 
 		res_ctr = 0
+		print('Debugging ', len(results))
 
 		for result in results:
 			result_folder_curr = result_folder + '/' + str(res_ctr)
 
 			metaexplainer_utils.create_folder(result_folder_curr)
 
+			if len(evaluations) > 0 and len(evaluations[res_ctr]) > 0:
+				#print(evaluations[res_ctr])
+				pd.DataFrame(evaluations[res_ctr]).to_csv(result_folder_curr + '/Evaluations.csv')
+
 			if explanation_type == 'Counterfactual Explanation':
-				result['Changed'].to_csv(result_folder_curr + '/' + explanation_substring + '_Results.csv')
-				result['Queries'].to_csv(result_folder_curr + '/' + explanation_substring + '_Original.csv')
+				result['Changed'].to_csv(result_folder_curr + '/Results.csv')
+				result['Queries'].to_csv(result_folder_curr + '/Original.csv')
 			else:
-				result.to_csv(result_folder_curr + '/' + explanation_substring + '_Results.csv')
+				result.to_csv(result_folder_curr + '/Results.csv')
 		
-			feature_subsets[res_ctr].to_csv(result_folder_curr + '/' + explanation_substring + '_Subset.csv')
+			feature_subsets[res_ctr].to_csv(result_folder_curr + '/Subset.csv')
+			res_ctr += 1
 
 		print('Created result folder ', result_folder, ' and added files for ', len(feature_subsets), ' with results from explainer ', explainer, ' for explanation ', explanation_type)
 	else:
@@ -183,7 +189,7 @@ if __name__=='__main__':
 	(subsets, action_list, explainer_method, explanation_type) = retrieve_sample_decompose_passes(sample_record, domain_dataset)
 
 	# explainer_method = get_corresponding_explainer()
-	method_results = run_and_evaluate_explainer(domain_dataset, model_details, subsets, action_list, explainer_method)
+	(method_results, evaluations) = run_and_evaluate_explainer(domain_dataset, model_details, subsets, action_list, explainer_method)
 
-	save_results(sample_record, subsets, method_results, explainer_method, explanation_type)
+	save_results(sample_record, subsets, method_results, evaluations, explainer_method, explanation_type)
 
