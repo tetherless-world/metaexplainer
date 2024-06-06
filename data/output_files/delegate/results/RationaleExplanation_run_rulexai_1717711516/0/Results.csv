@@ -1,0 +1,6 @@
+,Rules
+0,"IF BloodPressure = (-inf, 81.0) THEN label = {1}"
+1,"IF DiabetesPedigreeFunction = <0.47, inf) THEN label = {1}"
+2,"IF BloodPressure = <85.5, inf) THEN label = {0}"
+3,"IF Pregnancies = (-inf, 3.5) THEN label = {0}"
+4,"IF Glucose = (-inf, 105.5) THEN label = {0}"

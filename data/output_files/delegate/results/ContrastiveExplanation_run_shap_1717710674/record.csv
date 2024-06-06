@@ -1,0 +1,6 @@
+,80
+Question,What influenced the model to predict that a 50-year-old male with a BMI of 22 and a Diabetes Pedigree Function of 0.15 is unlikely to have Diabetes?
+Machine interpretation,"Influenced(Predictors, Diabetes) -> Influenced(age = 50, sex = Male, BMI = 22, DPF = 0.15, Diabetes = no)"
+Action,['Influenced']
+Feature groups,"[{'Predictors': '', 'Diabetes': ''}, {'Age': '50', 'Sex': 'Male', 'BMI': '22', 'DiabetesPedigreeFunction': '0.15', 'Diabetes': 'no'}]"
+Explanation type,Contrastive Explanation

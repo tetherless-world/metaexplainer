@@ -1,0 +1,6 @@
+,129
+Question,How would the Diabetes prediction change if the patient was female with a BMI of 22 and a Diabetes Pedigree Function of 0.3?
+Machine interpretation,If Female(B) and BMI(B) and DP_Function(0.3) -> Diabetes(Prediction)
+Action,"['Diabetes', 'Female', 'DP_Function']"
+Feature groups,"[{'BloodPressure': ''}, {'BloodPressure': ''}, {'Unnamed': '0.3'}, {'Prediction': ''}]"
+Explanation type,Counterfactual Explanation

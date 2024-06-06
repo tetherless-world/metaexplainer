@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import copy
 from sklearn.preprocessing import LabelEncoder
 
 import re
@@ -43,6 +44,8 @@ class EvaluateExplainer():
 
 		if len_rules == 0:
 			return [{'Metric': 'Average rule length', 'Value': 0}, {'Metric': 'Fidelity', 'Value': 0}]
+		
+		edit_dataset = copy.deepcopy(passed_dataset)
 
 		def extract_lower_upper_bounds(input_str):
 			split_by_AND = input_str.split(' AND ')
@@ -94,8 +97,8 @@ class EvaluateExplainer():
 			# if rule_len > 1:
 			# 	print(features_and_ranges)
 			
-			passed_dataset['matches_restrictions'] = passed_dataset.apply(check_restrictions, axis=1, restrictions=features_and_ranges)
-			matched_rows = passed_dataset[passed_dataset['matches_restrictions'] == True]
+			edit_dataset['matches_restrictions'] = edit_dataset.apply(check_restrictions, axis=1, restrictions=features_and_ranges)
+			matched_rows = edit_dataset[edit_dataset['matches_restrictions'] == True]
 
 			if len(matched_rows) > 0:
 				print(matched_rows)

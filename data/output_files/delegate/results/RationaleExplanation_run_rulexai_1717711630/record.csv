@@ -1,0 +1,6 @@
+,127
+Question,"Why predict Diabetes for a 50-year-old female with a BMI of 25 and a Diabetes Pedigree Function of 0.3, rather than a 40-year-old male with a BMI of 22 and a Diabetes Pedigree Function of 0.1?"
+Machine interpretation,"Predict(Diabetes, Female(BMI = 25, DPF = 0.3), age = 50) and not Predict(Diabetes, Male(BMI = 22, DPF = 0.1), age = 40)"
+Action,"['Female', 'Predict', 'Male']"
+Feature groups,"[{'BMI': '25', 'DiabetesPedigreeFunction': '0.3'}, {'BMI': '22', 'DiabetesPedigreeFunction': '0.1'}, {'(Diabetes': '', '()': '', 'Age': '40)'}]"
+Explanation type,Rationale Explanation

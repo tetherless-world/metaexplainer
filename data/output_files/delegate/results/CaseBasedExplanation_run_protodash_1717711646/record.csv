@@ -1,0 +1,6 @@
+,135
+Question,What role does gender play in the feature selection process for predicting Diabetes?
+Machine interpretation,"FeatureImportance GenderPrediction(Diabetes, Gender)"
+Action,['GenderPrediction']
+Feature groups,"[{'Diabetes': '', 'Gender': ''}]"
+Explanation type,Case Based Explanation

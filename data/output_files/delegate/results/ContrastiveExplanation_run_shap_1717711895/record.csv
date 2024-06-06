@@ -1,0 +1,6 @@
+,165
+Question,"If the patient was male instead of female, would the likelihood of having Diabetes be affected?"
+Machine interpretation,"If Sex(patient, Male) and not If Sex(patient, Female) -> Diabetes Likelihood Change"
+Action,
+Feature groups,"[{'Male': '', 'Sex': ''}, {'Female': '', 'Sex': ''}]"
+Explanation type,Contrastive Explanation

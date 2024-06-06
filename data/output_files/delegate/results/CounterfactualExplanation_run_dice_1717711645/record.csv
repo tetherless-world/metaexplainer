@@ -1,0 +1,6 @@
+,131
+Question,How would the treatment plan differ if the patient's age was 60 and BMI was 18?
+Machine interpretation,"If Age(patient, 60) and BMI(patient, 18), then TreatmentPlan(patient, ?) changes."
+Action,['TreatmentPlan']
+Feature groups,"[{'Age': '60'}, {'BMI': '18'}, {'patient': '', '?': ''}]"
+Explanation type,Counterfactual Explanation

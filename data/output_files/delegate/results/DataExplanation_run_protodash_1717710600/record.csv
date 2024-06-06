@@ -1,0 +1,6 @@
+,69
+Question,How has the distribution of Diabetes Pedigree Function values been used to identify high-risk individuals for Diabetes prediction?
+Machine interpretation,Preprocessing(DPF) -> Feature Engineering(DPF)
+Action,"['Preprocessing', 'Engineering']"
+Feature groups,"[{'DiabetesPedigreeFunction': ''}, {'DiabetesPedigreeFunction': ''}]"
+Explanation type,Data Explanation

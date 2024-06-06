@@ -1,0 +1,6 @@
+,154
+Question,What patterns exist in the BMI values of diabetic patients compared to non-diabetic patients?
+Machine interpretation,"Patterns(BMI, Diabetes = diabetic) and Patterns(BMI, Diabetes = non-diabetic)"
+Action,['Patterns']
+Feature groups,"[{'BMI': '', 'Diabetes': 'diabetic'}, {'BMI': '', 'Diabetes': 'non-diabetic'}]"
+Explanation type,Data Explanation

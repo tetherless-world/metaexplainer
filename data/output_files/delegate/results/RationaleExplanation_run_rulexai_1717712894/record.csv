@@ -1,0 +1,6 @@
+,213
+Question,What role does age play in the accuracy of Diabetes prediction in the training data instances?
+Machine interpretation,What role does Age feature in the ML model's performance on Diabetes prediction in the training dataset?
+Action,
+Feature groups,[{'Age': ''}]
+Explanation type,Rationale Explanation

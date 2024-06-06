@@ -1,0 +1,6 @@
+,124
+Question,Why prioritize the Diabetes Pedigree Function value of 0.2 in predicting Diabetes over 0.1?
+Machine interpretation,Why(Priorize(Diabetes Pedigree Function = 0.2) over Diabetes Pedigree Function = 0.1) in Diabetes prediction
+Action,['Priorize']
+Feature groups,"[{'Diabetes Pedigree Function': '0.2'}, {'DiabetesPedigreeFunction': '0.1) in Diabetes prediction'}]"
+Explanation type,Rationale Explanation

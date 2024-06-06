@@ -1,0 +1,6 @@
+,215
+Question,What led the model to predict no Diabetes for a 45-year-old male with a BMI of 24 and a Diabetes Pedigree Function of 0.1?
+Machine interpretation,"Predict(Diabetes) | Age = 45, Sex = Male, BMI = 24, DPF = 0.1 -> no Diabetes"
+Action,['Predict']
+Feature groups,"[{'Diabetes': ''}, {'Age': '45', 'Sex': 'Male', 'BMI': '24', 'DiabetesPedigreeFunction': '0.1 -> no'}]"
+Explanation type,Rationale Explanation

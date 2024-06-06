@@ -1,0 +1,6 @@
+,149
+Question,"If the patient had a BMI of 30 and a high Diabetes Pedigree Function of 0.4, would the treatment plan need to be adjusted?"
+Machine interpretation,"If BMI(patient, 30) and Diabetes Pedigree Function(patient, 0.4) -> Treatment Plan(patient, ?)"
+Action,"['Plan', 'Function']"
+Feature groups,"[{'BMI': '30'}, {'patient': '0.4'}, {'patient': '', '?': ''}]"
+Explanation type,Counterfactual Explanation

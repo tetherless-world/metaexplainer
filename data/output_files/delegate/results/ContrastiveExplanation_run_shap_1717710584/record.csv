@@ -1,0 +1,6 @@
+,58
+Question,Why emphasize the BMI range of 25-30 in determining Diabetes risk over the Diabetes Pedigree Function?
+Machine interpretation,Why emphasize the BMI range of 25-30 in determining Diabetes risk over the Diabetes Pedigree Function( Diabetes Pedigree Function)?
+Action,['Function']
+Feature groups,[{'Diabetes Pedigree Function': ''}]
+Explanation type,Contrastive Explanation

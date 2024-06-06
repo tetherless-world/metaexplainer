@@ -1,0 +1,6 @@
+,67
+Question,What instances in the training data have led to accurate predictions of Diabetes for patients with a BMI of 22 and a Diabetes Pedigree Function of 0.4?
+Machine interpretation,"Instances(BMI = 22, DPF = 0.4, Diabetes = ?)"
+Action,['Instances']
+Feature groups,"[{'BMI': '22', 'DiabetesPedigreeFunction': '0.4', 'Diabetes': '?'}]"
+Explanation type,Case Based Explanation

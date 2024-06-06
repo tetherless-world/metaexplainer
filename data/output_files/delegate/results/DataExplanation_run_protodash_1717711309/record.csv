@@ -1,0 +1,6 @@
+,87
+Question,How has the Diabetes Pedigree Function feature been imputed to handle missing values in the dataset for training the ML model?
+Machine interpretation,"Preprocessing(Diabetes Pedigree Function, Imputation)"
+Action,['Preprocessing']
+Feature groups,"[{'Diabetes Pedigree Function': '', 'Imputation': ''}]"
+Explanation type,Data Explanation

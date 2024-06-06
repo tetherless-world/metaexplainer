@@ -1,0 +1,6 @@
+,Rules
+0,"IF Pregnancies = <6.5, inf) THEN label = {1}"
+1,"IF BloodPressure = <65.5, inf) AND Pregnancies = <3.5, inf) AND BMI = (-inf, 37.4) THEN label = {1}"
+2,"IF Pregnancies = (-inf, 3.5) THEN label = {0}"
+3,"IF BMI = (-inf, 24.65) THEN label = {0}"
+4,"IF BMI = <37.4, inf) THEN label = {0}"

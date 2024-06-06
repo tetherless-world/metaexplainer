@@ -1,0 +1,6 @@
+,74
+Question,What instances from the training data are considered indicative for predicting Diabetes in a 45-year-old female with a BMI of 25 and a Diabetes Pedigree Function of 0.3?
+Machine interpretation,"Predict(Diabetes, Age = 45, Sex = Female, BMI = 25, DPF = 0.3)"
+Action,['Predict']
+Feature groups,"[{'Diabetes': '', 'Age': '45', 'Sex': 'Female', 'BMI': '25', 'DiabetesPedigreeFunction': '0.3'}]"
+Explanation type,Case Based Explanation

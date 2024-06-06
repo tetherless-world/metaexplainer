@@ -1,0 +1,6 @@
+,137
+Question,What influenced the model to predict that a 50-year-old male with a BMI of 22 and a Diabetes Pedigree Function of 0.15 does not have Diabetes?
+Machine interpretation,"Predict(Round(BMI) = 22, Age = 50, DiabetesPedigreeFunction = 0.15, Diabetes = no)"
+Action,['Round']
+Feature groups,"[{'BMI': ''}, {'Predict(()': '22', 'Age': '50', 'DiabetesPedigreeFunction': '0.15', 'Diabetes': 'no)'}]"
+Explanation type,Rationale Explanation

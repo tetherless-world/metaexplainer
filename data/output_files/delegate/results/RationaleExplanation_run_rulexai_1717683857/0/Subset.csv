@@ -1,0 +1,11 @@
+,Pregnancies,Glucose,BloodPressure,SkinThickness,Insulin,BMI,DiabetesPedigreeFunction,Age,Outcome,Sex,matches_restrictions
+489,8,194,80,23,30.5,26.1,0.551,67,0,Female,True
+285,7,136,74,26,135.0,26.0,0.647,51,0,Female,True
+459,9,134,74,33,60.0,25.9,0.46,81,0,Female,True
+634,10,92,62,23,30.5,25.9,0.167,31,0,Female,True
+496,5,110,68,23,30.5,26.0,0.292,30,0,Female,True
+752,3,108,62,24,30.5,26.0,0.223,25,0,Female,True
+258,1,193,50,16,375.0,25.9,0.655,24,0,Female,True
+340,1,130,70,13,105.0,25.9,0.472,22,0,Female,True
+101,1,151,60,23,30.5,26.1,0.179,22,0,Female,True
+421,2,94,68,18,76.0,26.0,0.561,21,0,Female,True

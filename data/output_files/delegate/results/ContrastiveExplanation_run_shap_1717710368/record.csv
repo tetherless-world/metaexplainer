@@ -1,0 +1,6 @@
+,35
+Question,Why focus on BMI as a key factor in determining Diabetes risk rather than age?
+Machine interpretation,Why(BMI) and why(not Age) in the prediction of Diabetes risk.
+Action,"['why', 'Why']"
+Feature groups,"[{'BMI': ''}, {'Age': ''}]"
+Explanation type,Contrastive Explanation

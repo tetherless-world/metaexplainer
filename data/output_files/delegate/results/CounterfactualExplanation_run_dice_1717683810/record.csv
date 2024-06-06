@@ -1,0 +1,6 @@
+,14
+Question,"If the patient had a BMI of 18 instead of 22, would the prediction for Diabetes be lower?"
+Machine interpretation,"If BMI(patient, 18) and not BMI(patient, 22)-> Diabetes(patient, ?)"
+Action,['Diabetes']
+Feature groups,"[{'BMI': '18'}, {'BMI': '22'}, {'patient': '', '?': ''}]"
+Explanation type,Counterfactual Explanation

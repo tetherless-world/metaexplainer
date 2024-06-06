@@ -1,0 +1,11 @@
+,Pregnancies,Glucose,BloodPressure,SkinThickness,Insulin,BMI,DiabetesPedigreeFunction,Age,Sex,Outcome
+0,-3,0,0,0,0.0,-12.5,-0.0,50,Female,0
+0,0,0,-45,0,0.0,-9.8,-0.34,0,Female,0
+0,0,0,0,0,0.0,-14.9,0.0,0,Female,0
+0,0,0,0,0,0.0,-11.4,0.0,0,Female,0
+0,0,0,0,0,0.0,-12.8,-0.36,0,Female,0
+0,-4,0,0,0,0.0,0.0,-0.0,47,Female,0
+0,0,0,0,0,0.0,-11.8,-0.0,0,Female,0
+0,0,0,-2,0,0.0,-34.2,0.0,0,Female,0
+0,0,0,0,0,0.0,-20.2,-0.31,0,Female,0
+0,0,0,0,0,0.0,-9.7,0.0,0,Female,0

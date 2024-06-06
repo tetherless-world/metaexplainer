@@ -1,0 +1,6 @@
+,133
+Question,How significant is the Diabetes Pedigree Function in the ML model's ability to predict Diabetes?
+Machine interpretation,How important is the Diabetes Pedigree Function in the ML model's Diabetes prediction accuracy?
+Action,
+Feature groups,[{'DiabetesPedigreeFunction': ''}]
+Explanation type,Case Based Explanation

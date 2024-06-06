@@ -1,0 +1,6 @@
+,188
+Question,How does the Diabetes Pedigree Function vary between male and female patients?
+Machine interpretation,How does Sex influence the DP(value = Diabetes Pedigree Function)
+Action,['DP']
+Feature groups,[{'value': 'Diabetes Pedigree Function'}]
+Explanation type,Rationale Explanation

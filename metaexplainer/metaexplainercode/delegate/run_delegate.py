@@ -187,7 +187,7 @@ if __name__=='__main__':
 
 	print('Length of parses to run ', len_parses)
 
-	for i in range(0, len_parses):
+	for i in range(0, len_parses + 1):
 		sample_record = decompose_parses.iloc[i]
 		
 		#need to make this run in a loop to run across all parses 

@@ -1,0 +1,6 @@
+,37
+Question,What transformations have been applied to the sex feature to enhance its contribution to the ML model for Diabetes prediction?
+Machine interpretation,What data processing has been performed on the sex feature to improve its relevance to the Diabetes prediction model?
+Action,
+Feature groups,[{'Sex': ''}]
+Explanation type,Data Explanation

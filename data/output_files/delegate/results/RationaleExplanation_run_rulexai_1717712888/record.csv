@@ -1,0 +1,6 @@
+,209
+Question,What factors led the model to predict that a 70-year-old female with a BMI of 27 and a Diabetes Pedigree Function of 0.1 does not have Diabetes?
+Machine interpretation,"Predict(Treatment, Diabetes = no, Age = 70, Sex = Female, BMI = 27, Diabetes Pedigree Function = 0.1)"
+Action,['Predict']
+Feature groups,"[{'Treatment': '', 'Diabetes': 'no', 'Age': '70', 'Sex': 'Female', 'BMI': '27', 'Diabetes Pedigree Function': '0.1'}]"
+Explanation type,Rationale Explanation

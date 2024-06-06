@@ -1,0 +1,6 @@
+,66
+Question,Are there specific gender-related patterns in the training data that impact the Diabetes prediction outcome?
+Machine interpretation,"Preprocessing_steps(gender) and Data_analysis(gender, Diabetes)"
+Action,"['Data_analysis', 'Preprocessing_steps']"
+Feature groups,"[{'gender': ''}, {'gender': '', 'Diabetes': ''}]"
+Explanation type,Data Explanation

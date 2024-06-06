@@ -1,0 +1,6 @@
+,84
+Question,How have age and BMI values been used to identify outliers in the dataset for Diabetes prediction?
+Machine interpretation,"Outlier_prediction(Age, BMI, Diabetes)"
+Action,['Outlier_prediction']
+Feature groups,"[{'Age': '', 'BMI': '', 'Diabetes': ''}]"
+Explanation type,Case Based Explanation

@@ -1,0 +1,6 @@
+,101
+Question,What impact does the Sex feature have on the accuracy of the Diabetes prediction model?
+Machine interpretation,"FeatureImpact(Sex, Diabetes)"
+Action,['FeatureImpact']
+Feature groups,"[{'Sex': '', 'Diabetes': ''}]"
+Explanation type,Counterfactual Explanation

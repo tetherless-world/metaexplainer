@@ -1,0 +1,6 @@
+,109
+Question,How has the Diabetes Pedigree Function feature been transformed to meet the assumptions of the ML model for Diabetes prediction?
+Machine interpretation,Preprocessing_steps(Diabetes Pedigree Function)
+Action,['Preprocessing_steps']
+Feature groups,[{'Diabetes Pedigree Function': ''}]
+Explanation type,Data Explanation

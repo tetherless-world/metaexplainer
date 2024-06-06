@@ -1,0 +1,6 @@
+,186
+Question,What significance does the Diabetes Pedigree Function hold in the feature importance ranking for Diabetes prediction?
+Machine interpretation,Predict(DPF)
+Action,['Predict']
+Feature groups,[{'DiabetesPedigreeFunction': ''}]
+Explanation type,Contrastive Explanation

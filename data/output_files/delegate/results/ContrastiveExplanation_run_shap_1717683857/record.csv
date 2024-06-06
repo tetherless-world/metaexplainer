@@ -1,0 +1,6 @@
+,19
+Question,What role does feature selection play in determining the importance of the BMI feature in the ML model for Diabetes prediction?
+Machine interpretation,What role does the feature selection process play in determining the feature importance of BMI in the Diabetes prediction ML model?
+Action,
+Feature groups,[{'BMI': ''}]
+Explanation type,Contrastive Explanation

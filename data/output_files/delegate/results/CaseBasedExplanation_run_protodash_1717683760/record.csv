@@ -1,0 +1,6 @@
+,1
+Question,In what instances from the training data has gender played a significant role in predicting Diabetes?
+Machine interpretation,"Instances(Male = low, Female = high) and Diabetes prediction"
+Action,['Instances']
+Feature groups,"[{'Male': 'low', 'Female': 'high'}]"
+Explanation type,Case Based Explanation

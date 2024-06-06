@@ -1,0 +1,6 @@
+,130
+Question,How does the gender distribution affect the Diabetes prediction outcome?
+Machine interpretation,"Preprocessing_steps(Male, Diabetes) and Preprocessing_steps(Female, Diabetes)"
+Action,['Preprocessing_steps']
+Feature groups,"[{'Male': '', 'Diabetes': ''}, {'Female': '', 'Diabetes': ''}]"
+Explanation type,Data Explanation

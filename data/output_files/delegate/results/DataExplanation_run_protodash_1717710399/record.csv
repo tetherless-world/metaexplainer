@@ -1,0 +1,6 @@
+,39
+Question,How has the Diabetes Pedigree Function feature been normalized for training the ML model for Diabetes prediction?
+Machine interpretation,Normalization(DPF)
+Action,['Normalization']
+Feature groups,[{'DiabetesPedigreeFunction': ''}]
+Explanation type,Data Explanation

@@ -1,0 +1,6 @@
+,102
+Question,In what instances from the training data has age played a significant role in predicting Diabetes?
+Machine interpretation,Instances(Age) -> Diabetes Prediction
+Action,['Instances']
+Feature groups,[{'Age': ''}]
+Explanation type,Counterfactual Explanation

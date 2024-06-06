@@ -1,0 +1,6 @@
+,81
+Question,How did the model decide that a 35-year-old female with a BMI of 20 and a Diabetes Pedigree Function of 0.2 is likely to have Diabetes?
+Machine interpretation,"How did the DiabetesPredictionModel derive that a patient with (age=35, sex=Female, BMI=20, DiabetesPedigreeFunction=0.2) is predicted to have Diabetes?"
+Action,['with']
+Feature groups,"[{'Age': '35', 'Sex': 'Female', 'BMI': '20', 'DiabetesPedigreeFunction': '0.2'}]"
+Explanation type,Rationale Explanation

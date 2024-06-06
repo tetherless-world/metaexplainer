@@ -1,0 +1,9 @@
+,Rules
+0,"IF DiabetesPedigreeFunction = (-inf, 0.22) THEN label = {0}"
+1,"IF Glucose = <168.5, inf) THEN label = {0}"
+2,"IF BMI = (-inf, 28.25) THEN label = {0}"
+3,"IF Glucose = (-inf, 123.5) AND BMI = (-inf, 40.25) THEN label = {0}"
+4,"IF BloodPressure = <97.0, inf) THEN label = {1}"
+5,"IF Insulin = <113.5, inf) THEN label = {1}"
+6,"IF BMI = <42.05, inf) THEN label = {1}"
+7,"IF Glucose = <123.5, 168.5) THEN label = {1}"

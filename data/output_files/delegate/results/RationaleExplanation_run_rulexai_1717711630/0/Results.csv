@@ -1,0 +1,3 @@
+,Rules
+0,"IF Glucose = (-inf, 157.5) THEN label = {0}"
+1,"IF Glucose = <157.5, inf) THEN label = {1}"

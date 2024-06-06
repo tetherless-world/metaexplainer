@@ -1,0 +1,5 @@
+,Rules
+0,"IF DiabetesPedigreeFunction = <0.39, inf) THEN label = {1}"
+1,"IF Pregnancies = <9.5, inf) THEN label = {1}"
+2,"IF BMI = (-inf, 27.45) THEN label = {0}"
+3,"IF DiabetesPedigreeFunction = (-inf, 0.39) AND Pregnancies = (-inf, 9.5) THEN label = {0}"

@@ -1,0 +1,6 @@
+,198
+Question,How do the predictions for Diabetes change for patients with a BMI of 30 as they age from 40 to 60 years old?
+Machine interpretation,"How do the Diabetes predictions vary for patients with BMI = 30 and age in [40, 60]?"
+Action,
+Feature groups,"[{'BMI': '30 and age in [40', '60]?': ''}]"
+Explanation type,Counterfactual Explanation

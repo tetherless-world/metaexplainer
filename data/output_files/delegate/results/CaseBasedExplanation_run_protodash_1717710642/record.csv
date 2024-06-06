@@ -1,0 +1,6 @@
+,78
+Question,How does the interaction between sex and Diabetes Pedigree Function values impact the prediction accuracy?
+Machine interpretation,How does the interaction between Sex(D) and Diabetes Pedigree Function(DPF) affect the accuracy of Diabetes prediction?
+Action,['Function']
+Feature groups,"[{'DiabetesPedigreeFunction': ''}, {'DiabetesPedigreeFunction': ''}]"
+Explanation type,Case Based Explanation

@@ -1,0 +1,6 @@
+,11
+Question,What is the correlation between Diabetes Pedigree Function values and the likelihood of Diabetes prediction?
+Machine interpretation,"Correlation(DPF, Diabetes)"
+Action,['Correlation']
+Feature groups,"[{'DiabetesPedigreeFunction': '', 'Diabetes': ''}]"
+Explanation type,Data Explanation

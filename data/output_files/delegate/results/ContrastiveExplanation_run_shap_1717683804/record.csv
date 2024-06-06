@@ -1,0 +1,6 @@
+,9
+Question,What is the significance of the age feature in predicting Diabetes compared to other features?
+Machine interpretation,What impact does the age attribute have in Diabetes prediction versus other attributes?
+Action,
+Feature groups,[{'Age': ''}]
+Explanation type,Contrastive Explanation

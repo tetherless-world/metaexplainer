@@ -1,0 +1,6 @@
+,75
+Question,What BMI ranges are commonly associated with a lower likelihood of accurate Diabetes prediction in similar cases?
+Machine interpretation,What BMI ranges are typically linked to a lower probability of accurate Diabetes prediction in scenarios with similar characteristics?
+Action,
+Feature groups,[{'BMI': ''}]
+Explanation type,Contrastive Explanation

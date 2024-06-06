@@ -1,0 +1,6 @@
+,53
+Question,Why consider a patient's Diabetes Pedigree Function value of 0.1 for Diabetes prediction rather than 0.2?
+Machine interpretation,Why consider Diabetes Pedigree Function(value = 0.1) over Diabetes Pedigree Function(value = 0.2) for prediction?
+Action,['Function']
+Feature groups,"[{'value': '0.1'}, {'value': '0.2'}]"
+Explanation type,Contrastive Explanation

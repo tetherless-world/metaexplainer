@@ -1,0 +1,6 @@
+,12
+Question,Are there specific Diabetes Pedigree Function ranges where the prediction for Diabetes tends to be more reliable?
+Machine interpretation,Option of Diabetes Pedigree Function values for predicting Diabetes reliability.
+Action,
+Feature groups,[{'DiabetesPedigreeFunction': ''}]
+Explanation type,Case Based Explanation

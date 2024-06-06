@@ -38,7 +38,7 @@ def filter_records(dataset, feature_groups, actions):
 
 	nan_value = float('nan')
 
-	if not (feature_groups == nan_value):
+	if not (np.all(pd.isna(feature_groups))):
 		for feature_group in feature_groups:
 			subset_dataset = dataset
 
@@ -50,7 +50,8 @@ def filter_records(dataset, feature_groups, actions):
 
 				if feature != '' and feature_val != '' and feature in column_names and metaexplainer_utils.is_valid_number(feature_val):
 					#print('Applying ', feature, 'fitler for vals ', feature_val)
-					subset_dataset = subset_dataset.iloc[(subset_dataset[feature]- float(feature_val)).abs().argsort()[:10]]
+					if not metaexplainer_utils.is_cat(subset_dataset[feature].dtype):
+						subset_dataset = subset_dataset.iloc[(subset_dataset[feature]- float(feature_val)).abs().argsort()[:10]]
 
 			subsets.append(subset_dataset)
 	

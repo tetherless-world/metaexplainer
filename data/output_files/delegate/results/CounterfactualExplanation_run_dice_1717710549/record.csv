@@ -1,0 +1,6 @@
+,55
+Question,Are there any age groups where the prediction of Diabetes is more uncertain for patients with a BMI below 25?
+Machine interpretation,"Age_group(BMI < 25, Diabetes_Prediction) = uncertain"
+Action,['Age_group']
+Feature groups,"[{'BMI': '', 'Diabetes_Prediction': ''}, {'()': 'uncertain'}]"
+Explanation type,Counterfactual Explanation

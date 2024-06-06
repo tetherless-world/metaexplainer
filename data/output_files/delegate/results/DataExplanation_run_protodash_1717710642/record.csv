@@ -1,0 +1,6 @@
+,77
+Question,"What insights have been gained from analyzing the interaction between age, gender, and Diabetes Pedigree Function in predicting Diabetes?"
+Machine interpretation,"Predict(Age) and Predict(Gender) and Predict(DPF, Diabetes)"
+Action,['Predict']
+Feature groups,"[{'Age': ''}, {'Gender': ''}, {'DiabetesPedigreeFunction': '', 'Diabetes': ''}]"
+Explanation type,Data Explanation

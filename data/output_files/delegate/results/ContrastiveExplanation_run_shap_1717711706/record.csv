@@ -1,0 +1,6 @@
+,136
+Question,How do the instances of males with a BMI below 20 differ in terms of Diabetes prediction compared to females with the same BMI range?
+Machine interpretation,How do the instances of males(BMI < 20) differ in terms of Diabetes prediction compared to females(BMI < 20)?
+Action,"['females', 'males']"
+Feature groups,"[{'BMI': ''}, {'BMI': ''}]"
+Explanation type,Contrastive Explanation

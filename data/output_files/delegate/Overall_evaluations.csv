@@ -1,0 +1,551 @@
+,Explanation Type,Explainer Method,Metric,Value
+0,Rationale Explanation,rulexai,Average rule length,1.4
+1,Rationale Explanation,rulexai,Fidelity,0.3999999999999999
+2,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+3,Counterfactual Explanation,dice,Diversity,101.00860027834538
+4,Counterfactual Explanation,dice,Non representativeness,0.0
+5,Counterfactual Explanation,dice,Diversity,93.53886590255964
+6,Counterfactual Explanation,dice,Non representativeness,0.0
+7,Counterfactual Explanation,dice,Diversity,486.2649698200023
+8,Rationale Explanation,rulexai,Average rule length,1.0
+9,Rationale Explanation,rulexai,Fidelity,0.3666666666666666
+10,Contrastive Explanation,shap,Faithfulness,0.8545733883819395
+11,Contrastive Explanation,shap,Monotonicity,0.1
+12,Data Explanation,protodash,Diversity,483.60080501644745
+13,Data Explanation,protodash,Non representativeness,0.02
+14,Data Explanation,protodash,Diversity,483.60080501644745
+15,Data Explanation,protodash,Non representativeness,0.02
+16,Contrastive Explanation,shap,Faithfulness,0.7549129539770776
+17,Contrastive Explanation,shap,Monotonicity,0.1
+18,Rationale Explanation,rulexai,Average rule length,1.25
+19,Rationale Explanation,rulexai,Fidelity,0.375
+20,Data Explanation,protodash,Non representativeness,0.03
+21,Data Explanation,protodash,Diversity,483.60080501644745
+22,Data Explanation,protodash,Non representativeness,0.02
+23,Data Explanation,protodash,Diversity,483.60080501644745
+24,Data Explanation,protodash,Non representativeness,0.02
+25,Data Explanation,protodash,Diversity,483.60080501644745
+26,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+27,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+28,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+29,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+30,Rationale Explanation,rulexai,Average rule length,1.0
+31,Rationale Explanation,rulexai,Fidelity,0.3666666666666667
+32,Rationale Explanation,rulexai,Average rule length,1.2
+33,Rationale Explanation,rulexai,Fidelity,0.3199999999999999
+34,Data Explanation,protodash,Non representativeness,0.02
+35,Data Explanation,protodash,Diversity,483.60080501644745
+36,Data Explanation,protodash,Non representativeness,0.02
+37,Data Explanation,protodash,Diversity,483.60080501644745
+38,Data Explanation,protodash,Non representativeness,0.02
+39,Data Explanation,protodash,Diversity,483.60080501644745
+40,Contrastive Explanation,shap,Faithfulness,0.6072735440399273
+41,Contrastive Explanation,shap,Monotonicity,0.1
+42,Contrastive Explanation,shap,Faithfulness,0.6201376113839955
+43,Contrastive Explanation,shap,Monotonicity,0.3
+44,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+45,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+46,Rationale Explanation,rulexai,Average rule length,1.0
+47,Rationale Explanation,rulexai,Fidelity,0.3666666666666666
+48,Data Explanation,protodash,Non representativeness,0.03
+49,Data Explanation,protodash,Diversity,483.60080501644745
+50,Contrastive Explanation,shap,Faithfulness,0.786074340672716
+51,Contrastive Explanation,shap,Monotonicity,0.0
+52,Contrastive Explanation,shap,Faithfulness,0.7549129539770776
+53,Contrastive Explanation,shap,Monotonicity,0.1
+54,Data Explanation,protodash,Diversity,483.60080501644745
+55,Data Explanation,protodash,Non representativeness,0.02
+56,Data Explanation,protodash,Non representativeness,0.02
+57,Data Explanation,protodash,Diversity,483.60080501644745
+58,Case Based Explanation,protodash,Non representativeness,0.02
+59,Case Based Explanation,protodash,Diversity,483.60080501644745
+60,Case Based Explanation,protodash,Non representativeness,0.02
+61,Case Based Explanation,protodash,Diversity,483.60080501644745
+62,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+63,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+64,Data Explanation,protodash,Non representativeness,0.03
+65,Data Explanation,protodash,Diversity,483.60080501644745
+66,Contrastive Explanation,shap,Faithfulness,0.7549129539770776
+67,Contrastive Explanation,shap,Monotonicity,0.1
+68,Rationale Explanation,rulexai,Average rule length,1.4
+69,Rationale Explanation,rulexai,Fidelity,0.3999999999999999
+70,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+71,Counterfactual Explanation,dice,Diversity,101.00860027834538
+72,Counterfactual Explanation,dice,Non representativeness,0.0
+73,Counterfactual Explanation,dice,Diversity,422.8073090621525
+74,Counterfactual Explanation,dice,Non representativeness,0.0
+75,Counterfactual Explanation,dice,Diversity,166.3904189317377
+76,Data Explanation,protodash,Non representativeness,0.02
+77,Data Explanation,protodash,Diversity,483.60080501644745
+78,Data Explanation,protodash,Non representativeness,0.02
+79,Data Explanation,protodash,Diversity,483.60080501644745
+80,Rationale Explanation,rulexai,Average rule length,1.0
+81,Rationale Explanation,rulexai,Fidelity,0.4
+82,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+83,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+84,Contrastive Explanation,shap,Faithfulness,0.7549129539770776
+85,Contrastive Explanation,shap,Monotonicity,0.1
+86,Rationale Explanation,rulexai,Average rule length,1.125
+87,Rationale Explanation,rulexai,Fidelity,0.3125
+88,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+89,Counterfactual Explanation,dice,Diversity,58.993724869148735
+90,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+91,Counterfactual Explanation,dice,Diversity,58.993724869148735
+92,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+93,Counterfactual Explanation,dice,Diversity,58.993724869148735
+94,Data Explanation,protodash,Non representativeness,0.02
+95,Data Explanation,protodash,Diversity,483.60080501644745
+96,Case Based Explanation,protodash,Non representativeness,0.03
+97,Case Based Explanation,protodash,Diversity,483.60080501644745
+98,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+99,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+100,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+101,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+102,Contrastive Explanation,shap,Faithfulness,0.7549129539770776
+103,Contrastive Explanation,shap,Monotonicity,0.1
+104,Rationale Explanation,rulexai,Average rule length,1.25
+105,Rationale Explanation,rulexai,Fidelity,0.425
+106,Rationale Explanation,rulexai,Average rule length,1.25
+107,Rationale Explanation,rulexai,Fidelity,0.425
+108,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+109,Counterfactual Explanation,dice,Diversity,101.00860027834538
+110,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+111,Counterfactual Explanation,dice,Diversity,57.41867287175635
+112,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+113,Counterfactual Explanation,dice,Diversity,57.41867287175635
+114,Counterfactual Explanation,dice,Non representativeness,0.01
+115,Counterfactual Explanation,dice,Diversity,174.58970727731273
+116,Counterfactual Explanation,dice,Non representativeness,0.01
+117,Counterfactual Explanation,dice,Diversity,253.70907679273
+118,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+119,Counterfactual Explanation,dice,Diversity,57.41867287175635
+120,Counterfactual Explanation,dice,Non representativeness,0.0
+121,Counterfactual Explanation,dice,Diversity,97.00276563075847
+122,Case Based Explanation,protodash,Non representativeness,0.05
+123,Case Based Explanation,protodash,Diversity,492.82433758941136
+124,Case Based Explanation,protodash,Non representativeness,0.0833333333333333
+125,Case Based Explanation,protodash,Diversity,494.1725262955732
+126,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+127,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+128,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+129,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+130,Rationale Explanation,rulexai,Average rule length,1.0
+131,Rationale Explanation,rulexai,Fidelity,0.4
+132,Case Based Explanation,protodash,Non representativeness,0.1166666666666666
+133,Case Based Explanation,protodash,Diversity,192.06548324977132
+134,Rationale Explanation,rulexai,Average rule length,1.25
+135,Rationale Explanation,rulexai,Fidelity,0.375
+136,Rationale Explanation,rulexai,Average rule length,1.125
+137,Rationale Explanation,rulexai,Fidelity,0.3125
+138,Counterfactual Explanation,dice,Non representativeness,0.0
+139,Counterfactual Explanation,dice,Diversity,65.46841715041838
+140,Data Explanation,protodash,Non representativeness,0.02
+141,Data Explanation,protodash,Diversity,483.60080501644745
+142,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+143,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+144,Rationale Explanation,rulexai,Average rule length,0.0
+145,Rationale Explanation,rulexai,Fidelity,0.0
+146,Rationale Explanation,rulexai,Average rule length,1.0
+147,Rationale Explanation,rulexai,Fidelity,0.5
+148,Data Explanation,protodash,Non representativeness,0.02
+149,Data Explanation,protodash,Diversity,483.60080501644745
+150,Contrastive Explanation,shap,Faithfulness,0.7850672917884924
+151,Contrastive Explanation,shap,Monotonicity,0.1
+152,Contrastive Explanation,shap,Faithfulness,0.7549129539770776
+153,Contrastive Explanation,shap,Monotonicity,0.1
+154,Contrastive Explanation,shap,Faithfulness,0.786074340672716
+155,Contrastive Explanation,shap,Monotonicity,0.0
+156,Contrastive Explanation,shap,Faithfulness,0.7549129539770776
+157,Contrastive Explanation,shap,Monotonicity,0.1
+158,Case Based Explanation,protodash,Non representativeness,0.03
+159,Case Based Explanation,protodash,Diversity,483.60080501644745
+160,Contrastive Explanation,shap,Faithfulness,0.7549129539770776
+161,Contrastive Explanation,shap,Monotonicity,0.1
+162,Data Explanation,protodash,Non representativeness,0.03
+163,Data Explanation,protodash,Diversity,483.60080501644745
+164,Data Explanation,protodash,Non representativeness,0.03
+165,Data Explanation,protodash,Diversity,483.60080501644745
+166,Data Explanation,protodash,Non representativeness,0.03
+167,Data Explanation,protodash,Diversity,483.60080501644745
+168,Data Explanation,protodash,Non representativeness,0.03
+169,Data Explanation,protodash,Diversity,483.60080501644745
+170,Data Explanation,protodash,Non representativeness,0.03
+171,Data Explanation,protodash,Diversity,483.60080501644745
+172,Data Explanation,protodash,Non representativeness,0.03
+173,Data Explanation,protodash,Diversity,483.60080501644745
+174,Rationale Explanation,rulexai,Average rule length,1.3333333333333333
+175,Rationale Explanation,rulexai,Fidelity,0.3666666666666667
+176,Rationale Explanation,rulexai,Average rule length,1.25
+177,Rationale Explanation,rulexai,Fidelity,0.375
+178,Rationale Explanation,rulexai,Average rule length,1.0
+179,Rationale Explanation,rulexai,Fidelity,0.3666666666666666
+180,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+181,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+182,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+183,Counterfactual Explanation,dice,Diversity,101.00860027834538
+184,Counterfactual Explanation,dice,Non representativeness,0.02
+185,Counterfactual Explanation,dice,Diversity,675.4456543922038
+186,Counterfactual Explanation,dice,Non representativeness,0.01
+187,Counterfactual Explanation,dice,Diversity,800.406045415097
+188,Data Explanation,protodash,Non representativeness,0.02
+189,Data Explanation,protodash,Diversity,483.60080501644745
+190,Case Based Explanation,protodash,Non representativeness,0.03
+191,Case Based Explanation,protodash,Diversity,483.60080501644745
+192,Case Based Explanation,protodash,Non representativeness,0.02
+193,Case Based Explanation,protodash,Diversity,483.60080501644745
+194,Case Based Explanation,protodash,Non representativeness,0.02
+195,Case Based Explanation,protodash,Diversity,483.60080501644745
+196,Data Explanation,protodash,Non representativeness,0.03
+197,Data Explanation,protodash,Diversity,483.60080501644745
+198,Data Explanation,protodash,Non representativeness,0.03
+199,Data Explanation,protodash,Diversity,483.60080501644745
+200,Rationale Explanation,rulexai,Average rule length,0.0
+201,Rationale Explanation,rulexai,Fidelity,0.0
+202,Contrastive Explanation,shap,Faithfulness,0.4798451479660152
+203,Contrastive Explanation,shap,Monotonicity,0.1
+204,Contrastive Explanation,shap,Faithfulness,0.4798451479660152
+205,Contrastive Explanation,shap,Monotonicity,0.1
+206,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+207,Counterfactual Explanation,dice,Diversity,101.00860027834538
+208,Counterfactual Explanation,dice,Non representativeness,0.0
+209,Counterfactual Explanation,dice,Diversity,486.2649698200023
+210,Counterfactual Explanation,dice,Non representativeness,0.02
+211,Counterfactual Explanation,dice,Diversity,147.32491536452656
+212,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+213,Counterfactual Explanation,dice,Diversity,101.00860027834538
+214,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+215,Counterfactual Explanation,dice,Diversity,101.00860027834538
+216,Counterfactual Explanation,dice,Non representativeness,0.0
+217,Counterfactual Explanation,dice,Diversity,121.46895399198092
+218,Data Explanation,protodash,Non representativeness,0.03
+219,Data Explanation,protodash,Diversity,483.60080501644745
+220,Data Explanation,protodash,Non representativeness,0.03
+221,Data Explanation,protodash,Diversity,483.60080501644745
+222,Data Explanation,protodash,Non representativeness,0.02
+223,Data Explanation,protodash,Diversity,483.60080501644745
+224,Data Explanation,protodash,Non representativeness,0.02
+225,Data Explanation,protodash,Diversity,483.60080501644745
+226,Data Explanation,protodash,Non representativeness,0.02
+227,Data Explanation,protodash,Diversity,483.60080501644745
+228,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+229,Counterfactual Explanation,dice,Diversity,58.993724869148735
+230,Counterfactual Explanation,dice,Non representativeness,0.04
+231,Counterfactual Explanation,dice,Diversity,493.8404836442507
+232,Counterfactual Explanation,dice,Non representativeness,0.01
+233,Counterfactual Explanation,dice,Diversity,1014.6802284935468
+234,Rationale Explanation,rulexai,Average rule length,1.25
+235,Rationale Explanation,rulexai,Fidelity,0.425
+236,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+237,Counterfactual Explanation,dice,Diversity,57.41867287175635
+238,Counterfactual Explanation,dice,Non representativeness,0.0
+239,Counterfactual Explanation,dice,Diversity,83.20459480908565
+240,Case Based Explanation,protodash,Non representativeness,0.15
+241,Case Based Explanation,protodash,Diversity,145.8082150455129
+242,Case Based Explanation,protodash,Non representativeness,0.03
+243,Case Based Explanation,protodash,Diversity,483.60080501644745
+244,Counterfactual Explanation,dice,Non representativeness,0.0
+245,Counterfactual Explanation,dice,Diversity,422.80730906215257
+246,Counterfactual Explanation,dice,Non representativeness,0.0
+247,Counterfactual Explanation,dice,Diversity,166.3904189317377
+248,Contrastive Explanation,shap,Faithfulness,0.7969111823156799
+249,Contrastive Explanation,shap,Monotonicity,0.0
+250,Contrastive Explanation,shap,Faithfulness,0.6506132020808755
+251,Contrastive Explanation,shap,Monotonicity,0.3
+252,Data Explanation,protodash,Non representativeness,0.03
+253,Data Explanation,protodash,Diversity,483.60080501644745
+254,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+255,Counterfactual Explanation,dice,Diversity,57.41867287175635
+256,Counterfactual Explanation,dice,Non representativeness,0.0
+257,Counterfactual Explanation,dice,Diversity,83.20459480908565
+258,Contrastive Explanation,shap,Faithfulness,0.6506132020808755
+259,Contrastive Explanation,shap,Monotonicity,0.3
+260,Contrastive Explanation,shap,Faithfulness,0.786074340672716
+261,Contrastive Explanation,shap,Monotonicity,0.0
+262,Contrastive Explanation,shap,Faithfulness,0.7549129539770776
+263,Contrastive Explanation,shap,Monotonicity,0.1
+264,Rationale Explanation,rulexai,Average rule length,1.25
+265,Rationale Explanation,rulexai,Fidelity,0.375
+266,Contrastive Explanation,shap,Faithfulness,0.786074340672716
+267,Contrastive Explanation,shap,Monotonicity,0.0
+268,Contrastive Explanation,shap,Faithfulness,0.7549129539770776
+269,Contrastive Explanation,shap,Monotonicity,0.1
+270,Counterfactual Explanation,dice,Non representativeness,0.01
+271,Counterfactual Explanation,dice,Diversity,253.70907679273
+272,Contrastive Explanation,shap,Faithfulness,0.7549129539770776
+273,Contrastive Explanation,shap,Monotonicity,0.1
+274,Counterfactual Explanation,dice,Non representativeness,0.04
+275,Counterfactual Explanation,dice,Diversity,740.6547822026351
+276,Counterfactual Explanation,dice,Non representativeness,0.01
+277,Counterfactual Explanation,dice,Diversity,144.40014747753204
+278,Data Explanation,protodash,Non representativeness,0.03
+279,Data Explanation,protodash,Diversity,483.60080501644745
+280,Data Explanation,protodash,Diversity,483.60080501644745
+281,Data Explanation,protodash,Non representativeness,0.02
+282,Contrastive Explanation,shap,Faithfulness,0.786074340672716
+283,Contrastive Explanation,shap,Monotonicity,0.0
+284,Contrastive Explanation,shap,Faithfulness,0.7549129539770776
+285,Contrastive Explanation,shap,Monotonicity,0.1
+286,Contrastive Explanation,shap,Faithfulness,0.6587494730065915
+287,Contrastive Explanation,shap,Monotonicity,0.0
+288,Data Explanation,protodash,Non representativeness,0.02
+289,Data Explanation,protodash,Diversity,483.60080501644745
+290,Rationale Explanation,rulexai,Average rule length,1.4
+291,Rationale Explanation,rulexai,Fidelity,0.4
+292,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+293,Counterfactual Explanation,dice,Diversity,101.00860027834538
+294,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+295,Counterfactual Explanation,dice,Diversity,101.00860027834538
+296,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+297,Counterfactual Explanation,dice,Diversity,43.27966966065603
+298,Data Explanation,protodash,Diversity,483.60080501644745
+299,Data Explanation,protodash,Non representativeness,0.02
+300,Rationale Explanation,rulexai,Average rule length,1.125
+301,Rationale Explanation,rulexai,Fidelity,0.3125
+302,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+303,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+304,Contrastive Explanation,shap,Faithfulness,0.786074340672716
+305,Contrastive Explanation,shap,Monotonicity,0.0
+306,Contrastive Explanation,shap,Faithfulness,0.7549129539770776
+307,Contrastive Explanation,shap,Monotonicity,0.1
+308,Contrastive Explanation,shap,Faithfulness,0.7549129539770776
+309,Contrastive Explanation,shap,Monotonicity,0.1
+310,Rationale Explanation,rulexai,Average rule length,1.2857142857142858
+311,Rationale Explanation,rulexai,Fidelity,0.3571428571428571
+312,Rationale Explanation,rulexai,Average rule length,1.2857142857142858
+313,Rationale Explanation,rulexai,Fidelity,0.3571428571428571
+314,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+315,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+316,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+317,Counterfactual Explanation,dice,Diversity,57.41867287175635
+318,Counterfactual Explanation,dice,Non representativeness,0.01
+319,Counterfactual Explanation,dice,Diversity,165.46078020456554
+320,Counterfactual Explanation,dice,Non representativeness,0.0
+321,Counterfactual Explanation,dice,Diversity,136.56643838646934
+322,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+323,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+324,Rationale Explanation,rulexai,Average rule length,1.4
+325,Rationale Explanation,rulexai,Fidelity,0.3999999999999999
+326,Data Explanation,protodash,Non representativeness,0.03
+327,Data Explanation,protodash,Diversity,483.60080501644745
+328,Data Explanation,protodash,Non representativeness,0.03
+329,Data Explanation,protodash,Diversity,483.60080501644745
+330,Data Explanation,protodash,Non representativeness,0.03
+331,Data Explanation,protodash,Diversity,483.60080501644745
+332,Data Explanation,protodash,Non representativeness,0.02
+333,Data Explanation,protodash,Diversity,483.60080501644745
+334,Data Explanation,protodash,Non representativeness,0.03
+335,Data Explanation,protodash,Diversity,483.60080501644745
+336,Rationale Explanation,rulexai,Average rule length,1.0
+337,Rationale Explanation,rulexai,Fidelity,0.3
+338,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+339,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+340,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+341,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+342,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+343,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+344,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+345,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+346,Data Explanation,protodash,Diversity,483.60080501644745
+347,Data Explanation,protodash,Non representativeness,0.02
+348,Counterfactual Explanation,dice,Non representativeness,0.02
+349,Counterfactual Explanation,dice,Diversity,868.4922478995945
+350,Counterfactual Explanation,dice,Non representativeness,0.02
+351,Counterfactual Explanation,dice,Diversity,234.13500432718752
+352,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+353,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+354,Rationale Explanation,rulexai,Average rule length,1.2857142857142858
+355,Rationale Explanation,rulexai,Fidelity,0.3571428571428571
+356,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+357,Counterfactual Explanation,dice,Diversity,101.00860027834538
+358,Counterfactual Explanation,dice,Non representativeness,0.0
+359,Counterfactual Explanation,dice,Diversity,65.46841715041838
+360,Contrastive Explanation,shap,Faithfulness,0.7969111823156799
+361,Contrastive Explanation,shap,Monotonicity,0.0
+362,Contrastive Explanation,shap,Faithfulness,0.6506132020808755
+363,Contrastive Explanation,shap,Monotonicity,0.3
+364,Data Explanation,protodash,Non representativeness,0.03
+365,Data Explanation,protodash,Diversity,483.60080501644745
+366,Case Based Explanation,protodash,Non representativeness,0.03
+367,Case Based Explanation,protodash,Diversity,483.60080501644745
+368,Rationale Explanation,rulexai,Average rule length,1.25
+369,Rationale Explanation,rulexai,Fidelity,0.425
+370,Case Based Explanation,protodash,Non representativeness,0.0833333333333333
+371,Case Based Explanation,protodash,Diversity,494.1725262955732
+372,Rationale Explanation,rulexai,Average rule length,0.0
+373,Rationale Explanation,rulexai,Fidelity,0.0
+374,Case Based Explanation,protodash,Non representativeness,0.03
+375,Case Based Explanation,protodash,Diversity,483.60080501644745
+376,Case Based Explanation,protodash,Non representativeness,0.03
+377,Case Based Explanation,protodash,Diversity,483.60080501644745
+378,Rationale Explanation,rulexai,Average rule length,0.0
+379,Rationale Explanation,rulexai,Fidelity,0.0
+380,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+381,Counterfactual Explanation,dice,Diversity,101.00860027834538
+382,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+383,Counterfactual Explanation,dice,Diversity,101.00860027834538
+384,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+385,Counterfactual Explanation,dice,Diversity,101.00860027834538
+386,Counterfactual Explanation,dice,Non representativeness,0.0
+387,Counterfactual Explanation,dice,Diversity,42.10357068208095
+388,Data Explanation,protodash,Non representativeness,0.03
+389,Data Explanation,protodash,Diversity,483.60080501644745
+390,Rationale Explanation,rulexai,Average rule length,1.2857142857142858
+391,Rationale Explanation,rulexai,Fidelity,0.3571428571428571
+392,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+393,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+394,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+395,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+396,Contrastive Explanation,shap,Faithfulness,0.4798451479660152
+397,Contrastive Explanation,shap,Monotonicity,0.1
+398,Contrastive Explanation,shap,Faithfulness,0.4798451479660152
+399,Contrastive Explanation,shap,Monotonicity,0.1
+400,Data Explanation,protodash,Non representativeness,0.02
+401,Data Explanation,protodash,Diversity,483.60080501644745
+402,Rationale Explanation,rulexai,Average rule length,1.3333333333333333
+403,Rationale Explanation,rulexai,Fidelity,0.3666666666666667
+404,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+405,Counterfactual Explanation,dice,Diversity,57.41867287175635
+406,Data Explanation,protodash,Non representativeness,0.03
+407,Data Explanation,protodash,Diversity,483.60080501644745
+408,Case Based Explanation,protodash,Non representativeness,0.03
+409,Case Based Explanation,protodash,Diversity,483.60080501644745
+410,Data Explanation,protodash,Non representativeness,0.02
+411,Data Explanation,protodash,Diversity,483.60080501644745
+412,Counterfactual Explanation,dice,Diversity,63.46842213194133
+413,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+414,Counterfactual Explanation,dice,Diversity,778.0641343882389
+415,Counterfactual Explanation,dice,Non representativeness,0.02
+416,Counterfactual Explanation,dice,Diversity,1056.019725997387
+417,Counterfactual Explanation,dice,Non representativeness,0.04
+418,Rationale Explanation,rulexai,Average rule length,1.125
+419,Rationale Explanation,rulexai,Fidelity,0.3125
+420,Case Based Explanation,protodash,Non representativeness,0.03
+421,Case Based Explanation,protodash,Diversity,483.60080501644745
+422,Case Based Explanation,protodash,Non representativeness,0.03
+423,Case Based Explanation,protodash,Diversity,483.60080501644745
+424,Rationale Explanation,rulexai,Average rule length,1.125
+425,Rationale Explanation,rulexai,Fidelity,0.3125
+426,Data Explanation,protodash,Diversity,483.60080501644745
+427,Data Explanation,protodash,Non representativeness,0.02
+428,Data Explanation,protodash,Diversity,483.60080501644745
+429,Data Explanation,protodash,Non representativeness,0.02
+430,Case Based Explanation,protodash,Non representativeness,0.03
+431,Case Based Explanation,protodash,Diversity,483.60080501644745
+432,Counterfactual Explanation,dice,Diversity,31.66547607423533
+433,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+434,Counterfactual Explanation,dice,Diversity,305.61528117891066
+435,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+436,Data Explanation,protodash,Non representativeness,0.03
+437,Data Explanation,protodash,Diversity,483.60080501644745
+438,Rationale Explanation,rulexai,Average rule length,1.125
+439,Rationale Explanation,rulexai,Fidelity,0.3125
+440,Data Explanation,protodash,Non representativeness,0.03
+441,Data Explanation,protodash,Diversity,483.60080501644745
+442,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+443,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+444,Contrastive Explanation,shap,Faithfulness,0.6072735440399273
+445,Contrastive Explanation,shap,Monotonicity,0.1
+446,Contrastive Explanation,shap,Faithfulness,0.6201376113839955
+447,Contrastive Explanation,shap,Monotonicity,0.3
+448,Contrastive Explanation,shap,Faithfulness,0.7969111823156799
+449,Contrastive Explanation,shap,Monotonicity,0.0
+450,Rationale Explanation,rulexai,Average rule length,1.2857142857142858
+451,Rationale Explanation,rulexai,Fidelity,0.3571428571428571
+452,Rationale Explanation,rulexai,Average rule length,1.2857142857142858
+453,Rationale Explanation,rulexai,Fidelity,0.3571428571428571
+454,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+455,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+456,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+457,Counterfactual Explanation,dice,Diversity,101.00860027834538
+458,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+459,Counterfactual Explanation,dice,Diversity,101.00860027834538
+460,Counterfactual Explanation,dice,Non representativeness,0.0
+461,Counterfactual Explanation,dice,Diversity,121.46895399198092
+462,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+463,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+464,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+465,Counterfactual Explanation,dice,Diversity,58.993724869148735
+466,Counterfactual Explanation,dice,Non representativeness,0.0
+467,Counterfactual Explanation,dice,Diversity,76.20765055803045
+468,Counterfactual Explanation,dice,Non representativeness,0.0
+469,Counterfactual Explanation,dice,Diversity,65.50008229004139
+470,Rationale Explanation,rulexai,Average rule length,1.0
+471,Rationale Explanation,rulexai,Fidelity,0.3
+472,Rationale Explanation,rulexai,Average rule length,1.3333333333333333
+473,Rationale Explanation,rulexai,Fidelity,0.3666666666666667
+474,Rationale Explanation,rulexai,Average rule length,1.0
+475,Rationale Explanation,rulexai,Fidelity,0.3666666666666666
+476,Rationale Explanation,rulexai,Average rule length,1.4
+477,Rationale Explanation,rulexai,Fidelity,0.3999999999999999
+478,Rationale Explanation,rulexai,Average rule length,1.3333333333333333
+479,Rationale Explanation,rulexai,Fidelity,0.3666666666666667
+480,Case Based Explanation,protodash,Non representativeness,0.03
+481,Case Based Explanation,protodash,Diversity,483.60080501644745
+482,Contrastive Explanation,shap,Faithfulness,0.5892424842351932
+483,Contrastive Explanation,shap,Monotonicity,0.0
+484,Contrastive Explanation,shap,Faithfulness,0.786074340672716
+485,Contrastive Explanation,shap,Monotonicity,0.0
+486,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+487,Counterfactual Explanation,dice,Diversity,101.00860027834538
+488,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+489,Counterfactual Explanation,dice,Diversity,101.00860027834538
+490,Counterfactual Explanation,dice,Non representativeness,0.01
+491,Counterfactual Explanation,dice,Diversity,143.20922945884183
+492,Data Explanation,protodash,Non representativeness,0.03
+493,Data Explanation,protodash,Diversity,483.60080501644745
+494,Counterfactual Explanation,dice,Non representativeness,0.1166666666666666
+495,Counterfactual Explanation,dice,Diversity,97.15256106332151
+496,Rationale Explanation,rulexai,Average rule length,0.0
+497,Rationale Explanation,rulexai,Fidelity,0.0
+498,Rationale Explanation,rulexai,Average rule length,0.0
+499,Rationale Explanation,rulexai,Fidelity,0.0
+500,Counterfactual Explanation,dice,Diversity,31.66547607423533
+501,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+502,Counterfactual Explanation,dice,Diversity,165.59114154767127
+503,Counterfactual Explanation,dice,Non representativeness,0.0
+504,Counterfactual Explanation,dice,Diversity,165.59114154767127
+505,Counterfactual Explanation,dice,Non representativeness,0.0
+506,Counterfactual Explanation,dice,Diversity,63.46842213194133
+507,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+508,Counterfactual Explanation,dice,Diversity,220.88154388719687
+509,Counterfactual Explanation,dice,Non representativeness,0.02
+510,Counterfactual Explanation,dice,Diversity,165.59114154767127
+511,Counterfactual Explanation,dice,Non representativeness,0.0
+512,Counterfactual Explanation,dice,Non representativeness,0.0
+513,Counterfactual Explanation,dice,Diversity,649.3203075953605
+514,Counterfactual Explanation,dice,Non representativeness,0.01
+515,Counterfactual Explanation,dice,Diversity,364.8013072349796
+516,Rationale Explanation,rulexai,Average rule length,1.25
+517,Rationale Explanation,rulexai,Fidelity,0.375
+518,Case Based Explanation,protodash,Non representativeness,0.03
+519,Case Based Explanation,protodash,Diversity,483.60080501644745
+520,Counterfactual Explanation,dice,Diversity,31.66547607423533
+521,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+522,Counterfactual Explanation,dice,Diversity,191.88827111604235
+523,Counterfactual Explanation,dice,Non representativeness,0.04
+524,Counterfactual Explanation,dice,Diversity,210.36714388598756
+525,Counterfactual Explanation,dice,Non representativeness,0.01
+526,Counterfactual Explanation,dice,Non representativeness,0.0333333333333333
+527,Counterfactual Explanation,dice,Diversity,101.82681027138136
+528,Data Explanation,protodash,Non representativeness,0.03
+529,Data Explanation,protodash,Diversity,483.60080501644745
+530,Data Explanation,protodash,Non representativeness,0.03
+531,Data Explanation,protodash,Diversity,483.60080501644745
+532,Data Explanation,protodash,Non representativeness,0.03
+533,Data Explanation,protodash,Diversity,483.60080501644745
+534,Data Explanation,protodash,Non representativeness,0.03
+535,Data Explanation,protodash,Diversity,483.60080501644745
+536,Case Based Explanation,protodash,Non representativeness,0.03
+537,Case Based Explanation,protodash,Diversity,483.60080501644745
+538,Rationale Explanation,rulexai,Average rule length,4.906542056074766
+539,Rationale Explanation,rulexai,Fidelity,0.2767718068535827
+540,Contrastive Explanation,shap,Faithfulness,0.6506132020808755
+541,Contrastive Explanation,shap,Monotonicity,0.3
+542,Contrastive Explanation,shap,Faithfulness,0.786074340672716
+543,Contrastive Explanation,shap,Monotonicity,0.0
+544,Contrastive Explanation,shap,Faithfulness,0.8022066142181405
+545,Contrastive Explanation,shap,Monotonicity,0.0
+546,Contrastive Explanation,shap,Faithfulness,0.6663865694245114
+547,Contrastive Explanation,shap,Monotonicity,0.1
+548,Data Explanation,protodash,Non representativeness,0.03
+549,Data Explanation,protodash,Diversity,483.60080501644745

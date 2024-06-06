@@ -1,0 +1,6 @@
+,121
+Question,How has the age range of 30-40 contributed to the accuracy of the Diabetes prediction model?
+Machine interpretation,How has the age_range feature (30-40) impacted the Diabetes prediction model's accuracy?
+Action,['feature']
+Feature groups,[{'30-40': ''}]
+Explanation type,Case Based Explanation

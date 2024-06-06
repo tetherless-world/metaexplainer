@@ -1,0 +1,6 @@
+,139
+Question,What are the typical age ranges for patients with a high likelihood of Diabetes based on their Diabetes Pedigree Function?
+Machine interpretation,"Correlation(DPF, Diabetes)"
+Action,['Correlation']
+Feature groups,"[{'DiabetesPedigreeFunction': '', 'Diabetes': ''}]"
+Explanation type,Case Based Explanation

@@ -1,0 +1,6 @@
+,158
+Question,Why did the model predict that a 30-year-old male with a BMI of 24 and a Diabetes Pedigree Function of 0.3 has Diabetes?
+Machine interpretation,"Why did the DiabetesPredictionModel classify a patient with ( age=30, sex=Male, BMI=24, DiabetesPedigreeFunction=0.3 ) as having Diabetes?"
+Action,['with']
+Feature groups,"[{'Age': '30', 'Sex': 'Male', 'BMI': '24', 'DiabetesPedigreeFunction': '0.3'}]"
+Explanation type,Rationale Explanation

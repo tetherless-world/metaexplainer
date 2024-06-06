@@ -1,0 +1,6 @@
+,192
+Question,What are the common features among patients with a high likelihood of Diabetes despite having a low BMI?
+Machine interpretation,What are the typical characteristics shared by individuals with a high Diabetes prediction outcome despite having a low BMI value?
+Action,
+Feature groups,[{'BMI': ''}]
+Explanation type,Rationale Explanation

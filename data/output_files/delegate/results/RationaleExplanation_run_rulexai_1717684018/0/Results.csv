@@ -1,0 +1,5 @@
+,Rules
+0,"IF BMI = (-inf, 32.25) THEN label = {0}"
+1,"IF BloodPressure = <87.0, inf) THEN label = {1}"
+2,"IF SkinThickness = (-inf, 20.5) THEN label = {1}"
+3,"IF BMI = <37.05, inf) THEN label = {1}"

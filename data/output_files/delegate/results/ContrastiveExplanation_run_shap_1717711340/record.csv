@@ -1,0 +1,6 @@
+,91
+Question,Why consider a patient's age in predicting Diabetes instead of their BMI?
+Machine interpretation,Why_Age_Prediction_Diabetes(BMI) -> Age
+Action,['Why_Age_Prediction_Diabetes']
+Feature groups,[{'BMI': ''}]
+Explanation type,Contrastive Explanation

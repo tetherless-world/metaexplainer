@@ -1,0 +1,6 @@
+,47
+Question,To what extent does age contribute to the variability in Diabetes prediction outcomes?
+Machine interpretation,"Correlation(Age, Diabetes)"
+Action,['Correlation']
+Feature groups,"[{'Age': '', 'Diabetes': ''}]"
+Explanation type,Data Explanation

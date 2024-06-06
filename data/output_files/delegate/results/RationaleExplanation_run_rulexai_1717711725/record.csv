@@ -1,0 +1,6 @@
+,143
+Question,Why did the model determine that a 30-year-old male with a BMI of 24 and a Diabetes Pedigree Function of 0.1 does not have Diabetes?
+Machine interpretation,"Diabetes(Prediction(Mage(30),  BMI(24),  DPF(0.1)) == No)"
+Action,"['Diabetes', 'Prediction', 'Mage']"
+Feature groups,"[{'BMI': '30'}, {'DiabetesPedigreeFunction': '24'}, {'Unnamed': '0.1'}, {'((()': '', '()': '', '())': ''}]"
+Explanation type,Rationale Explanation

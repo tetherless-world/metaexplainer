@@ -1,0 +1,6 @@
+,100
+Question,Why use age as a primary feature for predicting Diabetes rather than considering the patient's sex?
+Machine interpretation,"Feature_Importance(Age) and Feature_Comparison(Sex, Diabetes_Prediction)"
+Action,"['Feature_Importance', 'Feature_Comparison']"
+Feature groups,"[{'Age': ''}, {'Sex': '', 'Diabetes_Prediction': ''}]"
+Explanation type,Rationale Explanation

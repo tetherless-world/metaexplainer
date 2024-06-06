@@ -1,0 +1,6 @@
+,98
+Question,How would the likelihood of Diabetes be affected if the patient was 10 years younger?
+Machine interpretation,"DiabetesPrediction(patientAge - 10, Diabetes)"
+Action,['DiabetesPrediction']
+Feature groups,"[{'Age': '', 'Diabetes': ''}]"
+Explanation type,Counterfactual Explanation

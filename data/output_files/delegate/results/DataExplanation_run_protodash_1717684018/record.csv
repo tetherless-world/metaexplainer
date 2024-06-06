@@ -1,0 +1,6 @@
+,28
+Question,How has the distribution of BMI values influenced the classification of Diabetes prediction outcomes?
+Machine interpretation,"Predict(BMI, Diabetes)"
+Action,['Predict']
+Feature groups,"[{'BMI': '', 'Diabetes': ''}]"
+Explanation type,Data Explanation

@@ -1,0 +1,6 @@
+,51
+Question,How did the model justify predicting Diabetes for a 60-year-old female with a BMI of 21 and a Diabetes Pedigree Function of 0.25?
+Machine interpretation,"How did the DiabetesPredictionModel rationalize the prediction of Diabetes for Patient(age=60, sex=Female, BMI=21, DiabetesPedigreeFunction=0.25)?"
+Action,['Patient']
+Feature groups,"[{'Age': '60', 'Sex': 'Female', 'BMI': '21', 'DiabetesPedigreeFunction': '0.25'}]"
+Explanation type,Rationale Explanation

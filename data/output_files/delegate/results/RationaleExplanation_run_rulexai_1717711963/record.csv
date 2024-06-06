@@ -1,0 +1,6 @@
+,174
+Question,What significance does the Diabetes Pedigree Function hold in the feature importance ranking for Diabetes prediction?
+Machine interpretation,What is the role of Diabetes Pedigree Function in the ML model for Diabetes prediction?
+Action,
+Feature groups,[{'DiabetesPedigreeFunction': ''}]
+Explanation type,Rationale Explanation

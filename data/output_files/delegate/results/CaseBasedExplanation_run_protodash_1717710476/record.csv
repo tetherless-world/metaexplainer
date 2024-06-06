@@ -1,0 +1,6 @@
+,49
+Question,How has the BMI distribution been utilized to improve the accuracy of the Diabetes prediction model?
+Machine interpretation,Feature_importance(BMI) and Accuracy_Improvement(Diabetes Prediction)
+Action,"['Accuracy_Improvement', 'Feature_importance']"
+Feature groups,"[{'BMI': ''}, {'Diabetes Prediction': ''}]"
+Explanation type,Case Based Explanation

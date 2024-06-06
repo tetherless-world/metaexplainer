@@ -1,0 +1,6 @@
+,164
+Question,Why rely on the patient's sex as a key factor in predicting Diabetes instead of their BMI?
+Machine interpretation,Why Sex(p) and not BMI(p) for Diabetes prediction?
+Action,
+Feature groups,"[{'Pregnancies': ''}, {'Pregnancies': ''}]"
+Explanation type,Contrastive Explanation

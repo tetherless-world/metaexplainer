@@ -1,0 +1,6 @@
+,163
+Question,Would the likelihood of Diabetes change if the patient's Diabetes Pedigree Function was 0.3 instead of 0.1?
+Machine interpretation,"If DiabetesPedigreeFunction(patient, 0.3) and not DiabetesPedigreeFunction(patient, 0.1) -> Diabetes LikelihoodChange(patient)"
+Action,['LikelihoodChange']
+Feature groups,"[{'DiabetesPedigreeFunction': '0.3'}, {'DiabetesPedigreeFunction': '0.1'}, {'patient': ''}]"
+Explanation type,Counterfactual Explanation

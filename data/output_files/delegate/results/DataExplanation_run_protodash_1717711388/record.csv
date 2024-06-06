@@ -1,0 +1,6 @@
+,104
+Question,How has the age feature been preprocessed before being used in the ML model for Diabetes prediction?
+Machine interpretation,Preprocessing_steps(Age)
+Action,['Preprocessing_steps']
+Feature groups,[{'Age': ''}]
+Explanation type,Data Explanation

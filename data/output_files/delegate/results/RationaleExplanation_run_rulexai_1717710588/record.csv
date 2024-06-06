@@ -1,0 +1,6 @@
+,60
+Question,What features led the model to predict that a 65-year-old female with a BMI of 26 and a Diabetes Pedigree Function of 0.2 has Diabetes?
+Machine interpretation,"Predict(feature_values(age=65, sex=Female, bmi=26, Diabetes Pedigree Function=0.2, Diabetes = ?) -> Diabetes"
+Action,['feature_values']
+Feature groups,"[{'Age': '65', 'Sex': 'Female', 'BMI': '26', 'Diabetes Pedigree Function': '0.2', 'Diabetes': '?'}]"
+Explanation type,Rationale Explanation

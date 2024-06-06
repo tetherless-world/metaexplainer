@@ -1,0 +1,6 @@
+,167
+Question,What is the impact of BMI values on the prediction of Diabetes in different age groups?
+Machine interpretation,"Impact(BMI, Diabetes, Age)"
+Action,['Impact']
+Feature groups,"[{'BMI': '', 'Diabetes': '', 'Age': ''}]"
+Explanation type,Case Based Explanation

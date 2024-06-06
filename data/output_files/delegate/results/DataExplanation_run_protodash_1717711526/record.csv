@@ -1,0 +1,6 @@
+,123
+Question,What BMI values are commonly associated with accurate Diabetes predictions in similar cases?
+Machine interpretation,What BMI values have a high correlation with accurate Diabetes predictions in cases with similar  features?
+Action,
+Feature groups,[{'BMI': ''}]
+Explanation type,Data Explanation

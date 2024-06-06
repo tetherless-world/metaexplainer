@@ -1,0 +1,6 @@
+,93
+Question,What patterns have been observed in the relationship between BMI and Diabetes Pedigree Function for predicting Diabetes?
+Machine interpretation,"Correlation(BMI, DPF) and Pattern(BMI, DPF, Diabetes)"
+Action,"['Pattern', 'Correlation']"
+Feature groups,"[{'BMI': '', 'DiabetesPedigreeFunction': ''}, {'BMI': '', 'DiabetesPedigreeFunction': '', 'Diabetes': ''}]"
+Explanation type,Data Explanation

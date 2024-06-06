@@ -1,0 +1,6 @@
+,140
+Question,How do the predictions for Diabetes change for patients with a Diabetes Pedigree Function of 0.4 as they age from 60 to 70 years old?
+Machine interpretation,How do Diabetes predictions vary for patients with DPF = 0.4 and age = 60 and age = 70?
+Action,
+Feature groups,[{'How do Diabetes predictions vary for patients with DPF': '0.4 and age'}]
+Explanation type,Counterfactual Explanation

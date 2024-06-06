@@ -1,0 +1,6 @@
+,148
+Question,In what way has the Sex feature been incorporated into the ML model for Diabetes prediction?
+Machine interpretation,Feature_importance(Sex)
+Action,['Feature_importance']
+Feature groups,[{'Sex': ''}]
+Explanation type,Data Explanation

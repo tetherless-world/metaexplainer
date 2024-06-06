@@ -1,0 +1,6 @@
+,105
+Question,How does the BMI distribution vary among patients with and without Diabetes?
+Machine interpretation,How does BMI correlate with Diabetes status?
+Action,
+Feature groups,[{'BMI': ''}]
+Explanation type,Data Explanation

@@ -1,0 +1,6 @@
+,117
+Question,What insights can be gained by comparing the BMI values of diabetic and non-diabetic patients?
+Machine interpretation,What are the BMI differences between patients with and without diabetes?
+Action,
+Feature groups,[{'BMI': ''}]
+Explanation type,Data Explanation

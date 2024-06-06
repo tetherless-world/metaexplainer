@@ -1,0 +1,6 @@
+,195
+Question,In what instances from the training data are high BMI values indicative of a higher likelihood of Diabetes prediction?
+Machine interpretation,Instances(BMI = high) and Diabetes prediction = high
+Action,['Instances']
+Feature groups,"[{'BMI': 'high'}, {'() and Diabetes prediction': 'high'}]"
+Explanation type,Counterfactual Explanation

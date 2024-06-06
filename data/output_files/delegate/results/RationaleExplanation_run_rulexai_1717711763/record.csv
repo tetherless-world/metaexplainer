@@ -1,0 +1,6 @@
+,150
+Question,How have different gender groups been compared in terms of their susceptibility to Diabetes prediction?
+Machine interpretation,"Correlation(Sex, Diabetes)"
+Action,['Correlation']
+Feature groups,"[{'Sex': '', 'Diabetes': ''}]"
+Explanation type,Rationale Explanation

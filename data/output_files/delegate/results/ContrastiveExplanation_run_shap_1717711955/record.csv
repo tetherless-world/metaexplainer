@@ -1,0 +1,6 @@
+,169
+Question,Why consider a patient's BMI range of 18-22 for Diabetes prediction rather than 25-30?
+Machine interpretation,"Why consider BMI(range = 18 - 22, Diabetes = low) for prediction rather than BMI(range = 25 - 30, Diabetes = low)?"
+Action,
+Feature groups,"[{'range': '18 - 22', 'Diabetes': 'low'}, {'range': '25 - 30', 'Diabetes': 'low'}]"
+Explanation type,Contrastive Explanation

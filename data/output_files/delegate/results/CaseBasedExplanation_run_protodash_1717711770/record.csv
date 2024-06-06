@@ -1,0 +1,6 @@
+,160
+Question,Which combinations of features have shown consistent predictions for Diabetes across different age groups?
+Machine interpretation,"Predict(Diabetes,  combination of Diabetes_pediatric = low, Diabetes_pediatric = high, Age = young)"
+Action,['Predict']
+Feature groups,"[{'Diabetes': '', 'combination of Diabetes_pediatric': 'low', 'Diabetes_pediatric': 'high', 'Age': 'young'}]"
+Explanation type,Case Based Explanation

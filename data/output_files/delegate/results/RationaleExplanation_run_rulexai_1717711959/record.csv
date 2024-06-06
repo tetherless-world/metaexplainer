@@ -1,0 +1,6 @@
+,173
+Question,What influenced the model to predict that a 65-year-old male with a BMI of 18 and a Diabetes Pedigree Function of 0.15 does not have Diabetes?
+Machine interpretation,"Influenced(Prediction(Diabetes = no, Age = 65, Sex = Male, BMI = 18, DiabetesPedigreeFunction = 0.15))?"
+Action,['Prediction']
+Feature groups,"[{'Diabetes': 'no', 'Age': '65', 'Sex': 'Male', 'BMI': '18', 'DiabetesPedigreeFunction': '0.15'}]"
+Explanation type,Rationale Explanation

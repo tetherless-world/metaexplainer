@@ -1,0 +1,6 @@
+,0
+Question,How do the BMI values of male and female patients differ in relation to accurate Diabetes prediction?
+Machine interpretation,How do the BMI values of (Male) and (Female) patients vary in relation to accurate (Diabetes) prediction?
+Action,"['of', 'and', 'accurate']"
+Feature groups,"[{'Male': ''}, {'Female': ''}, {'Diabetes': ''}]"
+Explanation type,Data Explanation

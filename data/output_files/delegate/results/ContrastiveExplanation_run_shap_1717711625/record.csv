@@ -1,0 +1,6 @@
+,126
+Question,Why focus on the BMI range of 22-27 for determining Diabetes risk instead of 28-30?
+Machine interpretation,Why(BMI) and what(BMI range) instances (22-27 and 28-30)?
+Action,"['Why', 'instances', 'what']"
+Feature groups,"[{'BMI': ''}, {'BMI': ''}, {'22-27 and 28-30': ''}]"
+Explanation type,Contrastive Explanation

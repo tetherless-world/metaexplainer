@@ -1,0 +1,6 @@
+,205
+Question,What trends can be observed in the Diabetes Pedigree Function values of patients with different BMI ranges?
+Machine interpretation,"Trend_analysis(DPF, BMI)"
+Action,['Trend_analysis']
+Feature groups,"[{'DiabetesPedigreeFunction': '', 'BMI': ''}]"
+Explanation type,Data Explanation

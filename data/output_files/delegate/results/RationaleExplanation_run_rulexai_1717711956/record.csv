@@ -1,0 +1,6 @@
+,170
+Question,How did the model justify predicting Diabetes for a 45-year-old male with a BMI of 27 and a Diabetes Pedigree Function of 0.2?
+Machine interpretation,"Predict(Diabetes, Age = 45, Sex = Male, BMI = 27, DPF = 0.2)"
+Action,['Predict']
+Feature groups,"[{'Diabetes': '', 'Age': '45', 'Sex': 'Male', 'BMI': '27', 'DiabetesPedigreeFunction': '0.2'}]"
+Explanation type,Rationale Explanation

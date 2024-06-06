@@ -1,0 +1,5 @@
+,Rules
+0,"IF Glucose = <148.0, inf) THEN label = {1}"
+1,"IF Glucose = <112.0, inf) AND Pregnancies = (-inf, 8.0) THEN label = {1}"
+2,"IF Glucose = (-inf, 112.0) THEN label = {0}"
+3,"IF Pregnancies = <5.5, inf) THEN label = {0}"

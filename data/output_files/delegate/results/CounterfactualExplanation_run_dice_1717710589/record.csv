@@ -1,0 +1,6 @@
+,61
+Question,In what instances has the recommendation for Diabetes prediction been challenging to apply due to varying BMI values?
+Machine interpretation,Instances(BMI) where recommendation for Diabetes prediction is challenging to apply due to varying values.
+Action,['Instances']
+Feature groups,[{'BMI': ''}]
+Explanation type,Counterfactual Explanation

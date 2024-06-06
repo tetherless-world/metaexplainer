@@ -1,0 +1,6 @@
+,108
+Question,Are there specific BMI ranges where the prediction for Diabetes tends to be more accurate?
+Machine interpretation,Predict(BMI) and Accuracy(Diabetes)
+Action,"['Predict', 'Accuracy']"
+Feature groups,"[{'BMI': ''}, {'Diabetes': ''}]"
+Explanation type,Contrastive Explanation

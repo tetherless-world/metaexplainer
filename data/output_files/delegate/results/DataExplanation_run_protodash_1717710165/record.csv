@@ -1,0 +1,6 @@
+,32
+Question,How has the age feature been preprocessed before being used in the Diabetes prediction model?
+Machine interpretation,Preprocessing_steps(Age) -> Data_Transformation(Age)
+Action,"['Preprocessing_steps', 'Data_Transformation']"
+Feature groups,"[{'Age': ''}, {'Age': ''}]"
+Explanation type,Data Explanation

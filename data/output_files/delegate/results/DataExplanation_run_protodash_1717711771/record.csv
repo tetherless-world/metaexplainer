@@ -1,0 +1,6 @@
+,161
+Question,What is the distribution of ages in the dataset and how does it relate to the likelihood of Diabetes prediction?
+Machine interpretation,"Correlation(Age, Diabetes) and  Variation(Age, Diabetes,  low = < 30, medium = 30 - 60, high = > 60)"
+Action,"['Variation', 'Correlation']"
+Feature groups,"[{'Age': '', 'Diabetes': ''}, {'Age': '', 'Diabetes': '', 'low': '< 30', 'medium': '30 - 60', 'high': '> 60'}, {'() and  (': '', 'low': '< 30', 'medium': '30 - 60', 'high': '> 60)'}]"
+Explanation type,Data Explanation

@@ -1,0 +1,6 @@
+,155
+Question,How have different age groups been segmented to analyze the risk of Diabetes prediction?
+Machine interpretation,Preprocessing(Age)
+Action,['Preprocessing']
+Feature groups,[{'Age': ''}]
+Explanation type,Data Explanation

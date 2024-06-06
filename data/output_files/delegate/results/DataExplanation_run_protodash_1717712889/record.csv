@@ -1,0 +1,6 @@
+,212
+Question,How have the Diabetes Pedigree Function values been normalized for training the ML model?
+Machine interpretation,Preprocessing(Diabetes Pedigree Function)
+Action,['Preprocessing']
+Feature groups,[{'Diabetes Pedigree Function': ''}]
+Explanation type,Data Explanation

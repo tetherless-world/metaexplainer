@@ -1,0 +1,6 @@
+,72
+Question,In what way has the Diabetes Pedigree Function been used to identify genetic predisposition to Diabetes prediction?
+Machine interpretation,Question:  In what way has the Diabetes Pedigree Function been used to identify genetic predisposition to Diabetes prediction?
+Action,
+Feature groups,[{'DiabetesPedigreeFunction': ''}]
+Explanation type,Data Explanation

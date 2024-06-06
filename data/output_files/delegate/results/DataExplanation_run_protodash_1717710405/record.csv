@@ -1,0 +1,6 @@
+,42
+Question,How has the distribution of BMI values been leveraged to create BMI-specific risk profiles for Diabetes prediction?
+Machine interpretation,How has the BMI feature been utilized to create risk profiles for Diabetes prediction based on BMI values?
+Action,
+Feature groups,[{'BMI': ''}]
+Explanation type,Data Explanation

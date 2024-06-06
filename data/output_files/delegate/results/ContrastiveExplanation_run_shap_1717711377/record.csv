@@ -1,0 +1,6 @@
+,99
+Question,What impact does the BMI feature scaling have on the ML model's performance in predicting Diabetes?
+Machine interpretation,What effect does the BMI feature undergo on its way to influencing the Diabetes prediction outcome?
+Action,
+Feature groups,[{'BMI': ''}]
+Explanation type,Contrastive Explanation

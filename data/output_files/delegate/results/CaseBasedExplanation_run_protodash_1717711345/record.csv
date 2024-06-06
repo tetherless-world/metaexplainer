@@ -1,0 +1,6 @@
+,96
+Question,What are the typical age ranges where the recommendation for Diabetes prediction is most applicable?
+Machine interpretation,"Explanation type:  Case Based Explanation,  Action:  Provide recommendation for Diabetes prediction in age range (25-35),  Target variable:  Diabetes prediction (low likelihood)."
+Action,"['prediction', 'range']"
+Feature groups,"[{'25-35': ''}, {'low likelihood': ''}]"
+Explanation type,Case Based Explanation

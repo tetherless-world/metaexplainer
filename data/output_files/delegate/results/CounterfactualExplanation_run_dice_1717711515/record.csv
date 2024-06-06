@@ -1,0 +1,6 @@
+,110
+Question,"What if the patient's age was 70 and had a high Diabetes Pedigree Function of 0.4, would the prediction of Diabetes be more accurate?"
+Machine interpretation,"If Age(patient, 70) and Diabetes Pedigree Function(patient, 0.4) -> Diabetes(Patient)"
+Action,"['Diabetes', 'Function']"
+Feature groups,"[{'Age': '70'}, {'patient': '0.4'}, {'Patient': ''}]"
+Explanation type,Counterfactual Explanation

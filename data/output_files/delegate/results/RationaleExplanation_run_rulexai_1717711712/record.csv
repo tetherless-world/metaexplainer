@@ -1,0 +1,6 @@
+,141
+Question,Why did the model determine that a 40-year-old female with a BMI of 30 and a Diabetes Pedigree Function of 0.1 is unlikely to have Diabetes?
+Machine interpretation,"Why did the model conclude that a patient with (Age = 40, Sex = Female, BMI = 30, Diabetes Pedigree Function = 0.1, Diabetes = no) is unlikely to have Diabetes?"
+Action,['with']
+Feature groups,"[{'Age': '40', 'Sex': 'Female', 'BMI': '30', 'Diabetes Pedigree Function': '0.1', 'Diabetes': 'no'}]"
+Explanation type,Rationale Explanation

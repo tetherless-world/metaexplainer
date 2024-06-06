@@ -1,0 +1,6 @@
+,207
+Question,What is the distribution of ages in the dataset and how does it relate to the likelihood of Diabetes prediction?
+Machine interpretation,"What is the age distribution in the dataset, and how does it correlate with the Diabetes prediction outcome?"
+Action,
+Feature groups,[{'Age': ''}]
+Explanation type,Data Explanation

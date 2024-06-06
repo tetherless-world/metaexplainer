@@ -1,0 +1,8 @@
+,Rules
+0,"IF Glucose = (-inf, 131.5) THEN label = {0}"
+1,"IF BMI = <32.7, inf) THEN label = {0}"
+2,"IF Pregnancies = (-inf, 0.5) THEN label = {0}"
+3,"IF DiabetesPedigreeFunction = <0.65, inf) THEN label = {0}"
+4,"IF Glucose = <180.0, inf) THEN label = {1}"
+5,"IF BloodPressure = (-inf, 93.5) AND Glucose = <144.0, inf) THEN label = {1}"
+6,"IF Glucose = <131.5, inf) AND SkinThickness = (-inf, 24.5) THEN label = {1}"

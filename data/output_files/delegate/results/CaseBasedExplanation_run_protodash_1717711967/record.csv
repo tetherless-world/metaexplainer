@@ -1,0 +1,6 @@
+,176
+Question,How do different combinations of BMI and Diabetes Pedigree Function values influence the Diabetes prediction outcome?
+Machine interpretation,"Preprocessing(BMI, DPF) -> Diabetes Prediction"
+Action,['Preprocessing']
+Feature groups,"[{'BMI': '', 'DiabetesPedigreeFunction': ''}]"
+Explanation type,Case Based Explanation

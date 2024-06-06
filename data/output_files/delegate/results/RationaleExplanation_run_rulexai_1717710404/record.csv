@@ -1,0 +1,6 @@
+,41
+Question,To what extent does the Diabetes Pedigree Function value affect the likelihood of Diabetes prediction in the training data instances?
+Machine interpretation,"Filter(DPF, Diabetes)"
+Action,['Filter']
+Feature groups,"[{'DiabetesPedigreeFunction': '', 'Diabetes': ''}]"
+Explanation type,Rationale Explanation

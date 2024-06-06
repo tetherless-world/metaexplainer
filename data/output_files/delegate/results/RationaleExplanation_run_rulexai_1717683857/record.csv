@@ -1,0 +1,6 @@
+,21
+Question,What broader information about the current situation prompted the suggestion of this recommendation for a 65-year-old female with a BMI of 26 and a Diabetes Pedigree Function of 0.12?
+Machine interpretation,"Prompted(Suggestion(Rationale(BMI = 26, Diabetes Pedigree Function = 0.12, Age = 65, Sex = Female)))"
+Action,"['Rationale', 'Prompted', 'Suggestion']"
+Feature groups,"[{'BMI': '26', 'Diabetes Pedigree Function': '0.12', 'Age': '65', 'Sex': 'Female'}]"
+Explanation type,Rationale Explanation
