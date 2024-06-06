@@ -183,13 +183,20 @@ if __name__=='__main__':
 
 	decompose_parses = load_parses(mode=mode)
 
-	sample_record = decompose_parses.iloc[random.randrange(0, len(decompose_parses))]
-	
-	#need to make this run in a loop to run across all parses 
-	(subsets, action_list, explainer_method, explanation_type) = retrieve_sample_decompose_passes(sample_record, domain_dataset)
+	len_parses = len(decompose_parses)
 
-	# explainer_method = get_corresponding_explainer()
-	(method_results, evaluations) = run_and_evaluate_explainer(domain_dataset, model_details, subsets, action_list, explainer_method)
+	print('Length of parses to run ', len_parses)
 
-	save_results(sample_record, subsets, method_results, evaluations, explainer_method, explanation_type)
+	for i in range(0, len_parses):
+		sample_record = decompose_parses.iloc[i]
+		
+		#need to make this run in a loop to run across all parses 
+		(subsets, action_list, explainer_method, explanation_type) = retrieve_sample_decompose_passes(sample_record, domain_dataset)
+
+		# explainer_method = get_corresponding_explainer()
+		(method_results, evaluations) = run_and_evaluate_explainer(domain_dataset, model_details, subsets, action_list, explainer_method)
+
+		save_results(sample_record, subsets, method_results, evaluations, explainer_method, explanation_type)
+
+		print('Finished delegate for record ', str(i), ' of ', str(len_parses))
 

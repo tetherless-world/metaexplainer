@@ -93,8 +93,13 @@ class TabularExplainers():
 		# delete 1st column (sequence numbers)
 		original = original[:, 1:]
 
+		n_cases = 10
+
+		if len(original) <= 10:
+			n_cases = 5
+
 		protodash_explainer = ProtodashExplainer()
-		(W, S, _) = protodash_explainer.explain(original, original, m=10)
+		(W, S, _) = protodash_explainer.explain(original, original, m=n_cases)
 
 		inc_prototypes = self.dataset.iloc[S, :].copy()
 		inc_prototypes = metaexplainer_utils.drop_unnamed_cols(inc_prototypes)
