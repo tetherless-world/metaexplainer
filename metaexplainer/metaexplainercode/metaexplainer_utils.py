@@ -112,6 +112,17 @@ def read_delegate_parsed_instruction_file(file_name):
 	return parses
 
 
+def load_delegate_parses(domain_name, mode='generated', usable=True):
+	parse_file = codeconstants.DELEGATE_FOLDER + domain_name + '_parsed_' + mode + '_delegate_instructions.txt'
+
+	if not usable:
+		parse_file = codeconstants.DELEGATE_FOLDER + '/unusable/' + domain_name + '_parsed_' + mode + '_delegate_instructions.txt'
+
+	parses = read_delegate_parsed_instruction_file(parse_file)
+	parses_df = pd.DataFrame(parses)
+
+	return parses_df
+
 def load_selected_explanation_types():
 	loaded_explanations = [x.strip() for x in open(codeconstants.EXPLANATIONS_LOADED_FROM_EO, 'r').readlines()]
 	return loaded_explanations

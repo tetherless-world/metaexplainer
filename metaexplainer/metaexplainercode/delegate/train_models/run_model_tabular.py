@@ -290,7 +290,7 @@ if __name__ == '__main__':
 
 		model_output[mod_num] = (model, mod_classification_report)
 
-	#print(model_output)
+	print(model_output)
 	model_output_print = get_best_model(model_output, 0)
 	print('Testing proba ', model_output_print[1].predict_proba)
 	print(model_output_print[0])

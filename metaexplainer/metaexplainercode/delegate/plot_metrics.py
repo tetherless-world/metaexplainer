@@ -18,10 +18,22 @@ def read_records_df(record_path):
     df.drop(0,inplace=True)
     return df
 
-if __name__=='__main__':
-    '''
-    Read evaluation files from different folders and add to corresponding: explanation type, explainer method, metric, value dataframe 
-    '''
+def evaluate_parses(domain_name, mode='generated'):
+    decompose_parses = metaexplainer_utils.load_delegate_parses(domain_name, mode=mode)
+
+    print('Reporting parse stats for mode ', mode)
+
+    print('Usable passes ', len(decompose_parses))
+
+    print('Number of explanation types ', decompose_parses['Explanation type'].value_counts())
+
+    unusable_parses = metaexplainer_utils.load_delegate_parses(domain_name, mode=mode,usable=False)
+
+    print('Length of unusable passes ', len(unusable_parses))
+
+
+
+def plot_explainer_results():
     delegate_results_folder = codeconstants.DELEGATE_FOLDER + '/results/'
     overall_evals = []
 
@@ -59,6 +71,18 @@ if __name__=='__main__':
     print(grouped_mean)
     
     overall_evals_df.to_csv(codeconstants.DELEGATE_FOLDER + '/Overall_evaluations.csv')
+
+if __name__=='__main__':
+    '''
+    Read evaluation files from different folders and add to corresponding: explanation type, explainer method, metric, value dataframe 
+    '''
+    domain_name = 'Diabetes'
+    #plot_explainer_results()
+
+    evaluate_parses(domain_name, mode='generated')
+
+    evaluate_parses(domain_name, mode='fine-tuned')
+    
 
 
 

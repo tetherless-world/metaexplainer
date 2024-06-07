@@ -29,16 +29,6 @@ from metaexplainercode.delegate.evaluate_explainers import EvaluateExplainer
 
 import random
 
-
-
-def load_parses(mode='fine-tuned'):
-	parse_file = codeconstants.DELEGATE_FOLDER + domain_name + '_parsed_' + mode + '_delegate_instructions.txt'
-
-	parses = metaexplainer_utils.read_delegate_parsed_instruction_file(parse_file)
-	parses_df = pd.DataFrame(parses)
-
-	return parses_df
-
 def retrieve_sample_decompose_passes(sample_record, dataset):
 	'''
 	Read from delegate output folder, if not running the method in real-time
@@ -181,7 +171,7 @@ if __name__=='__main__':
 				  'transformations': transformations,
 				  'results': method_results}
 
-	decompose_parses = load_parses(mode=mode)
+	decompose_parses = metaexplainer_utils.load_delegate_parses(domain_name, mode=mode)
 
 	len_parses = len(decompose_parses)
 
