@@ -1,0 +1,6 @@
+,261
+Question,What factors led to the model predicting that a 60-year-old female with a BMI of 29 and a Diabetes Pedigree Function of 0.2 has Diabetes?
+Machine interpretation,"What factors contributed to the model predicting that a patient with ( age=60, sex=Female, BMI=29, Diabetes Pedigree Function=0.2, Diabetes = high) has Diabetes?"
+Action,['with']
+Feature groups,"[{'Age': '60', 'Sex': 'Female', 'BMI': '29', 'Diabetes Pedigree Function': '0.2', 'Diabetes': 'high'}]"
+Explanation type,Rationale Explanation

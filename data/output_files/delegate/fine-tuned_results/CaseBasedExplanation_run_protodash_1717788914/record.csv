@@ -1,0 +1,6 @@
+,164
+Question,How does gender impact the accuracy of Diabetes prediction in different scenarios?
+Machine interpretation,Filter(Sex)
+Action,['Filter']
+Feature groups,[{'Sex': ''}]
+Explanation type,Case Based Explanation

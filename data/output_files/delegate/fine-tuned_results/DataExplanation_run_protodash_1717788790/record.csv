@@ -1,0 +1,6 @@
+,28
+Question,What role does gender play in the feature selection process for predicting Diabetes?
+Machine interpretation,Feature_importance(Sex)
+Action,['Feature_importance']
+Feature groups,[{'Sex': ''}]
+Explanation type,Data Explanation

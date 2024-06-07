@@ -1,0 +1,6 @@
+,119
+Question,"What if the patient's age was 60, BMI was 22, and Diabetes Pedigree Function was 0.2? Would the Diabetes prediction differ from the current one?"
+Machine interpretation,"If Age(patient, 60) ∧ BMI(patient, 22) ∧ DPFunc(patient, 0.2), then P(Diabetes) changes."
+Action,['DPFunc']
+Feature groups,"[{'Age': '60'}, {'BMI': '22'}, {'patient': '0.2'}, {'Diabetes': ''}]"
+Explanation type,Counterfactual Explanation

@@ -1,0 +1,6 @@
+,16
+Question,What role does feature selection play in determining the importance of the BMI feature in the ML model for Diabetes prediction?
+Machine interpretation,PCA(BMI)
+Action,['PCA']
+Feature groups,[{'BMI': ''}]
+Explanation type,Data Explanation

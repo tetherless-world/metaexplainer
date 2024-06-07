@@ -1,0 +1,6 @@
+,Pregnancies,Glucose,BloodPressure,SkinThickness,Insulin,BMI,DiabetesPedigreeFunction,Age,Outcome,Sex,Weights of Prototypes
+6,3,78,50,32,88.0,31.0,0.248,26,1,Female,0.58
+3,1,89,66,23,94.0,28.1,0.167,21,0,Female,0.17
+2,8,183,64,23,30.5,23.3,0.672,32,1,Female,0.14
+1,1,85,66,29,30.5,26.6,0.351,31,0,Female,0.07
+7,10,115,72,23,30.5,35.3,0.134,29,0,Female,0.04

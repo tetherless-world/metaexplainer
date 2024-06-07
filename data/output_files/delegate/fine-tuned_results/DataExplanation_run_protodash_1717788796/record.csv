@@ -1,0 +1,6 @@
+,43
+Question,How has the BMI distribution been utilized to improve the accuracy of the Diabetes prediction model?
+Machine interpretation,"Correlation(BMI, Diabetes = Accurate)"
+Action,['Correlation']
+Feature groups,"[{'BMI': '', 'Diabetes': 'Accurate'}]"
+Explanation type,Data Explanation

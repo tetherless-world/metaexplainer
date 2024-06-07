@@ -1,0 +1,6 @@
+,199
+Question,What role does the interaction between sex and BMI values play in determining the accuracy of Diabetes predictions?
+Machine interpretation,"Filter(Sex, BMI, Diabetes = accuracy)"
+Action,['Filter']
+Feature groups,"[{'Sex': '', 'BMI': '', 'Diabetes': 'accuracy'}]"
+Explanation type,Case Based Explanation

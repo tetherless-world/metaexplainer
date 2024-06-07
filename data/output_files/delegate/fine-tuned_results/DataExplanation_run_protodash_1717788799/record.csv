@@ -1,0 +1,6 @@
+,49
+Question,How have age and Diabetes Pedigree Function values been combined to enhance the accuracy of the Diabetes prediction model?
+Machine interpretation,Summary(BMI) and Filter(Age)
+Action,"['Filter', 'Summary']"
+Feature groups,"[{'BMI': ''}, {'Age': ''}]"
+Explanation type,Data Explanation

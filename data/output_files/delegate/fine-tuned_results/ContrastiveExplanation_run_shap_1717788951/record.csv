@@ -1,0 +1,6 @@
+,206
+Question,"Why consider a high BMI of 28 as a significant factor for predicting Diabetes in a 60-year-old male with a Diabetes Pedigree Function of 0.2, rather than focusing on a low BMI of 20 in a 30-year-old female with a Diabetes Pedigree Function of 0.1?"
+Machine interpretation,"Predict(BMI = 28, Age = 60, Sex = Male, DPF = 0.2) over Predict(BMI = 20, Age = 30, Sex = Female, DPF = 0.1)"
+Action,['Predict']
+Feature groups,"[{'BMI': '28', 'Age': '60', 'Sex': 'Male', 'DiabetesPedigreeFunction': '0.2'}, {'BMI': '20', 'Age': '30', 'Sex': 'Female', 'DiabetesPedigreeFunction': '0.1'}]"
+Explanation type,Contrastive Explanation

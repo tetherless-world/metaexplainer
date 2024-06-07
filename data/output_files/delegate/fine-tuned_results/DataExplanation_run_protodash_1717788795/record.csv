@@ -1,0 +1,6 @@
+,40
+Question,What is the distribution of ages in the dataset and how does it relate to the likelihood of Diabetes prediction?
+Machine interpretation,Summary(Age)
+Action,['Summary']
+Feature groups,[{'Age': ''}]
+Explanation type,Data Explanation

@@ -1,0 +1,6 @@
+,175
+Question,How do different combinations of age and Diabetes Pedigree Function values impact the Diabetes prediction outcome?
+Machine interpretation,"Filter(Age, DPF)"
+Action,['Filter']
+Feature groups,"[{'Age': '', 'DiabetesPedigreeFunction': ''}]"
+Explanation type,Case Based Explanation

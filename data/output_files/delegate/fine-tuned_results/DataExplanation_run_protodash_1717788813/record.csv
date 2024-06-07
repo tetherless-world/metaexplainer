@@ -1,0 +1,6 @@
+,79
+Question,How has the BMI feature been selected and weighted in the ML model for Diabetes prediction?
+Machine interpretation,Preprocessing_steps(BMI) and Feature_importance(BMI)
+Action,"['Feature_importance', 'Preprocessing_steps']"
+Feature groups,"[{'BMI': ''}, {'BMI': ''}]"
+Explanation type,Data Explanation

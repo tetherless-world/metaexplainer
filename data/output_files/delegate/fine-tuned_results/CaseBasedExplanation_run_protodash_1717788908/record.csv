@@ -1,0 +1,6 @@
+,151
+Question,How do the predictions for Diabetes change for patients with a Diabetes Pedigree Function of 0.1 as they age from 50 to 70 years old?
+Machine interpretation,"How do the Diabetes predictions change for patients with (Diabetes Pedigree Function = 0.1, Age = 50) and (Diabetes Pedigree Function = 0.1, Age = 70)?"
+Action,"['with', 'and']"
+Feature groups,"[{'Diabetes Pedigree Function': '0.1', 'Age': '50'}, {'Diabetes Pedigree Function': '0.1', 'Age': '70'}]"
+Explanation type,Case Based Explanation

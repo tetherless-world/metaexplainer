@@ -1,0 +1,6 @@
+,221
+Question,Why consider a patient's age range of 50-60 for Diabetes prediction rather than 30-40?
+Machine interpretation,Predict(Age = 50 - 60) and Predict(Age = 30 - 40)
+Action,['Predict']
+Feature groups,"[{'Age': '50 - 60'}, {'Age': '30 - 40'}]"
+Explanation type,Contrastive Explanation

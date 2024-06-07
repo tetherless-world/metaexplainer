@@ -1,0 +1,6 @@
+,118
+Question,"If the patient was male instead of female, would the likelihood of having Diabetes be affected?"
+Machine interpretation,"If Sex(patient, Male) ∧ ¬Sex(patient, Female), then P(Diabetes) changes."
+Action,
+Feature groups,"[{'Male': '', 'Sex': ''}, {'Female': '', 'Sex': ''}, {'Diabetes': ''}]"
+Explanation type,Counterfactual Explanation

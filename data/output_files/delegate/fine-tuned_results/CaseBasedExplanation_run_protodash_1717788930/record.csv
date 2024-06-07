@@ -1,0 +1,6 @@
+,195
+Question,How do the BMI values of male and female patients differ in relation to accurate Diabetes prediction?
+Machine interpretation,"Filter(BMI, Sex = Female, Diabetes = accurate) and Filter(BMI, Sex = Male, Diabetes = accurate)"
+Action,['Filter']
+Feature groups,"[{'BMI': '', 'Sex': 'Female', 'Diabetes': 'accurate'}, {'BMI': '', 'Sex': 'Male', 'Diabetes': 'accurate'}]"
+Explanation type,Case Based Explanation

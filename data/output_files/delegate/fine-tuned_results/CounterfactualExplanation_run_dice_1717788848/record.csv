@@ -1,0 +1,6 @@
+,122
+Question,How would the Diabetes prediction change if the patient had a Diabetes Pedigree Function of 0.5 instead of 0.3?
+Machine interpretation,"If DP_Function(patient, 0.5) and not If DP_Function(patient, 0.3)-> Diabetes_Prediction(patient, ?)"
+Action,"['DP_Function', 'Diabetes_Prediction']"
+Feature groups,"[{'patient': '0.5'}, {'patient': '0.3'}, {'patient': '', '?': ''}]"
+Explanation type,Counterfactual Explanation

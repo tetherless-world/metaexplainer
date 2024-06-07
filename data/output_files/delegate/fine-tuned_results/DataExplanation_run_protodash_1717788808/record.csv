@@ -1,0 +1,6 @@
+,69
+Question,How significant is the relationship between the Diabetes Pedigree Function and the likelihood of Diabetes diagnosis?
+Machine interpretation,"Correlation(DPF, Diabetes = accuracy)"
+Action,['Correlation']
+Feature groups,"[{'DiabetesPedigreeFunction': '', 'Diabetes': 'accuracy'}]"
+Explanation type,Data Explanation

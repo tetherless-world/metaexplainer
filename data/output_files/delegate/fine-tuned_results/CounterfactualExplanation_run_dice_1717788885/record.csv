@@ -1,0 +1,6 @@
+,133
+Question,"If the patient was male instead of female, would the prediction for Diabetes be different?"
+Machine interpretation,"If Sex(patient, Male) and not If Sex(patient, Female)-> Diabetes Prediction Change"
+Action,
+Feature groups,"[{'Male': '', 'Sex': ''}, {'Female': '', 'Sex': ''}]"
+Explanation type,Counterfactual Explanation

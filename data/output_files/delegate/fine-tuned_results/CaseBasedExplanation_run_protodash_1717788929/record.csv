@@ -1,0 +1,6 @@
+,193
+Question,To what extent does age contribute to the variability in Diabetes prediction outcomes?
+Machine interpretation,"Filter(Age, Diabetes = accuracy)"
+Action,['Filter']
+Feature groups,"[{'Age': '', 'Diabetes': 'accuracy'}]"
+Explanation type,Case Based Explanation

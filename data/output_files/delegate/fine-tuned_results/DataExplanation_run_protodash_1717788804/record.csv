@@ -1,0 +1,6 @@
+,60
+Question,What is the distribution of age among patients with and without Diabetes?
+Machine interpretation,"Summary(Age, Diabetes = yes) and Summary(Age, Diabetes = no)"
+Action,['Summary']
+Feature groups,"[{'Age': '', 'Diabetes': 'yes'}, {'Age': '', 'Diabetes': 'no'}]"
+Explanation type,Data Explanation

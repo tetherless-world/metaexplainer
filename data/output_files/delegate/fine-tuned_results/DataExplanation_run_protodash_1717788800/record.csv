@@ -1,0 +1,6 @@
+,52
+Question,What insights can be gained from analyzing the correlation between age and Diabetes Pedigree Function in relation to Diabetes prediction?
+Machine interpretation,"Correlation(Age, DPF)"
+Action,['Correlation']
+Feature groups,"[{'Age': '', 'DiabetesPedigreeFunction': ''}]"
+Explanation type,Data Explanation

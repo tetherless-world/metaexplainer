@@ -1,0 +1,6 @@
+,189
+Question,In what scenarios has the Diabetes Pedigree Function value been a decisive factor in predicting Diabetes accurately?
+Machine interpretation,Filter(DPF) and (Diabetes = accuracy)
+Action,"['Filter', 'and']"
+Feature groups,"[{'DiabetesPedigreeFunction': ''}, {'Diabetes': 'accuracy'}]"
+Explanation type,Case Based Explanation

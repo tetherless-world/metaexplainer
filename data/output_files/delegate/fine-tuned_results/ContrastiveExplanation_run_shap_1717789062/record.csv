@@ -1,0 +1,6 @@
+,209
+Question,"Why rely on a BMI of 24 for predicting Diabetes in a 40-year-old male with a Diabetes Pedigree Function of 0.15, rather than a BMI of 18 in a 50-year-old female with a Diabetes Pedigree Function of 0.3?"
+Machine interpretation,"Rely(BMI) and Predict(BMI = 24, Age = 40, DPF = 15) and Rely(BMI = 18, Age = 50, Sex = Female, DPF = 0.3)"
+Action,"['Predict', 'Rely']"
+Feature groups,"[{'BMI': ''}, {'BMI': '24', 'Age': '40', 'DiabetesPedigreeFunction': '15'}, {'BMI': '18', 'Age': '50', 'Sex': 'Female', 'DiabetesPedigreeFunction': '0.3'}, {'() and (': '24', 'Age': '50', 'DiabetesPedigreeFunction': '0.3)', 'Sex': 'Female'}]"
+Explanation type,Contrastive Explanation

@@ -1,0 +1,6 @@
+,211
+Question,Why use the Diabetes Pedigree Function as a feature over the patient's sex for predicting Diabetes?
+Machine interpretation,Feature_importance(Diabetes Pedigree Function) and Feature_importance(Sex) -> Diabetes Prediction
+Action,['Feature_importance']
+Feature groups,"[{'Diabetes Pedigree Function': ''}, {'Sex': ''}]"
+Explanation type,Contrastive Explanation

@@ -1,0 +1,6 @@
+,178
+Question,Are there specific Diabetes Pedigree Function ranges where the prediction for Diabetes tends to be more reliable?
+Machine interpretation,Filter(DPF)
+Action,['Filter']
+Feature groups,[{'DiabetesPedigreeFunction': ''}]
+Explanation type,Case Based Explanation

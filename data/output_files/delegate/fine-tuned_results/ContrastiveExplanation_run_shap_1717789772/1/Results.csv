@@ -1,0 +1,10 @@
+,col_name,feature_importance_vals
+5,num__Glucose,[0.1058119 0.1058119]
+4,num__BMI,[0.05197333 0.05197333]
+6,num__Age,[0.03881 0.03881]
+7,num__Insulin,[0.01530476 0.01530476]
+2,num__SkinThickness,[0.01466667 0.01466667]
+3,num__Pregnancies,[0.01221476 0.01221476]
+1,num__BloodPressure,[0.0062819 0.0062819]
+0,num__DiabetesPedigreeFunction,[0.00019 0.00019]
+8,cat__Sex_Female,[0. 0.]

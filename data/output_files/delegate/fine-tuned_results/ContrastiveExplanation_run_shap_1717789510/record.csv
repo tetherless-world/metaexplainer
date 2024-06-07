@@ -1,0 +1,6 @@
+,216
+Question,Why emphasize the BMI range of 25-30 in determining Diabetes risk over the Diabetes Pedigree Function?
+Machine interpretation,Predict(BMI = 25 - 30) and Feature_importance(DPF)
+Action,"['Feature_importance', 'Predict']"
+Feature groups,"[{'BMI': '25 - 30'}, {'DiabetesPedigreeFunction': ''}]"
+Explanation type,Contrastive Explanation

@@ -1,0 +1,6 @@
+,188
+Question,How do the BMI values differ between patients with positive and negative Diabetes predictions?
+Machine interpretation,"Filter(BMI, Diabetes = high) and Filter(BMI, Diabetes = low)"
+Action,['Filter']
+Feature groups,"[{'BMI': '', 'Diabetes': 'high'}, {'BMI': '', 'Diabetes': 'low'}]"
+Explanation type,Case Based Explanation

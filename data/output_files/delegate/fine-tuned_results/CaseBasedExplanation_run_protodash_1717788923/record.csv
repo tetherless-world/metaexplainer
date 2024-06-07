@@ -1,0 +1,6 @@
+,184
+Question,How does the combination of age and BMI values affect the likelihood of Diabetes prediction?
+Machine interpretation,"Filter(Age, BMI)"
+Action,['Filter']
+Feature groups,"[{'Age': '', 'BMI': ''}]"
+Explanation type,Case Based Explanation

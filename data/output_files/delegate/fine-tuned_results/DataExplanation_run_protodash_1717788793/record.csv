@@ -1,0 +1,6 @@
+,35
+Question,How has the age distribution been utilized to create age-specific models for Diabetes prediction?
+Machine interpretation,"Summary(Age, Diabetes)"
+Action,['Summary']
+Feature groups,"[{'Age': '', 'Diabetes': ''}]"
+Explanation type,Data Explanation

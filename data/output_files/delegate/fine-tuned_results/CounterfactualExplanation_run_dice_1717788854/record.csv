@@ -1,0 +1,6 @@
+,124
+Question,"What if the patient's BMI was 30 and the Diabetes Pedigree Function was 0.1, would the prediction of Diabetes still be negative?"
+Machine interpretation,"If BMI(patient, 30) AND DP_Function(patient, 0.1) -> Diabetes_Prediction(patient, ?)"
+Action,"['DP_Function', 'Diabetes_Prediction']"
+Feature groups,"[{'BMI': '30'}, {'patient': '0.1'}, {'patient': '', '?': ''}]"
+Explanation type,Counterfactual Explanation

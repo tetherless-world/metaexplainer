@@ -1,0 +1,6 @@
+,136
+Question,Would the prediction for Diabetes change if the patient's Diabetes Pedigree Function was 0.1 instead of 0.2?
+Machine interpretation,"If DPFunc(patient, 0.1) and not If DPFunc(patient, 0.2)-> Diabetes Prediction Change"
+Action,['DPFunc']
+Feature groups,"[{'patient': '0.1'}, {'patient': '0.2'}]"
+Explanation type,Counterfactual Explanation

@@ -1,0 +1,6 @@
+,198
+Question,How does the distribution of age values impact the overall accuracy of Diabetes prediction outcomes?
+Machine interpretation,"Filter(Age, Diabetes = accuracy)"
+Action,['Filter']
+Feature groups,"[{'Age': '', 'Diabetes': 'accuracy'}]"
+Explanation type,Case Based Explanation

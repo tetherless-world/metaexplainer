@@ -1,0 +1,6 @@
+,220
+Question,Why use the patient's sex as a determining factor for Diabetes prediction over their age?
+Machine interpretation,Feature_importance(Age) and Feature_importance(Sex) -> Diabetes Prediction
+Action,['Feature_importance']
+Feature groups,"[{'Age': ''}, {'Sex': ''}]"
+Explanation type,Contrastive Explanation

@@ -1,0 +1,6 @@
+,204
+Question,"Why choose a Diabetes Pedigree Function of 0.2 as a key indicator for predicting Diabetes in a 65-year-old male with a BMI of 24, rather than in a 30-year-old female with a BMI of 18?"
+Machine interpretation,"Predict(Diabetes, Age = 65, Sex = Male, BMI = 24, DPF = 0.2) > Predict(Diabetes, Age = 30, Sex = Female, Age = 18, DPF = 0.2)"
+Action,['Predict']
+Feature groups,"[{'Diabetes': '', 'Age': '65', 'Sex': 'Male', 'BMI': '24', 'DiabetesPedigreeFunction': '0.2'}, {'Diabetes': '', 'Age': '18', 'Sex': 'Female', 'DiabetesPedigreeFunction': '0.2'}]"
+Explanation type,Contrastive Explanation

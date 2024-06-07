@@ -1,0 +1,6 @@
+,134
+Question,"How would the likelihood of Diabetes change if the patient's age was 60, BMI was 22, and Diabetes Pedigree Function was 0.4?"
+Machine interpretation,"If Age(patient, 60) AND BMI(patient, 22) AND DPFunc(patient, 0.4) -> Diabetes Likelihood Change"
+Action,['DPFunc']
+Feature groups,"[{'Age': '60'}, {'BMI': '22'}, {'patient': '0.4'}]"
+Explanation type,Counterfactual Explanation

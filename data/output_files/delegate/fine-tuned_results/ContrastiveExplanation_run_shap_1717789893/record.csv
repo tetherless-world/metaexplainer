@@ -1,0 +1,6 @@
+,224
+Question,Why include the patient's sex as a feature in the Diabetes prediction model instead of their BMI?
+Machine interpretation,Feature_importance(Sex) and Feature_importance(BMI) -> Diabetes Prediction
+Action,['Feature_importance']
+Feature groups,"[{'Sex': ''}, {'BMI': ''}]"
+Explanation type,Contrastive Explanation

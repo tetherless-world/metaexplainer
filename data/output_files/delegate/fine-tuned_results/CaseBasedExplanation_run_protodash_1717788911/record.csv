@@ -1,0 +1,6 @@
+,157
+Question,Are there any age groups where the prediction of Diabetes is more uncertain for patients with a BMI of 28?
+Machine interpretation,"Filter(Age) Predict(BMI = 28, Diabetes = uncertain)"
+Action,"['Filter', 'Predict']"
+Feature groups,"[{'Age': ''}, {'BMI': '28', 'Diabetes': 'uncertain'}]"
+Explanation type,Case Based Explanation

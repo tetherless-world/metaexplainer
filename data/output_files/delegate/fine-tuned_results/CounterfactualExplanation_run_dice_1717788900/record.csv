@@ -1,0 +1,6 @@
+,138
+Question,"If the patient had a BMI of 18 instead of 22, would the prediction for Diabetes be lower?"
+Machine interpretation,"If BMI(patient, 18) and not If BMI(patient, 22)-> Low Diabetes Likelihood"
+Action,
+Feature groups,"[{'BMI': '18'}, {'BMI': '22'}]"
+Explanation type,Counterfactual Explanation

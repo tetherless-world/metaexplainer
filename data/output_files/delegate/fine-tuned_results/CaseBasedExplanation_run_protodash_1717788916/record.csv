@@ -1,0 +1,6 @@
+,169
+Question,What role does age play in the accuracy of Diabetes prediction in the training data instances?
+Machine interpretation,"Filter(Age, Accuracy)"
+Action,['Filter']
+Feature groups,"[{'Age': '', 'Accuracy': ''}]"
+Explanation type,Case Based Explanation

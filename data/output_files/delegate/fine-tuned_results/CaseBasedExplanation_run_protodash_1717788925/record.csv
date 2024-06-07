@@ -1,0 +1,6 @@
+,187
+Question,What age group tends to have the highest occurrence of Diabetes based on the prediction outcomes?
+Machine interpretation,Filter(Age) and (Diabetes = high)
+Action,"['Filter', 'and']"
+Feature groups,"[{'Age': ''}, {'Diabetes': 'high'}]"
+Explanation type,Case Based Explanation

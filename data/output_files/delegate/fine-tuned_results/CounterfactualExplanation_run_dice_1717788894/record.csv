@@ -1,0 +1,6 @@
+,135
+Question,"If the patient had a BMI of 30 instead of 25, would the likelihood of having Diabetes increase significantly?"
+Machine interpretation,"If BMI(patient, 30) and not If BMI(patient, 25)-> Diabetes Likelihood"
+Action,
+Feature groups,"[{'BMI': '30'}, {'BMI': '25'}]"
+Explanation type,Counterfactual Explanation

@@ -1,0 +1,6 @@
+,130
+Question,"What if the patient's age was 50 instead of 40, would the likelihood of having Diabetes change?"
+Machine interpretation,"If Age(patient, 50) and not If Age(patient, 40) -> Diabetes Likelihood Change"
+Action,
+Feature groups,"[{'Age': '50'}, {'Age': '40'}]"
+Explanation type,Counterfactual Explanation

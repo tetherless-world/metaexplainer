@@ -1,0 +1,6 @@
+,63
+Question,How has the age of patients been utilized in training the Diabetes prediction model?
+Machine interpretation,Feature_importance(Age)
+Action,['Feature_importance']
+Feature groups,[{'Age': ''}]
+Explanation type,Data Explanation

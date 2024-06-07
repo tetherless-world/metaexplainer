@@ -1,0 +1,6 @@
+,131
+Question,"If the patient had a BMI of 25 instead of 20, would the prediction for Diabetes remain the same?"
+Machine interpretation,"If BMI(patient, 25) and not If BMI(patient, 20) -> Diabetes Prediction Change"
+Action,
+Feature groups,"[{'BMI': '25'}, {'BMI': '20'}]"
+Explanation type,Counterfactual Explanation

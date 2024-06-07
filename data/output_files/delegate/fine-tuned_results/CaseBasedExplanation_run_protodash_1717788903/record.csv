@@ -1,0 +1,6 @@
+,141
+Question,To what other situations has the recommendation of Diabetes been applied for patients with a BMI greater than 28?
+Machine interpretation,(BMI > 28)
+Action,
+Feature groups,[{'BMI': ''}]
+Explanation type,Case Based Explanation

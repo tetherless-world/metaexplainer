@@ -1,0 +1,6 @@
+,148
+Question,How do the predictions for Diabetes vary between males and females with a BMI of 28 and a Diabetes Pedigree Function of 0.2?
+Machine interpretation,"Predict(Diabetes, BMI = 28, DPF = 0.2, Sex = Female) and Predict(Diabetes, BMI = 28, DPF = 0.2, Sex = Male)"
+Action,['Predict']
+Feature groups,"[{'Diabetes': '', 'BMI': '28', 'DiabetesPedigreeFunction': '0.2', 'Sex': 'Female'}, {'Diabetes': '', 'BMI': '28', 'DiabetesPedigreeFunction': '0.2', 'Sex': 'Male'}]"
+Explanation type,Case Based Explanation

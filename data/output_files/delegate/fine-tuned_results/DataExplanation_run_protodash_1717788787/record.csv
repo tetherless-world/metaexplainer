@@ -1,0 +1,6 @@
+,21
+Question,How does the gender distribution affect the probability of Diabetes prediction in the dataset?
+Machine interpretation,Summary(Sex)
+Action,['Summary']
+Feature groups,[{'Sex': ''}]
+Explanation type,Data Explanation

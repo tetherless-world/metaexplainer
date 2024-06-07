@@ -1,0 +1,6 @@
+,203
+Question,"Why prioritize the age of 55 in predicting Diabetes for a female with a BMI of 30 and a Diabetes Pedigree Function of 0.15, rather than the age of 35 in a male with a BMI of 20 and a Diabetes Pedigree Function of 0.1?"
+Machine interpretation,"Predict(Diabetes, Age = 55, Sex = Female, BMI = 30, DPF = 0.15) > Predict(Diabetes, Age = 35, Sex = Male, Age = 20, DPF = 0.1)"
+Action,['Predict']
+Feature groups,"[{'Diabetes': '', 'Age': '55', 'Sex': 'Female', 'BMI': '30', 'DiabetesPedigreeFunction': '0.15'}, {'Diabetes': '', 'Age': '20', 'Sex': 'Male', 'DiabetesPedigreeFunction': '0.1'}]"
+Explanation type,Contrastive Explanation

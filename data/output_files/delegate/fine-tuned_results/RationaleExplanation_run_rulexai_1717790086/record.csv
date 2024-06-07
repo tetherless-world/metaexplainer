@@ -1,0 +1,6 @@
+,278
+Question,What factors contributed to the model predicting that a 55-year-old male with a BMI of 20 and a Diabetes Pedigree Function of 0.2 does not have Diabetes?
+Machine interpretation,"What influenced the model's decision to classify a patient with ( age=55, sex=Male, BMI=20, Diabetes Pedigree Function=0.2, Diabetes = low) as not having Diabetes with low likelihood?"
+Action,['with']
+Feature groups,"[{'Age': '55', 'Sex': 'Male', 'BMI': '20', 'Diabetes Pedigree Function': '0.2', 'Diabetes': 'low'}]"
+Explanation type,Rationale Explanation

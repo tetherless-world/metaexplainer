@@ -1,0 +1,6 @@
+,144
+Question,Which combinations of features have shown consistent predictions for Diabetes across different age groups?
+Machine interpretation,Filter(Age) and Retreive(combinations)
+Action,"['Filter', 'Retreive']"
+Feature groups,"[{'Age': ''}, {'combinations': ''}]"
+Explanation type,Case Based Explanation

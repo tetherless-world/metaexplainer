@@ -1,0 +1,6 @@
+,4
+Question,What is the average age of patients diagnosed with Diabetes compared to those without Diabetes?
+Machine interpretation,"Average(Age, Diabetes = yes) and Average(Age, Diabetes = no)"
+Action,['Average']
+Feature groups,"[{'Age': '', 'Diabetes': 'yes'}, {'Age': '', 'Diabetes': 'no'}]"
+Explanation type,Data Explanation

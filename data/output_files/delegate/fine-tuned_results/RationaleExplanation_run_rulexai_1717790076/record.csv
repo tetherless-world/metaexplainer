@@ -1,0 +1,6 @@
+,232
+Question,What led the model to predict no Diabetes for a 50-year-old male with a BMI of 22 and a Diabetes Pedigree Function of 0.15?
+Machine interpretation,"What factors guided the DiabetesPredictionModel to forecast no Diabetes for Patient(age=50, sex=Male, BMI=22, DiabetesPedigreeFunction=0.15)?"
+Action,['Patient']
+Feature groups,"[{'Age': '50', 'Sex': 'Male', 'BMI': '22', 'DiabetesPedigreeFunction': '0.15'}]"
+Explanation type,Rationale Explanation

@@ -1,0 +1,6 @@
+,228
+Question,Why use the patient's sex as a key factor in predicting Diabetes instead of their Diabetes Pedigree Function?
+Machine interpretation,Feature_importance(Sex) and Feature_importance(DPF) -> Diabetes Prediction
+Action,['Feature_importance']
+Feature groups,"[{'Sex': ''}, {'DiabetesPedigreeFunction': ''}]"
+Explanation type,Contrastive Explanation

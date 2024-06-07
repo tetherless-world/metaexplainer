@@ -1,0 +1,6 @@
+,65
+Question,How has the Diabetes Pedigree Function been used to differentiate between diabetic and non-diabetic patients?
+Machine interpretation,Feature_importance(DPF)
+Action,['Feature_importance']
+Feature groups,[{'DiabetesPedigreeFunction': ''}]
+Explanation type,Data Explanation

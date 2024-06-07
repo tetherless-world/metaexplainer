@@ -1,0 +1,6 @@
+,24
+Question,What is the impact of age and BMI combined on the Diabetes prediction outcome?
+Machine interpretation,"Summary(Age, BMI, Diabetes)"
+Action,['Summary']
+Feature groups,"[{'Age': '', 'BMI': '', 'Diabetes': ''}]"
+Explanation type,Data Explanation

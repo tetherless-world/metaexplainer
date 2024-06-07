@@ -1,0 +1,6 @@
+,173
+Question,What BMI ranges are commonly associated with a lower likelihood of accurate Diabetes prediction in similar cases?
+Machine interpretation,Filter(BMI) and (Accuracy = low)
+Action,"['Filter', 'and']"
+Feature groups,"[{'BMI': ''}, {'Accuracy': 'low'}]"
+Explanation type,Case Based Explanation

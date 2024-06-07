@@ -1,0 +1,6 @@
+,207
+Question,"Why prioritize the Diabetes Pedigree Function of 0.25 in predicting Diabetes for a 45-year-old female with a BMI of 26, instead of the Diabetes Pedigree Function of 0.1 in a 70-year-old male with a BMI of 18?"
+Machine interpretation,"Priortize(Diabetes Pedigree Function) and Predict(Diabetes Pedigree Function = 0.25, Age = 45, BMI = 26) and Predict(Diabetes Pedigree Function = 0.1, Age = 70, BMI = 18)"
+Action,"['Priortize', 'Predict']"
+Feature groups,"[{'Diabetes Pedigree Function': ''}, {'Diabetes Pedigree Function': '0.25', 'Age': '45', 'BMI': '26'}, {'Diabetes Pedigree Function': '0.1', 'Age': '70', 'BMI': '18'}, {'() and (': '0.25', 'Age': '70', 'BMI': '18)'}]"
+Explanation type,Contrastive Explanation

@@ -1,0 +1,6 @@
+,13
+Question,How has the age feature been encoded to facilitate its utilization in the ML model for Diabetes prediction?
+Machine interpretation,Summary(Age)
+Action,['Summary']
+Feature groups,[{'Age': ''}]
+Explanation type,Data Explanation

@@ -1,0 +1,6 @@
+,153
+Question,Are there any specific patterns in the training data that indicate a low likelihood of Diabetes for patients with a BMI of 18 and a Diabetes Pedigree Function of 0.2?
+Machine interpretation,"(Diabetes = low, DPF = 0.2, BMI = 18)"
+Action,
+Feature groups,"[{'Diabetes': 'low', 'DiabetesPedigreeFunction': '0.2', 'BMI': '18'}]"
+Explanation type,Case Based Explanation

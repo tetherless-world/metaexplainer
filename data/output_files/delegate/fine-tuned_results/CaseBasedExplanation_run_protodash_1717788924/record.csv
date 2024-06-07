@@ -1,0 +1,6 @@
+,185
+Question,What are the common trends observed in the Diabetes Pedigree Function values of patients with accurate prediction outcomes?
+Machine interpretation,Filter(DPF) and (Diabetes = accuracy)
+Action,"['Filter', 'and']"
+Feature groups,"[{'DiabetesPedigreeFunction': ''}, {'Diabetes': 'accuracy'}]"
+Explanation type,Case Based Explanation

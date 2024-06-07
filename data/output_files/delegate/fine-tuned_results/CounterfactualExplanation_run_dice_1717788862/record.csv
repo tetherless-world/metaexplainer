@@ -1,0 +1,6 @@
+,126
+Question,"If the patient had a high BMI of 28 and a low Diabetes Pedigree Function of 0.2, would the prediction of Diabetes be more certain?"
+Machine interpretation,"If BMI(patient, 28) AND DP_Function(patient, 0.2) -> Certainty(Diabetes_Prediction(patient, ?))"
+Action,"['DP_Function', 'Certainty', 'Diabetes_Prediction']"
+Feature groups,"[{'patient': '28'}, {'patient': '0.2'}, {'patient': '', '?': ''}]"
+Explanation type,Counterfactual Explanation

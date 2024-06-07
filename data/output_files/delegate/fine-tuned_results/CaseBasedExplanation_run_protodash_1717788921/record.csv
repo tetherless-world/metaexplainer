@@ -1,0 +1,6 @@
+,181
+Question,How does the Diabetes Pedigree Function value influence the prediction outcome in different cases?
+Machine interpretation,"Filter(DPF, Diabetes)"
+Action,['Filter']
+Feature groups,"[{'DiabetesPedigreeFunction': '', 'Diabetes': ''}]"
+Explanation type,Case Based Explanation

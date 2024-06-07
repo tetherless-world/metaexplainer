@@ -120,12 +120,17 @@ def run_and_evaluate_explainer(domain_dataset, model_details, feature_subsets, a
 	#print(evaluations)
 	return (results, evaluations)
 
-def save_results(sample_record, feature_subsets, results, evaluations, explainer, explanation_type):
-	metaexplainer_utils.create_folder(codeconstants.DELEGATE_RESULTS_FOLDER)
+def save_results(sample_record, feature_subsets, results, evaluations, explainer, explanation_type, mode='generated'):
+	results_folder_mode = codeconstants.DELEGATE_RESULTS_FOLDER
+
+	if mode=='fine-tuned':
+		results_folder_mode = codeconstants.DELEGATE_FOLDER + '/fine-tuned_results'
+
+	metaexplainer_utils.create_folder(results_folder_mode)
 
 	if len(explainer) and len(results) > 0:
 		explanation_substring = explanation_type.replace(' ', '') + '_' + explainer[0]
-		result_folder = codeconstants.DELEGATE_RESULTS_FOLDER + '/' + explanation_substring + '_' + str(int(time.time()))
+		result_folder = results_folder_mode + '/' + explanation_substring + '_' + str(int(time.time()))
 		metaexplainer_utils.create_folder(result_folder)
 
 		#this will directly be used for prompt in synthesis
@@ -165,7 +170,7 @@ if __name__=='__main__':
 	domain_dataset = metaexplainer_utils.load_dataset(domain_name)
 
 	(training_model, transformations, method_results) = get_domain_model(domain_name)
-	mode = 'generated'
+	mode = 'fine-tuned'
 
 	model_details = {'model': training_model,
 				  'transformations': transformations,
@@ -177,7 +182,7 @@ if __name__=='__main__':
 
 	print('Length of parses to run ', len_parses)
 
-	for i in range(0, len_parses + 1):
+	for i in range(0, len_parses):
 		sample_record = decompose_parses.iloc[i]
 		
 		#need to make this run in a loop to run across all parses 
@@ -186,7 +191,7 @@ if __name__=='__main__':
 		# explainer_method = get_corresponding_explainer()
 		(method_results, evaluations) = run_and_evaluate_explainer(domain_dataset, model_details, subsets, action_list, explainer_method)
 
-		save_results(sample_record, subsets, method_results, evaluations, explainer_method, explanation_type)
+		save_results(sample_record, subsets, method_results, evaluations, explainer_method, explanation_type, mode=mode)
 
 		print('Finished delegate for record ', str(i), ' of ', str(len_parses))
 

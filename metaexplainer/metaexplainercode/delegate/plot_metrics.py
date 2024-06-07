@@ -33,8 +33,12 @@ def evaluate_parses(domain_name, mode='generated'):
 
 
 
-def plot_explainer_results():
+def plot_explainer_results(mode='generated'):
     delegate_results_folder = codeconstants.DELEGATE_FOLDER + '/results/'
+
+    if mode == 'fine-tuned':
+        delegate_results_folder = codeconstants.DELEGATE_FOLDER + '/fine-tuned_results/'
+
     overall_evals = []
 
     results_dict_format = {'Explanation Type': '', 'Explainer Method': '', 'Metric': '', 'Value': 0}
@@ -70,18 +74,19 @@ def plot_explainer_results():
     print("\nMean by group:")
     print(grouped_mean)
     
-    overall_evals_df.to_csv(codeconstants.DELEGATE_FOLDER + '/Overall_evaluations.csv')
+    overall_evals_df.to_csv(codeconstants.DELEGATE_FOLDER + '/' + mode + '_explainer_evaluations.csv')
 
 if __name__=='__main__':
     '''
     Read evaluation files from different folders and add to corresponding: explanation type, explainer method, metric, value dataframe 
     '''
     domain_name = 'Diabetes'
-    #plot_explainer_results()
+    
+    plot_explainer_results(mode='fine-tuned')
 
-    evaluate_parses(domain_name, mode='generated')
+    #evaluate_parses(domain_name, mode='generated')
 
-    evaluate_parses(domain_name, mode='fine-tuned')
+   # evaluate_parses(domain_name, mode='fine-tuned')
     
 
 

@@ -1,0 +1,6 @@
+,213
+Question,Why consider a patient's BMI range of 18-22 for Diabetes prediction rather than 25-30?
+Machine interpretation,Predict(BMI = 18 - 22) and Predict(BMI = 25 - 30)
+Action,['Predict']
+Feature groups,"[{'BMI': '18 - 22'}, {'BMI': '25 - 30'}]"
+Explanation type,Contrastive Explanation

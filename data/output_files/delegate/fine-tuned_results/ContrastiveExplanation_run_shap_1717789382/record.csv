@@ -1,0 +1,6 @@
+,214
+Question,Why include the Diabetes Pedigree Function in the prediction model for Diabetes instead of just relying on age?
+Machine interpretation,Feature_importance(Diabetes Pedigree Function) and Feature_importance(Age) -> Diabetes Prediction
+Action,['Feature_importance']
+Feature groups,"[{'Diabetes Pedigree Function': ''}, {'Age': ''}]"
+Explanation type,Contrastive Explanation

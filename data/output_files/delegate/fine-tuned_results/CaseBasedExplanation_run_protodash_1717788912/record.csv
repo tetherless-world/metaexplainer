@@ -1,0 +1,6 @@
+,160
+Question,What are the typical age ranges where this recommendation for Diabetes prediction is most applicable?
+Machine interpretation,Filter(Age)
+Action,['Filter']
+Feature groups,[{'Age': ''}]
+Explanation type,Case Based Explanation

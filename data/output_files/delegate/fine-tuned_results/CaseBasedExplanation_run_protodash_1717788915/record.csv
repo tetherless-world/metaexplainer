@@ -1,0 +1,6 @@
+,167
+Question,Are there specific age groups where the prediction for Diabetes tends to be more challenging?
+Machine interpretation,Filter(Age)
+Action,['Filter']
+Feature groups,[{'Age': ''}]
+Explanation type,Case Based Explanation

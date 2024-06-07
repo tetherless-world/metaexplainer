@@ -1,0 +1,6 @@
+,76
+Question,What is the significance of the age feature in predicting Diabetes compared to other features?
+Machine interpretation,Feature_importance(Age)
+Action,['Feature_importance']
+Feature groups,[{'Age': ''}]
+Explanation type,Data Explanation

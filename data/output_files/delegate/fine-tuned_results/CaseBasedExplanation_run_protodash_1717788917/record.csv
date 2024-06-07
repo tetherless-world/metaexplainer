@@ -1,0 +1,6 @@
+,171
+Question,How does the Diabetes Pedigree Function value correlate with the accuracy of Diabetes prediction in different cases?
+Machine interpretation,"Filter(DPF, Accuracy)"
+Action,['Filter']
+Feature groups,"[{'DiabetesPedigreeFunction': '', 'Accuracy': ''}]"
+Explanation type,Case Based Explanation
