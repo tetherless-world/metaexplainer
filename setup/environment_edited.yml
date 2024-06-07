@@ -25,6 +25,10 @@ dependencies:
   - seaborn
   - llama-index 
   - llama-index-experimental
+  - langchain
+  - langchain_experimental
+  - langchain_openai
+  - tabulate
   - ibm_db
   - shap
   - uwsgi==2.0.18  
