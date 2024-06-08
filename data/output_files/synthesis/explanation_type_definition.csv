@@ -1,0 +1,7 @@
+,Explanation type,Definition
+0,Case Based Explanation,"Provides solutions that are based on actual prior cases that can be presented to the user to provide compelling support for the system’s conclusions, and may involve analogical reasoning, relying on similarities between features of the case and of the current situation."
+1,Contrastive Explanation,"Answers the question “Why this output instead of that output,” making a contrast between the given output and the facts that led to it (inputs and other considerations),  and an alternate output of interest and the foil (facts that would have led to it)."
+2,Data Explanation,
+3,Rationale Explanation,
+4,Contextual Explanation,"Refers to information about items other than the explicit inputs and output, such as information about the user, situation, and broader environment that affected the computation."
+5,Counterfactual Explanation,Addresses the question of what solutions would have been obtained with a different set of inputs than those used.

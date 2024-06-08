@@ -64,7 +64,7 @@ if __name__=='__main__':
 		
 		evaluations_df = pd.concat([x.head(1) for x in evaluations_list], ignore_index=True)
 
-
+		print(evaluations_df)
 		grouped_mean = evaluations_df.groupby('Metric')['Value'].mean().reset_index()
 
 		# Renaming the columns for better readability
