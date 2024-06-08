@@ -12,11 +12,6 @@ from metaexplainercode import codeconstants
 
 from metaexplainercode import metaexplainer_utils
 
-def read_records_df(record_path):
-    df = pd.read_csv(record_path, skiprows=1, header=None).T   # Read csv, and transpose
-    df.columns = df.iloc[0]                                 # Set new column names
-    df.drop(0,inplace=True)
-    return df
 
 def evaluate_parses(domain_name, mode='generated'):
     decompose_parses = metaexplainer_utils.load_delegate_parses(domain_name, mode=mode)
@@ -45,7 +40,7 @@ def plot_explainer_results(mode='generated'):
 
     for dir_ep in os.listdir(delegate_results_folder):
         dir_ep_path = delegate_results_folder + '/' + dir_ep
-        record_dets = read_records_df(dir_ep_path + '/record.csv')
+        record_dets = metaexplainer_utils.read_delegate_records_df(dir_ep_path + '/record.csv')
         #print(record_dets.columns)
         
         sub_dirs = os.listdir(dir_ep_path)

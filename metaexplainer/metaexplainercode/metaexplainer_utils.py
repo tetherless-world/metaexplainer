@@ -16,6 +16,8 @@ import re
 import numpy as np
 import pandas as pd
 
+import os
+
 import torch
 import collections 
 from pathlib import Path
@@ -111,6 +113,38 @@ def read_delegate_parsed_instruction_file(file_name):
 	
 	return parses
 
+def read_delegate_explainer_outputs(mode='generated'):
+	'''
+	Return directories to read - since this code is used by delegate and synthesis 
+	'''
+	delegate_results_folder = codeconstants.DELEGATE_FOLDER + '/results/'
+
+	dirs_explainer_delegate = {}
+	
+	if mode == 'fine-tuned':
+		delegate_results_folder = codeconstants.DELEGATE_FOLDER + '/fine-tuned_results/'
+	
+	for dir_ep in os.listdir(delegate_results_folder):
+		dir_ep_path = delegate_results_folder + '/' + dir_ep
+		sub_dirs_dir = []
+
+		sub_dirs = os.listdir(dir_ep_path)
+		
+		for subset_dir in sub_dirs:
+			subset_dir_path = dir_ep_path + '/' + subset_dir
+			
+			if os.path.isdir(subset_dir_path):
+				sub_dirs_dir.append(subset_dir_path)
+
+		dirs_explainer_delegate[dir_ep_path] = sub_dirs_dir
+
+	return dirs_explainer_delegate
+
+def read_delegate_records_df(record_path):
+    df = pd.read_csv(record_path, skiprows=1, header=None).T   # Read csv, and transpose
+    df.columns = df.iloc[0]                                 # Set new column names
+    df.drop(0,inplace=True)
+    return df
 
 def load_delegate_parses(domain_name, mode='generated', usable=True):
 	parse_file = codeconstants.DELEGATE_FOLDER + domain_name + '_parsed_' + mode + '_delegate_instructions.txt'
