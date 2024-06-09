@@ -19,8 +19,8 @@ class ParseExplainerOutput:
         return output_frame
     
     def parse_feature_importances(self, output_frame):
-        output_frame['col_name'] = output_frame['col_name'].apply(lambda x: x.replace('num_', ''))
-        output_frame['feature_importance_vals'] = output_frame['feature_importance_vals'].apply(lambda x: x[0])
+        output_frame['col_name'] = output_frame['col_name'].apply(lambda x: x.replace('num__', ''))
+        output_frame['feature_importance_vals'] = output_frame['feature_importance_vals'].apply(lambda x: eval(x.replace(' ', ','))[0])
         return output_frame
     
     def parse_counterfactuals(output_frame):

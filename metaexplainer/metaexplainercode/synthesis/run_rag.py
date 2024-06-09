@@ -105,7 +105,7 @@ def construct_prompt_record(output_folder):
 
 def retrieve_prompt_subset():
 	prompt_template_text = '''
-	Find a match in the data based on {{Question}}. If there are no full matches, summarize the dataset.'''
+	Find a match in the data based on feature groups in {{Question}}. If there are no full matches, summarize the dataset.'''
 	# Also, keep in mind the contexts that:
 	# {{Question}} is addressed by a {{Explanation_Type}}
 	# Explanations of {{Explanation_Type}} typically have a format of {{Definition}} and are answered in {{Modality}}, so try recreating this.
@@ -121,7 +121,7 @@ def retrieve_prompt_subset():
 def retrieve_prompt_explanation():
 	#certain kind of prediction and features in certain ways, and that fact that it uses confidence 
 	prompt_template_text = '''
-	Summarize the data in English based on {{Definition}}.'''
+	Summarize the data in English. Structure your response based on the expected format for {{Explanation_Type}} being that {{Definition}}.'''
 	# Also, keep in mind the contexts that:
 	# {{Question}} is addressed by a {{Explanation_Type}}
 	# Explanations of {{Explanation_Type}} typically have a format of {{Definition}} and are answered in {{Modality}}, so try recreating this.
@@ -176,15 +176,15 @@ if __name__=='__main__':
 			response = query_engine.query(
 				filled_prompt_subset,
 			)
-			print('Subset match for ',str(i),' ', response)
+			print('Matched subset from data: ',str(i),' ', response)
 
 			query_engine_explan = PandasQueryEngine(df=prompt_record['Results'][i], verbose=False, synthesize_response=True)
 			response_explan = query_engine_explan.query(
 				filled_prompt
 			)
-			print('Summary of results for group ',str(i),' ', response_explan)
+			print('Explanations for group: ',str(i),' ', response_explan)
 
-			print('-----')
+		print('-----')
 
 		# langchain_agent_subsets = create_pandas_dataframe_agent(OpenAI(temperature=0, seed=3), prompt_record['Subsets'], max_iterations = 50, verbose=True)
 		# out = langchain_agent_subsets.invoke(filled_prompt_subset)
