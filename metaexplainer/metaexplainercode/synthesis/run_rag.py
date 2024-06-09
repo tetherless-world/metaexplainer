@@ -21,12 +21,40 @@ sys.path.append('../')
 from metaexplainercode import metaexplainer_utils
 from metaexplainercode import codeconstants
 from metaexplainercode import ontology_utils
+from metaexplainercode.synthesis.handle_explainer_outputs import ParseExplainerOutput
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
 from jinja2 import Template
 
+def edit_results(prompt_record):
+	'''
+	Don't create entries for multiple sub-results if they are not needed, they could be created because of a parsing error.
+	- If the length of feature groups is less than length of sub_dirs - use just length of feature groups
+	- If record subsets are same across result sets, use non-duplicates 
+	'''
+	len_fg = len(prompt_record['feature_groups'])
+
+	if len_fg < len(prompt_record['Results']):
+		prompt_record['Results'] = prompt_record['Results'][:len_fg]
+		prompt_record['Metrics'] = prompt_record['Metrics'][:len_fg]
+		prompt_record['Subsets'] = prompt_record['Subsets'][:len_fg]
+
+	duplicates = []
+
+	for i in range(0, len(prompt_record['Results'])):
+		for j in range(i + 1, len(prompt_record['Results'])):
+			if metaexplainer_utils.are_dfs_equal(prompt_record['Results'][i], prompt_record['Results'][j]):
+				duplicates.append(j)
+
+	
+	prompt_record['Results'] = [prompt_record['Results'][i] for i in range(0, len(prompt_record['Results'])) if i not in duplicates]
+	prompt_record['Metrics'] = [prompt_record['Metrics'][i] for i in range(0, len(prompt_record['Results'])) if i not in duplicates]
+	prompt_record['Subsets'] = [prompt_record['Subsets'][i] for i in range(0, len(prompt_record['Results'])) if i not in duplicates]
+
+	return prompt_record
+	
 def construct_prompt_record(output_folder):
 	dir_ep = output_folder.split('/')[-1]
 	sub_dirs = delegate_output_folders[output_folder]
@@ -42,16 +70,27 @@ def construct_prompt_record(output_folder):
 	prompt_record['Question'] = record_dets['Question'].item()
 	prompt_record['feature_groups'] = eval(record_dets['Feature groups'].item())
 
+	parse_explainer_obj = ParseExplainerOutput(prompt_record['Modality'], prompt_record['Explanation_Type'])
+	
+
 	results_list = []
 	evaluations_list = []
 	subset_list = []
+	modality_func_finder = prompt_record['Modality'].lower().replace(' ', '_')
 
 	for sub_dir in sub_dirs:
-		results_list.append(pd.read_csv(sub_dir + '/Results.csv'))
+		results_list.append(getattr(parse_explainer_obj,'parse' + '_' + modality_func_finder)(pd.read_csv(sub_dir + '/Results.csv')))
 		evaluations_list.append(pd.read_csv(sub_dir + '/Evaluations.csv'))
 		subset_list.append(pd.read_csv(sub_dir + '/Subset.csv'))
 		
+	prompt_record['Results'] = results_list
+	prompt_record['Subsets'] = subset_list
+	prompt_record['Metrics'] = evaluations_list
+
+	prompt_record = edit_results(prompt_record)
+
 	evaluations_df = pd.concat([x.head(10) for x in evaluations_list], ignore_index=True)
+
 
 	grouped_mean = evaluations_df.groupby('Metric')['Value'].mean().reset_index()
 
@@ -59,8 +98,8 @@ def construct_prompt_record(output_folder):
 	grouped_mean.columns = ['Metric', 'mean_value']
 
 	prompt_record['Metrics'] = grouped_mean
-	prompt_record['Results'] = results_list
-	prompt_record['Subsets'] = subset_list
+	
+	print(prompt_record)
 
 	return prompt_record
 
@@ -128,21 +167,24 @@ if __name__=='__main__':
 		filled_prompt = prompt_template.render(prompt_record)
 		filled_prompt_subset = prompt_template_subset.render(prompt_record)
 
-		print(prompt_record)
+		#print(prompt_record)
 
-		query_engine = PandasQueryEngine(df=prompt_record['Subsets'][0], verbose=False, synthesize_response=True)
-	
-		# #need to replace this query with EO templates - check how to add the templates
-		response = query_engine.query(
-			filled_prompt_subset,
-		)
-		print('Subset match:', response)
+		for i in range(0, len(prompt_record['Results'])):
+			query_engine = PandasQueryEngine(df=prompt_record['Subsets'][i], verbose=False, synthesize_response=True)
+		
+			# #need to replace this query with EO templates - check how to add the templates
+			response = query_engine.query(
+				filled_prompt_subset,
+			)
+			print('Subset match for ',str(i),' ', response)
 
-		query_engine_explan = PandasQueryEngine(df=prompt_record['Results'][0], verbose=False, synthesize_response=True)
-		response_explan = query_engine_explan.query(
-			filled_prompt
-		)
-		print('Summary of results',response_explan)
+			query_engine_explan = PandasQueryEngine(df=prompt_record['Results'][i], verbose=False, synthesize_response=True)
+			response_explan = query_engine_explan.query(
+				filled_prompt
+			)
+			print('Summary of results for group ',str(i),' ', response_explan)
+
+			print('-----')
 
 		# langchain_agent_subsets = create_pandas_dataframe_agent(OpenAI(temperature=0, seed=3), prompt_record['Subsets'], max_iterations = 50, verbose=True)
 		# out = langchain_agent_subsets.invoke(filled_prompt_subset)

@@ -26,6 +26,15 @@ import sys
 sys.path.append('../')
 from metaexplainercode import codeconstants
 
+from pandas.testing import assert_frame_equal
+
+def are_dfs_equal(df1, df2):
+	try:
+		assert_frame_equal(df1, df2)
+		return True
+	except:  # appeantly AssertionError doesn't catch all
+		return False
+
 
 def find_list_difference(l1, l2):
 	'''
