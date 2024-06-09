@@ -38,7 +38,7 @@ def construct_prompt_record(output_folder):
 	prompt_record['Explanation_Type'] = record_dets.iloc[0]['Explanation type']
 	prompt_record['Definition'] = explanation_definition_pd[explanation_definition_pd['Explanation type'] == prompt_record['Explanation_Type']]['Definition'].item()
 	prompt_record['Explainer_Method'] = dir_ep.split('_')[2]
-	prompt_record['Modality'] = explainer_modality_pd[explainer_modality_pd['Instances'].str.lower() == prompt_record['Explainer_Method']]['Modality'].item()
+	prompt_record['Modality'] = explainer_modality_pd[explainer_modality_pd['Instances'].str.lower() == prompt_record['Explainer_Method']].iloc[0]['Modality']
 	prompt_record['Question'] = record_dets['Question'].item()
 	prompt_record['feature_groups'] = eval(record_dets['Feature groups'].item())
 
