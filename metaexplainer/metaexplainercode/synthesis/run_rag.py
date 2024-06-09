@@ -105,7 +105,7 @@ def construct_prompt_record(output_folder):
 
 def retrieve_prompt_subset():
 	prompt_template_text = '''
-	Find a match in the data based on feature groups in {{Question}}. If there are no full matches, summarize the dataset.'''
+	Find a match in the data based on feature group: {{feature_group}}. If there are no full matches, summarize the dataset.'''
 	# Also, keep in mind the contexts that:
 	# {{Question}} is addressed by a {{Explanation_Type}}
 	# Explanations of {{Explanation_Type}} typically have a format of {{Definition}} and are answered in {{Modality}}, so try recreating this.
@@ -163,15 +163,15 @@ if __name__=='__main__':
 
 	for output_folder in delegate_output_folders.keys():
 		prompt_record = construct_prompt_record(output_folder)
-
-		filled_prompt = prompt_template.render(prompt_record)
-		filled_prompt_subset = prompt_template_subset.render(prompt_record)
-
 		#print(prompt_record)
 
 		for i in range(0, len(prompt_record['Results'])):
 			query_engine = PandasQueryEngine(df=prompt_record['Subsets'][i], verbose=False, synthesize_response=True)
-		
+			feature_group = prompt_record['feature_groups'][i]
+
+			filled_prompt = prompt_template.render(prompt_record)
+			filled_prompt_subset = prompt_template_subset.render({'feature_group': feature_group})
+
 			# #need to replace this query with EO templates - check how to add the templates
 			response = query_engine.query(
 				filled_prompt_subset,
