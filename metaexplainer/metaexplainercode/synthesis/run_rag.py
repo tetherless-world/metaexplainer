@@ -28,7 +28,7 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
 from jinja2 import Template
 
-def edit_results(prompt_record): #will be crucial to edit this for better feature groups
+def edit_results(prompt_record): #will be crucial to edit this for better feature groupsgi
 	'''
 	Don't create entries for multiple sub-results if they are not needed, they could be created because of a parsing error.
 	- If the length of feature groups is less than length of sub_dirs - use just length of feature groups
@@ -71,6 +71,7 @@ def construct_prompt_record(output_folder):
 	record_dets = metaexplainer_utils.read_delegate_records_df(output_folder + '/record.csv')
 
 	prompt_record = {}
+	prompt_record['Record'] = record_dets
 
 	prompt_record['Explanation_Type'] = record_dets.iloc[0]['Explanation type']
 	prompt_record['Definition'] = explanation_definition_pd[explanation_definition_pd['Explanation type'] == prompt_record['Explanation_Type']]['Definition'].item()
@@ -84,29 +85,38 @@ def construct_prompt_record(output_folder):
 
 	results_list = []
 	evaluations_list = []
+	originals_list = []
 	subset_list = []
 	modality_func_finder = prompt_record['Modality'].lower().replace(' ', '_')
 
 	for sub_dir in sub_dirs:
-		results_list.append(getattr(parse_explainer_obj,'parse' + '_' + modality_func_finder)(pd.read_csv(sub_dir + '/Results.csv')))
+		(edited_result, use_question) = getattr(parse_explainer_obj,'parse' + '_' + modality_func_finder)(pd.read_csv(sub_dir + '/Results.csv'))
+		#print('Debug ', edited_result)
+		results_list.append(edited_result)
 		evaluations_list.append(pd.read_csv(sub_dir + '/Evaluations.csv'))
+		if prompt_record['Explanation_Type'] == 'Counterfactual Explanation':
+			originals_list.append(pd.read_csv(sub_dir + '/Original.csv'))
 		subset_list.append(pd.read_csv(sub_dir + '/Subset.csv'))
 		
 	prompt_record['Results'] = results_list
 	prompt_record['Subsets'] = subset_list
 	prompt_record['Metrics'] = evaluations_list
+	if prompt_record['Explanation_Type'] == 'Counterfactual Explanation':
+		prompt_record['Original'] = originals_list
+	prompt_record['use_question'] = use_question
 
 	prompt_record = edit_results(prompt_record)
 
-	evaluations_df = pd.concat([x.head(10) for x in evaluations_list], ignore_index=True)
+	#don't group at this stage
+	# evaluations_df = pd.concat([x.head(10) for x in evaluations_list], ignore_index=True)
 
 
-	grouped_mean = evaluations_df.groupby('Metric')['Value'].mean().reset_index()
+	# grouped_mean = evaluations_df.groupby('Metric')['Value'].mean().reset_index()
 
-		# Renaming the columns for better readability
-	grouped_mean.columns = ['Metric', 'mean_value']
+	# 	# Renaming the columns for better readability
+	# grouped_mean.columns = ['Metric', 'mean_value']
 
-	prompt_record['Metrics'] = grouped_mean
+	# prompt_record['Metrics'] = grouped_mean
 
 	return prompt_record
 
@@ -132,6 +142,106 @@ def retrieve_prompt_explanation():
 
 	return prompt_template_text
 
+def save_explanations(explanation_type_explainer_timestamp_dir, records, 
+					  explanations_aux, explanations, queries,
+					  explanation_type):
+	'''
+	Use the same folder name as delegate so that it is easy to retrieve from delegate
+	'''
+	synthesis_results_folder = codeconstants.SYNTHESIS_FOLDER + '/results/'
+	synthesis_instance_folder = synthesis_results_folder + '/' + explanation_type_explainer_timestamp_dir
+
+	metaexplainer_utils.create_folder(synthesis_results_folder)
+	metaexplainer_utils.create_folder(synthesis_instance_folder)
+
+	ctr = 0
+	curr_folder = synthesis_instance_folder + '/' + str(ctr)
+
+	'''
+	Persist explanation, subsets, results and metrics for each set
+	'''
+	for explanation in explanations_aux:
+		metaexplainer_utils.create_folder(curr_folder)
+		explanation['Results'].to_csv(curr_folder + '/' + 'Results.csv')
+		explanation['Subsets'].to_csv(curr_folder + '/' + 'Subsets.csv')
+		if explanation_type == 'Counterfactual Explanation':
+			pd.DataFrame(explanation['Original']).to_csv(curr_folder + '/' + 'Original.csv')
+		explanation['Metrics'].to_csv(curr_folder + '/' + 'Metrics.csv')
+
+		ctr += 1
+		curr_folder = synthesis_instance_folder + '/' + str(ctr)
+	
+	records.to_csv(synthesis_instance_folder + '/Record.csv')
+	
+	pd.DataFrame(explanations).to_csv(synthesis_instance_folder + '/Explanations.csv')
+	pd.DataFrame(queries).to_csv(synthesis_instance_folder + '/Queries.csv')
+
+	explan_text = ''
+	group_ctr = 0
+	for explan_record in explanations:
+		explan_text += 'Group ' + str(group_ctr) + '\n'
+		explan_text += 'Matched subset ' + explan_record['Subset'] + '\n'
+		explan_text += 'Explainer explanation ' + explan_record['Explanation'] + '\n'
+		explan_text += '---------\n'
+	
+	with open(synthesis_instance_folder + '/Explanations.txt', 'w') as f:
+		f.write(explan_text)
+	
+	print('Created folder for ', synthesis_instance_folder)
+
+
+def run_rag_on_record(output_folder):
+	prompt_record = construct_prompt_record(output_folder)
+	print(prompt_record)
+	print('Lengths ', len(prompt_record['Results']), len(prompt_record['Subsets']))
+	explans_list = []
+
+	explanation_aux = []
+	queries_list = []
+	
+	for i in range(0, len(prompt_record['Results'])):	
+		if not prompt_record['use_question']:
+			feature_group = prompt_record['feature_groups'][i]
+		else:
+			feature_group = prompt_record['Question']
+
+		if not (len(feature_group) == 1 and 'patient' in feature_group.keys()):
+			to_add_in_aux = {'Results': prompt_record['Results'][i], 'Subsets': prompt_record['Subsets'][i], 'Metrics': prompt_record['Metrics'][i]}
+					
+			if len(feature_group) == 0:
+				feature_group = prompt_record['Question']
+
+			filled_prompt = prompt_template.render(prompt_record)
+			filled_prompt_subset = prompt_template_subset.render({'feature_group': feature_group, 'outcome_variable': 'Outcome'})
+
+			query_engine = PandasQueryEngine(df=prompt_record['Subsets'][i], verbose=False, synthesize_response=True)
+
+			if prompt_record['Explanation_Type'] == 'Counterfactual Explanation':
+				filled_prompt += 'The dataframe contains changes and not actual values.'
+					
+			response = query_engine.query(
+				filled_prompt_subset,
+			)
+			print('Matched subset from data: ',str(i),' ', response)
+
+			query_engine_explan = PandasQueryEngine(df=prompt_record['Results'][i], verbose=False, synthesize_response=True)
+			response_explan = query_engine_explan.query(
+				filled_prompt
+			)
+
+			explans_list.append({'Subset': str(response), 'Explanation': str(response_explan)})
+			queries_list.append({'Subset Query': filled_prompt_subset, 'Explanation Query': filled_prompt, 'Feature group': feature_group})
+
+			if prompt_record['Explanation_Type'] == 'Counterfactual Explanation':
+				to_add_in_aux['Original'] = prompt_record['Original']
+
+			explanation_aux.append(to_add_in_aux)
+			print('Explanations for group: ',str(i),' ', response_explan)
+			
+	print('-----')
+	save_explanations(output_folder.split('results/')[-1], prompt_record['Record'], explanation_aux, explans_list, queries_list, prompt_record['Explanation_Type'])
+		
+
 if __name__=='__main__':
 	'''
 	Pass into prompt:
@@ -153,42 +263,16 @@ if __name__=='__main__':
 	
 	prompt_template = Template(prompt_template_text_explan)
 	prompt_template_subset = Template(prompt_subset)
+	
 
 	for output_folder in delegate_output_folders.keys():
-		prompt_record = construct_prompt_record(output_folder)
-		print(prompt_record)
-		print('Lengths ', len(prompt_record['Results']), len(prompt_record['Subsets']))
+		run_rag_on_record(output_folder)
 
-		for i in range(0, len(prompt_record['Results'])):
-			feature_group = prompt_record['feature_groups'][i]
-
-			if not (len(feature_group) == 1 and 'patient' in feature_group.keys()):
-				if len(feature_group) == 0:
-					feature_group = prompt_record['Question']
-
-				filled_prompt = prompt_template.render(prompt_record)
-				filled_prompt_subset = prompt_template_subset.render({'feature_group': feature_group, 'outcome_variable': 'Outcome'})
-
-				query_engine = PandasQueryEngine(df=prompt_record['Subsets'][i], verbose=False, synthesize_response=True)
-
-				if prompt_record['Explanation_Type'] == 'Counterfactual Explanation':
-					filled_prompt += 'The dataframe contains changes and not actual values.'
-				
-				response = query_engine.query(
-					filled_prompt_subset,
-				)
-				print('Matched subset from data: ',str(i),' ', response)
-
-				query_engine_explan = PandasQueryEngine(df=prompt_record['Results'][i], verbose=False, synthesize_response=True)
-				response_explan = query_engine_explan.query(
-					filled_prompt
-				)
-
-				print('Explanations for group: ',str(i),' ', response_explan)
-
-		print('-----')
-
-		# langchain_agent_subsets = create_pandas_dataframe_agent(OpenAI(temperature=0, seed=3), prompt_record['Subsets'], max_iterations = 50, verbose=True)
+	
+	'''
+	Trials
+	'''
+	# langchain_agent_subsets = create_pandas_dataframe_agent(OpenAI(temperature=0, seed=3), prompt_record['Subsets'], max_iterations = 50, verbose=True)
 		# out = langchain_agent_subsets.invoke(filled_prompt_subset)
 		# print('Subsets', out)
 

@@ -13,19 +13,21 @@ class ParseExplainerOutput:
         self.explanation_type = explanation_type
 
     def parse_representative_samples(self, output_frame):
-        return output_frame
+        if self.explanation_type == 'Data Explanation':
+            return (output_frame, True)
+        return (output_frame, False)
 
     def parse_rules(self, output_frame):
         #could parse rules based on fidelity values
-        return output_frame
+        return (output_frame, False)
     
     def parse_feature_importances(self, output_frame):
         output_frame['col_name'] = output_frame['col_name'].apply(lambda x: x.replace('num__', ''))
         output_frame['feature_importance_vals'] = output_frame['feature_importance_vals'].apply(lambda x: eval(x.replace(' ', ','))[0])
-        return output_frame
+        return (output_frame, False)
     
     def parse_counterfactuals(output_frame):
-        return output_frame
+        return (output_frame, False)
 
 
 
