@@ -16,6 +16,7 @@ class ParseExplainerOutput:
         return output_frame
 
     def parse_rules(self, output_frame):
+        #could parse rules based on fidelity values
         return output_frame
     
     def parse_feature_importances(self, output_frame):

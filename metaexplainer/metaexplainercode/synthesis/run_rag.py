@@ -28,7 +28,7 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
 from jinja2 import Template
 
-def edit_results(prompt_record):
+def edit_results(prompt_record): #will be crucial to edit this for better feature groups
 	'''
 	Don't create entries for multiple sub-results if they are not needed, they could be created because of a parsing error.
 	- If the length of feature groups is less than length of sub_dirs - use just length of feature groups
@@ -165,11 +165,14 @@ if __name__=='__main__':
 			if not (len(feature_group) == 1 and 'patient' in feature_group.keys()):
 				if len(feature_group) == 0:
 					feature_group = prompt_record['Question']
-					
+
 				filled_prompt = prompt_template.render(prompt_record)
 				filled_prompt_subset = prompt_template_subset.render({'feature_group': feature_group, 'outcome_variable': 'Outcome'})
 
 				query_engine = PandasQueryEngine(df=prompt_record['Subsets'][i], verbose=False, synthesize_response=True)
+
+				if prompt_record['Explanation_Type'] == 'Counterfactual Explanation':
+					filled_prompt += 'The dataframe contains changes and not actual values.'
 				
 				response = query_engine.query(
 					filled_prompt_subset,
