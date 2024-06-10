@@ -41,6 +41,11 @@ def edit_results(prompt_record):
 		prompt_record['Results'] = prompt_record['Results'][:len_fg]
 		prompt_record['Metrics'] = prompt_record['Metrics'][:len_fg]
 		prompt_record['Subsets'] = prompt_record['Subsets'][:len_fg]
+	
+	#edit feature groups to remove empty features 
+	for fg in prompt_record['feature_groups']:
+		fg.pop('Diabetes', 'No key found')
+
 
 	duplicates = []
 
@@ -157,7 +162,10 @@ if __name__=='__main__':
 		for i in range(0, len(prompt_record['Results'])):
 			feature_group = prompt_record['feature_groups'][i]
 
-			if not 'patient' in feature_group.keys():
+			if not (len(feature_group) == 1 and 'patient' in feature_group.keys()):
+				if len(feature_group) == 0:
+					feature_group = prompt_record['Question']
+					
 				filled_prompt = prompt_template.render(prompt_record)
 				filled_prompt_subset = prompt_template_subset.render({'feature_group': feature_group, 'outcome_variable': 'Outcome'})
 
