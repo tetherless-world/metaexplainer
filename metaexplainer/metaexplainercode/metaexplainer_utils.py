@@ -10,6 +10,9 @@ import Levenshtein
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
+from nltk.tokenize import word_tokenize
+
 import re
 
 #data stack
@@ -219,7 +222,7 @@ def generate_acronyms_possibilities(list_of_conts):
 
 def check_if_label(field_key, labels):
 	'''
-	Check if field is in labels
+	Check if field is in labels / columns
 	Ignore case and spaces
 	Need to see how to handle abbreviations
 	'''
@@ -234,6 +237,19 @@ def check_if_label(field_key, labels):
 		return (True, acronyms_labels[field_key.upper()])
 	return (False, '')
 
+def find_labels_in_sentence(sentence, domain_name):
+	tokenized_sent = word_tokenize(sentence)
+	col_names_domain = load_column_names(domain_name)
+	#print(col_names_domain)
+	cols_matched = []
+	
+	for token in tokenized_sent:
+		matched_or_not, matched_col = check_if_label(token, col_names_domain)
+
+		if matched_or_not:
+			cols_matched.append(matched_col)
+
+	return cols_matched
 
 def is_valid_number(string):
 	try:
