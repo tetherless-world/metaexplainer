@@ -1,4 +1,4 @@
-# Metaexplainer - Implementation
+# MetaExplainer - Implementation
 
 
 **Conda cheat sheet**
