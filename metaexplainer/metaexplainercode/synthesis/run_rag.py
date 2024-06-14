@@ -102,7 +102,7 @@ def construct_prompt_record(output_folder):
 	prompt_record['Subsets'] = subset_list
 	prompt_record['Metrics'] = evaluations_list
 	if prompt_record['Explanation_Type'] == 'Counterfactual Explanation':
-		prompt_record['Original'] = originals_list
+		prompt_record['Originals'] = originals_list
 	prompt_record['use_question'] = use_question
 
 	prompt_record = edit_results(prompt_record)
@@ -164,8 +164,11 @@ def save_explanations(explanation_type_explainer_timestamp_dir, records,
 		metaexplainer_utils.create_folder(curr_folder)
 		explanation['Results'].to_csv(curr_folder + '/' + 'Results.csv')
 		explanation['Subsets'].to_csv(curr_folder + '/' + 'Subsets.csv')
+
 		if explanation_type == 'Counterfactual Explanation':
-			pd.DataFrame(explanation['Original']).to_csv(curr_folder + '/' + 'Original.csv')
+			#print(explanation['Originals'])
+			explanation['Originals'].to_csv(curr_folder + '/' + 'Original.csv')
+
 		explanation['Metrics'].to_csv(curr_folder + '/' + 'Metrics.csv')
 
 		ctr += 1
@@ -190,7 +193,7 @@ def save_explanations(explanation_type_explainer_timestamp_dir, records,
 	print('Created folder for ', synthesis_instance_folder)
 
 
-def run_rag_on_record(output_folder):
+def run_rag_on_record(output_folder, domain_name):
 	prompt_record = construct_prompt_record(output_folder)
 	print(prompt_record)
 	print('Lengths ', len(prompt_record['Results']), len(prompt_record['Subsets']))
@@ -211,9 +214,16 @@ def run_rag_on_record(output_folder):
 			if len(feature_group) == 0:
 				feature_group = prompt_record['Question']
 
+			cols_in_question = metaexplainer_utils.find_labels_in_sentence(prompt_record['Question'], domain_name)
+			cols_in_question = list(set(cols_in_question))
+			print('Debug ', cols_in_question)
+
 			filled_prompt = prompt_template.render(prompt_record)
 			filled_prompt_subset = prompt_template_subset.render({'feature_group': feature_group, 'outcome_variable': 'Outcome'})
 
+			if len(cols_in_question) > 0:
+				filled_prompt += 'If features from question which are: ' + str(cols_in_question) + 'in dataframe, tailor your answers to them.'
+			
 			query_engine = PandasQueryEngine(df=prompt_record['Subsets'][i], verbose=False, synthesize_response=True)
 
 			if prompt_record['Explanation_Type'] == 'Counterfactual Explanation':
@@ -224,6 +234,7 @@ def run_rag_on_record(output_folder):
 			)
 			print('Matched subset from data: ',str(i),' ', response)
 
+
 			query_engine_explan = PandasQueryEngine(df=prompt_record['Results'][i], verbose=False, synthesize_response=True)
 			response_explan = query_engine_explan.query(
 				filled_prompt
@@ -233,7 +244,7 @@ def run_rag_on_record(output_folder):
 			queries_list.append({'Subset Query': filled_prompt_subset, 'Explanation Query': filled_prompt, 'Feature group': feature_group})
 
 			if prompt_record['Explanation_Type'] == 'Counterfactual Explanation':
-				to_add_in_aux['Original'] = prompt_record['Original']
+				to_add_in_aux['Originals'] = prompt_record['Originals'][i]
 
 			explanation_aux.append(to_add_in_aux)
 			print('Explanations for group: ',str(i),' ', response_explan)
@@ -263,10 +274,12 @@ if __name__=='__main__':
 	
 	prompt_template = Template(prompt_template_text_explan)
 	prompt_template_subset = Template(prompt_subset)
+
+	domain_name = 'Diabetes'
 	
 
 	for output_folder in delegate_output_folders.keys():
-		run_rag_on_record(output_folder)
+		run_rag_on_record(output_folder, domain_name)
 
 	
 	'''

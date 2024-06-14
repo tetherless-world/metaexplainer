@@ -23,11 +23,6 @@ dependencies:
   - ipdb
   - xgboost=1.0.2
   - seaborn
-  - llama-index 
-  - llama-index-experimental
-  - langchain
-  - langchain_experimental
-  - langchain_openai
   - tabulate
   - ibm_db
   - shap
@@ -38,6 +33,14 @@ dependencies:
     - ontospy==1.9.9.4
     - ray==0.7.6
     - owlready2
+    - langchain
+    - weaviate-client
+    - ragas
+    - llama-index 
+    - llama-index-experimental
+    - langchain
+    - langchain_experimental
+    - langchain_openai
     - pubmed_lookup
     - eutils
     - nltk
