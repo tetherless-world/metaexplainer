@@ -1,7 +1,7 @@
 from ragas import evaluate
 from ragas import evaluate
 
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import CharacterTextSplitter, NLTKTextSplitter, RecursiveCharacterTextSplitter
 
 from ragas.metrics import (
     faithfulness,
@@ -24,14 +24,15 @@ Construct the question, contexts and answer fields for each result frame so that
 '''
 
 def chunk_contexts(context): 
-    text_splitter = CharacterTextSplitter(
-        separator = "\n\n",
-        chunk_size = 20,
-        chunk_overlap  = 20
-    )
-    docs = text_splitter.create_documents([context])
-    docs = [doc.page_content for doc in docs]
-    print(len(docs))
+    if len(context) > 16000:
+        context = context[:15000]
+
+    text_splitter = RecursiveCharacterTextSplitter(separators=["\n\n", "\n", ' ', ''], chunk_size = 200, chunk_overlap = 0)
+    #print(len(context))
+    docs = text_splitter.split_text(context)
+    #print(docs)
+    docs = [doc for doc in docs]
+    #print(len(docs))
     return docs
 
 def construct_eval_record(dir_path, sub_dirs):
@@ -54,6 +55,7 @@ def construct_eval_record(dir_path, sub_dirs):
 
         explanations.append(explan_record['Subset'])
         subset_txt = str(metaexplainer_utils.drop_unnamed_cols(pd.read_csv(sub_dir + '/Subsets.csv')).to_string(index=False))
+        #print('Debug - chunk len', len(chunk_contexts(subset_txt)))
         contexts.append(chunk_contexts(subset_txt))
         questions.append(question)
 
@@ -70,9 +72,12 @@ def construct_eval_record(dir_path, sub_dirs):
     per_record_result_df['question'] = questions
     per_record_result_df['contexts'] = contexts
 
-    #print(per_record_result_df['answers'])
+    results_df = pd.DataFrame(per_record_result_df)
 
-    return pd.DataFrame(per_record_result_df)
+    #print(per_record_result_df['answers'])
+    #print('sample ', results_df.head(10))
+
+    return results_df
 
 def eval_metrics(eval_dataset):
     result = evaluate(
