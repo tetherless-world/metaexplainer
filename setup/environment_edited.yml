@@ -37,6 +37,8 @@ dependencies:
     - weaviate-client
     - ragas
     - llama-index 
+    - llama-index-llms-huggingface
+    - langchain-huggingface
     - llama-index-experimental
     - langchain
     - langchain_experimental

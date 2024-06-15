@@ -125,16 +125,21 @@ def read_delegate_parsed_instruction_file(file_name):
 	
 	return parses
 
-def read_delegate_explainer_outputs(mode='generated'):
+def read_delegate_explainer_outputs(mode='generated', stage='delegate'):
 	'''
 	Return directories to read - since this code is used by delegate and synthesis 
 	'''
-	delegate_results_folder = codeconstants.DELEGATE_FOLDER + '/results/'
+	stage_dir = codeconstants.DELEGATE_FOLDER
+
+	if stage=='synthesis':
+		stage_dir = codeconstants.SYNTHESIS_FOLDER
+
+	delegate_results_folder = stage_dir + '/results/'
 
 	dirs_explainer_delegate = {}
 	
 	if mode == 'fine-tuned':
-		delegate_results_folder = codeconstants.DELEGATE_FOLDER + '/fine-tuned_results/'
+		delegate_results_folder = stage_dir + '/fine-tuned_results/'
 	
 	for dir_ep in os.listdir(delegate_results_folder):
 		dir_ep_path = delegate_results_folder + '/' + dir_ep

@@ -250,9 +250,6 @@ class LLM_ExplanationInterpretor():
 		return base_model
 
 	def set_refined_model(self):
-		'''
-		Might be unnecessary
-		'''
 		refined_model = None
 		with torch.no_grad():
 			# Load the Peft configuration from the saved location
