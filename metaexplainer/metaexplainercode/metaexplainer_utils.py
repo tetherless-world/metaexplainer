@@ -10,6 +10,8 @@ import Levenshtein
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+import random
+
 
 from nltk.tokenize import word_tokenize
 
@@ -62,6 +64,10 @@ def drop_unnamed_cols(df):
 	'''
 	df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
 	return df
+
+def get_random_samples_in_list(passed_list, no_samples):
+	rand_ranges = random.sample(range(len(passed_list)), no_samples)
+	return [passed_list[i] for i in rand_ranges]
 
 def find_cosine_similarity(s1, s2):
 	'''

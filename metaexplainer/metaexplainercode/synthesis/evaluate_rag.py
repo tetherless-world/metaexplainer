@@ -33,6 +33,12 @@ from metaexplainercode.decompose.fine_tune import LLM_ExplanationInterpretor
 import pandas as pd
 from datasets import Dataset
 
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_random_exponential,
+)
+
 '''
 Construct the question, contexts and answer fields for each result frame so that they can be evaluated.
 '''
@@ -57,10 +63,12 @@ def construct_eval_record(dir_path, sub_dirs, context_size):
 
     record = pd.read_csv(dir_path + '/Record.csv')
     question = record['Question'].item()
+    explanation_type = record['Explanation type'].item()
 
     questions = []
     explanations = []
     contexts = []
+    explanation_types = []
     
     ctr = 0
 
@@ -72,16 +80,19 @@ def construct_eval_record(dir_path, sub_dirs, context_size):
         #print('Debug - chunk len', len(chunk_contexts(subset_txt)))
         contexts.append(chunk_contexts(subset_txt, context_size))
         questions.append(question)
+        explanation_types.append(explanation_type)
 
         explanations.append(explan_record['Explanation'])
         explanation_txt = str(metaexplainer_utils.drop_unnamed_cols(pd.read_csv(sub_dir + '/Results.csv')).to_string(index=False))
         contexts.append(chunk_contexts(explanation_txt, context_size))
 
         questions.append(question)
+        explanation_types.append(explanation_type)
 
         ctr+=1
 
     per_record_result_df = {}
+    per_record_result_df['explanation_type'] = explanation_types
     per_record_result_df['answer'] = explanations
     per_record_result_df['question'] = questions
     per_record_result_df['contexts'] = contexts
@@ -92,6 +103,12 @@ def construct_eval_record(dir_path, sub_dirs, context_size):
     #print('sample ', results_df.head(10))
 
     return results_df
+
+def summarize_evaluations():
+    eval_df = pd.read_csv(codeconstants.SYNTHESIS_FOLDER + '/Evaluations_rag.csv')
+    print('Faithfulness', eval_df.loc[:, 'faithfulness'].mean())
+    print('Answer relevance', eval_df.loc[:, 'answer_relevancy'].mean())
+    print('Contextualization', eval_df.loc[:, 'context_utilization'].mean())
 
 def load_llm_model():
     base_model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
@@ -105,12 +122,10 @@ def load_llm_model():
 	#instantiating class 
     llm_explanation_interpreter = LLM_ExplanationInterpretor(llama_tokenizer, base_model_name, refined_model_name)
     #llm_explanation_interpreter.set_refined_model()
-
     
-
     llama_llm = pipeline(
     tokenizer=llama_tokenizer,
-    model=llm_explanation_interpreter.set_base_model(),
+    model=llm_explanation_interpreter.get_base_model(),
     return_full_text=True,  # langchain expects the full text
     task='text-generation',
     temperature=0.1, 
@@ -121,16 +136,16 @@ def load_llm_model():
 
     return evaluator
 
-
+@retry(wait=wait_random_exponential(min=1, max=960), stop=stop_after_attempt(6))
 def eval_metrics(eval_dataset):
-    quantization_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    # bnb_4bit_compute_dtype=torch.float16,
-    # bnb_4bit_quant_type="nf4",
-    # bnb
-    #_4bit_use_double_quant=True,
-    )
-    model_name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+    # quantization_config = BitsAndBytesConfig(
+    # load_in_4bit=True,
+    # # bnb_4bit_compute_dtype=torch.float16,
+    # # bnb_4bit_quant_type="nf4",
+    # # bnb
+    # #_4bit_use_double_quant=True,
+    # )
+    # model_name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 
     # tiny_llm = pipeline(
     # tokenizer=AutoTokenizer.from_pretrained(model_name),
@@ -143,11 +158,11 @@ def eval_metrics(eval_dataset):
 
     # embedding_model = HuggingFaceEmbeddings(model_name=model_name)
 
-    evaluator = load_llm_model()
+    #ßevaluator = load_llm_model()
 
     result = evaluate(
     dataset = eval_dataset, 
-    llm = evaluator,
+    #llm = evaluator,
     metrics=[
         faithfulness,
         answer_relevancy,
@@ -169,11 +184,32 @@ if __name__ == '__main__':
         eval_dataset = construct_eval_record(result_dir, synthesis_dirs[result_dir], context_size)
         result_datasets.append(eval_dataset)
     
-    result_df = pd.concat(result_datasets)
-    #result_df['contexts'] = result_df['contexts'].astype(str)
+    batch_size = 2
+    prev = 0
+    eval_metrics_list = []
+    sample_list = [i for i in range(0, len(result_datasets))]
 
-    result_datasets = Dataset.from_pandas(result_df)
-    print(result_df.head(10))
-    eval_metrics = eval_metrics(result_datasets)
-    eval_metrics.to_csv(codeconstants.SYNTHESIS_FOLDER + '/Evaluations_rag.csv')
-    print(eval_metrics.head(10))
+    print(' List ', len(result_datasets), 'types ', set([type(df) for df in result_datasets]))
+
+    ctr = 0
+
+    while(True):
+        if len(sample_list) == 0:
+            break
+
+        random_vals = metaexplainer_utils.get_random_samples_in_list(sample_list, batch_size)
+
+        sample_list = [x for x in sample_list if x not in random_vals]
+
+        result_df = pd.concat([result_datasets[idx] for idx in random_vals])
+        
+        batched_dataset = Dataset.from_pandas(result_df)
+        #print(result_df.head(10))
+        eval_metrics_list.append(eval_metrics(batched_dataset))
+
+        ctr += 1
+
+        if ctr%10 == 0:
+            pd.concat(eval_metrics_list).to_csv(codeconstants.SYNTHESIS_FOLDER + '/Evaluations_rag.csv')
+        
+        print('Done for ', ctr)
