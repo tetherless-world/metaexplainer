@@ -17,7 +17,7 @@ if __name__=='__main__':
     read_folders = metaexplainer_utils.read_delegate_explainer_outputs(mode='generated', stage='synthesis')
     print(len(read_folders))
 
-    rand_questions_15 = metaexplainer_utils.get_random_samples_in_list(read_folders, 15)
+    rand_questions_15 = metaexplainer_utils.get_random_samples_in_list(list(read_folders.keys()), 15)
 
     for folder in rand_questions_15:
         #need question, explanation, explanation type, metrics
@@ -28,8 +28,12 @@ if __name__=='__main__':
 
         #there can be multiple rows in explanations - what do you do here? Show each differently or as one?
         explanation_details = pd.read_csv(folder + '/Explanations.csv')
-        record_folder['Explanation of Matched Subset'] = explanation_details['Subset']
-        record_folder['Explanation of Explainer Outputs'] = explanation_details['Explanation']
+        record_folder['Explanation of Matched Subset'] = ''
+        record_folder['Explanation of Explainer Outputs'] = ''
+
+        for index, row in explanation_details.iterrows():
+            record_folder['Explanation of Matched Subset'] += explanation_details['Subset']
+            record_folder['Explanation of Explainer Outputs'] += explanation_details['Explanation']
         
         sub_folders = metaexplainer_utils.get_subfolders_in_folder(folder)
         metrics = []
@@ -37,4 +41,7 @@ if __name__=='__main__':
         for sub_folder in sub_folders:
             metrics.append(pd.read_csv(sub_folder + '/Metrics.csv'))
         
+        record_folder['Metrics'] = metrics
+        print(record_folder)
+        break
         #average along the metrics 
