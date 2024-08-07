@@ -3,6 +3,8 @@ import os
 #A file to save constant file variables that are used across code files in this directory
 
 DATA_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/datasets/'))
+DEFAULTS_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/defaults/'))
+
 PROMPTS_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/prompts/'))
 ONTOLOGY_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/ontologies/'))
 QUERIES_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), r'../../data/sparql_queries/'))
