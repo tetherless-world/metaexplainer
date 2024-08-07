@@ -23,6 +23,7 @@ dependencies:
   - ipdb
   - xgboost=1.0.2
   - seaborn
+  - openpyxl
   - tabulate
   - ibm_db
   - shap
