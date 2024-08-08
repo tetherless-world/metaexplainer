@@ -228,6 +228,8 @@ def run_rag_on_record(output_folder, domain_name):
 
 			if prompt_record['Explanation_Type'] == 'Counterfactual Explanation':
 				filled_prompt += 'The dataframe contains changes and not actual values.'
+			elif prompt_record['Explanation_Type'] == 'Rationale Explanation':
+				filled_prompt += 'The dataframe contains rules derived for classification. Summarize them.'
 					
 			response = query_engine.query(
 				filled_prompt_subset,
@@ -279,6 +281,12 @@ if __name__=='__main__':
 	
 
 	for output_folder in delegate_output_folders.keys():
+		explan_record = pd.read_csv(output_folder + '/record.csv').set_index('Unnamed: 0').T
+		#print(explan_record.columns)
+		explan_type = explan_record['Explanation type'][0]
+
+		#temp only run for rationale
+		#if explan_type == 'Rationale Explanation':
 		run_rag_on_record(output_folder, domain_name)
 
 	
