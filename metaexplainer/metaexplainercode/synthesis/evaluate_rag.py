@@ -158,7 +158,7 @@ def eval_metrics(eval_dataset):
 
     # embedding_model = HuggingFaceEmbeddings(model_name=model_name)
 
-    #ßevaluator = load_llm_model()
+    #evaluator = load_llm_model()
 
     result = evaluate(
     dataset = eval_dataset, 
@@ -211,5 +211,6 @@ if __name__ == '__main__':
 
         if ctr%10 == 0:
             pd.concat(eval_metrics_list).to_csv(codeconstants.SYNTHESIS_FOLDER + '/Evaluations_rag.csv')
+            print('Persisting results for ctr ',ctr)
         
         print('Done for ', ctr)
