@@ -134,6 +134,9 @@ def read_delegate_parsed_instruction_file(file_name):
 def get_subfolders_in_folder(folder_path):
 	return [ f.path for f in os.scandir(folder_path) if f.is_dir() ]
 
+def get_files_in_folder(folder_path):
+	return [ f.path for f in os.scandir(folder_path) if f.is_file() ]
+
 
 def read_delegate_explainer_outputs(mode='generated', stage='delegate'):
 	'''
